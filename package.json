@@ -1,0 +1,29 @@
+{
+  "name": "duck-wash",
+  "version": "1.0.0",
+  "description": "Washer/Drier Management WebApp",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PMARINA/CS546-Final-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PMARINA/CS546-Final-Project/issues"
+  },
+  "homepage": "https://github.com/PMARINA/CS546-Final-Project#readme",
+  "devDependencies": {
+    "eslint": "^8.2.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-react": "^7.27.0",
+    "eslint-pre-commit-hook": "^2.0.7",
+    "html-validator": "^5.0.3",
+    "nodemon": "^2.0.15",
+    "pre-commit": "^1.2.2"
+  }
+}
