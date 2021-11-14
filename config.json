@@ -1,0 +1,12 @@
+{
+  "APPLICATION": {
+    "SECURITY": {
+      "Password": {
+        "BcryptNumHashingRounds": 12
+      }
+    }
+  },
+  "MONGO": {
+    "ServerURL": "mongodb://127.0.0.1/DuckWash"
+  }
+}

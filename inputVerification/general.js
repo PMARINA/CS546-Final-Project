@@ -1,4 +1,4 @@
-let { ObjectId } = require('mongodb');
+const {ObjectId} = require('mongodb');
 
 // When set to true; all errors will also print which function they come from
 const DEBUG_MODE = false;
@@ -10,12 +10,12 @@ const DEBUG_MODE = false;
  * @param {string} funName the name of the function this argument is being called from
  */
 const argExists = function argExists(arg, argName, funName) {
-	let errStr = `${argName} is missing`;
-	if (DEBUG_MODE) {
-		errStr += ` (function: ${funName})`;
-	}
+  let errStr = `${argName} is missing`;
+  if (DEBUG_MODE) {
+    errStr += ` (function: ${funName})`;
+  }
 
-	if (arg === undefined) throw new Error(errStr);
+  if (arg === undefined) throw new Error(errStr);
 };
 
 /** verifies arg is an array
@@ -24,12 +24,12 @@ const argExists = function argExists(arg, argName, funName) {
  * @param {string} funName the name of the function this argument is being called from
  */
 const isArray = function isArray(arg, argName, funName) {
-	let errStr = `${argName} is not an array`;
-	if (DEBUG_MODE) {
-		errStr += ` (function: ${funName})`;
-	}
+  let errStr = `${argName} is not an array`;
+  if (DEBUG_MODE) {
+    errStr += ` (function: ${funName})`;
+  }
 
-	if (!Array.isArray(arg)) throw new Error(errStr);
+  if (!Array.isArray(arg)) throw new Error(errStr);
 };
 
 /**
@@ -39,13 +39,14 @@ const isArray = function isArray(arg, argName, funName) {
  * @param {string} funName the name of the function this argument is being called from
  */
 const isObj = function isObj(arg, argName, funName) {
-	let errStr = `${argName} is not an object`;
-	if (DEBUG_MODE) {
-		errStr += ` (function: ${funName})`;
-	}
+  let errStr = `${argName} is not an object`;
+  if (DEBUG_MODE) {
+    errStr += ` (function: ${funName})`;
+  }
 
-	if (typeof arg !== 'object' || arg === null || Array.isArray(arg))
-		throw new Error(errStr);
+  if (typeof arg !== 'object' || arg === null || Array.isArray(arg)) {
+    throw new Error(errStr);
+  }
 };
 
 /**
@@ -56,38 +57,38 @@ const isObj = function isObj(arg, argName, funName) {
  * @param {string} desiredType type to check against
  */
 const isType = function isType(arg, argName, funName, desiredType) {
-	let errStr = `${argName} is not of type ${desiredType}`;
-	if (DEBUG_MODE) {
-		errStr += ` (function: ${funName})`;
-	}
+  let errStr = `${argName} is not of type ${desiredType}`;
+  if (DEBUG_MODE) {
+    errStr += ` (function: ${funName})`;
+  }
 
-	switch (desiredType) {
-		case 'array':
-			isArray(arg, argName, funName);
-			break;
-		case 'object':
-			isObj(arg, argName, funName);
-			break;
-		case 'objectId':
-			if (typeof arg !== 'string') throw new Error(errStr);
-			isObjId(arg, argName, funName);
-			break;
-		case 'number':
-			if (typeof arg !== desiredType) {
-				if (typeof arg === 'string') {
-					try {
-						parseInt(arg);
-					} catch (e) {
-						throw new Error(errStr);
-					}
-				} else {
-					throw new Error(errStr);
-				}
-			}
-			break;
-		default:
-			if (typeof arg !== desiredType) throw new Error(errStr);
-	}
+  switch (desiredType) {
+    case 'array':
+      isArray(arg, argName, funName);
+      break;
+    case 'object':
+      isObj(arg, argName, funName);
+      break;
+    case 'objectId':
+      if (typeof arg !== 'string') throw new Error(errStr);
+      isObjId(arg, argName, funName);
+      break;
+    case 'number':
+      if (typeof arg !== desiredType) {
+        if (typeof arg === 'string') {
+          try {
+            parseInt(arg);
+          } catch (e) {
+            throw new Error(errStr);
+          }
+        } else {
+          throw new Error(errStr);
+        }
+      }
+      break;
+    default:
+      if (typeof arg !== desiredType) throw new Error(errStr);
+  }
 };
 
 /**
@@ -97,16 +98,16 @@ const isType = function isType(arg, argName, funName, desiredType) {
  * @param {string} funName the name of the function this argument is being called from
  */
 const isObjId = function isObjId(id, argName, funName) {
-	let errStr = `${argName} is not a valid ObjectId`;
-	if (DEBUG_MODE) {
-		errStr += ` (function: ${funName})`;
-	}
+  let errStr = `${argName} is not a valid ObjectId`;
+  if (DEBUG_MODE) {
+    errStr += ` (function: ${funName})`;
+  }
 
-	try {
-		const parsedId = ObjectId(id);
-	} catch (e) {
-		throw new Error(errStr);
-	}
+  try {
+    new ObjectId(id);
+  } catch (e) {
+    throw new Error(errStr);
+  }
 };
 
 /**
@@ -116,15 +117,15 @@ const isObjId = function isObjId(id, argName, funName) {
  * @param {string} funName the name of the function this argument is being called from
  */
 const strNotBlanks = function strNotBlanks(str, argName, funName) {
-	let errStr = `${argName} cannot be a blank string`;
-	if (DEBUG_MODE) {
-		errStr += ` (function: ${funName})`;
-	}
+  let errStr = `${argName} cannot be a blank string`;
+  if (DEBUG_MODE) {
+    errStr += ` (function: ${funName})`;
+  }
 
-	const newStr = str.trim();
-	if (newStr.length === 0) {
-		throw new Error(errStr);
-	}
+  const newStr = str.trim();
+  if (newStr.length === 0) {
+    throw new Error(errStr);
+  }
 };
 
 /**
@@ -134,12 +135,12 @@ const strNotBlanks = function strNotBlanks(str, argName, funName) {
  * @param {string} funName the name of the function this argument is being called from
  */
 const arrNotEmpty = function arrNotEmpty(arr, argName, funName) {
-	let errStr = `${argName} is empty`;
-	if (DEBUG_MODE) {
-		errStr += ` (function: ${funName})`;
-	}
+  let errStr = `${argName} is empty`;
+  if (DEBUG_MODE) {
+    errStr += ` (function: ${funName})`;
+  }
 
-	if (arr.length === 0) throw new Error(errStr);
+  if (arr.length === 0) throw new Error(errStr);
 };
 
 /**
@@ -149,68 +150,69 @@ const arrNotEmpty = function arrNotEmpty(arr, argName, funName) {
  * @param {string} funName the name of the function this argument is being called from
  */
 const objIsNotEmpty = function objIsNotEmpty(obj, argName, funName) {
-	let errStr = `${argName} is empty`;
-	if (DEBUG_MODE) {
-		errStr += ` (function: ${funName})`;
-	}
+  let errStr = `${argName} is empty`;
+  if (DEBUG_MODE) {
+    errStr += ` (function: ${funName})`;
+  }
 
-	if (Object.keys(obj).length === 0) throw new Error(errStr);
+  if (Object.keys(obj).length === 0) throw new Error(errStr);
 };
 
 module.exports = {
-	/**
-	 * generic function to perform basic validation checks
-	 * on a function's given arguments
-	 * @param {*} arg the argument to validate
-	 * @param {string} argName the name of the argument
-	 * @param {string} funName the function the argument is being passed to
-	 * @param {string} desiredType the desired data type of the argument: boolean, number, string, array, object, objectId
-	 */
-	verifyArg(arg, argName, funName, desiredType) {
-		argExists(arg, argName, funName);
-		isType(arg, argName, funName, desiredType);
+  /**
+   * generic function to perform basic validation checks
+   * on a function's given arguments
+   * @param {*} arg the argument to validate
+   * @param {string} argName the name of the argument
+   * @param {string} funName the function the argument is being passed to
+   * @param {string} desiredType the desired data type of the argument: boolean, number, string, array, object, objectId
+   */
+  verifyArg(arg, argName, funName, desiredType) {
+    argExists(arg, argName, funName);
+    isType(arg, argName, funName, desiredType);
 
-		switch (desiredType) {
-			case 'string':
-				strNotBlanks(arg, argName, funName);
-				break;
-			case 'array':
-				arrNotEmpty(arg, argName, funName);
-				break;
-			case 'object':
-				objIsNotEmpty(arg, argName, funName);
-				break;
-			default:
-				return;
-		}
-	},
+    switch (desiredType) {
+      case 'string':
+        strNotBlanks(arg, argName, funName);
+        break;
+      case 'array':
+        arrNotEmpty(arg, argName, funName);
+        break;
+      case 'object':
+        objIsNotEmpty(arg, argName, funName);
+        break;
+      default:
+        return;
+    }
+  },
 
-	/**
-	 * verifies an arg is NOT passed to the function
-	 * @param {*} arg dummy argument that your function shouldn't have
-	 * @param {string} funName the name of the function to print in error (when applicable)
-	 */
-	argDNE(arg, funName) {
-		if (typeof arg !== 'undefined')
-			throw new Error(`${funName} takes no arguments`);
-	},
+  /**
+   * verifies an arg is NOT passed to the function
+   * @param {*} arg dummy argument that your function shouldn't have
+   * @param {string} funName the name of the function to print in error (when applicable)
+   */
+  argDNE(arg, funName) {
+    if (typeof arg !== 'undefined') {
+      throw new Error(`${funName} takes no arguments`);
+    }
+  },
 
-	/**
-	 * verifies a numerical arg is within accepted range
-	 * @param {number} num number to verify the range of
-	 * @param {string} argName the name of the arg to print in error (when applicable)
-	 * @param {string} funName the name of the function this argument is being called from
-	 * @param {number} lower lower bound (inclusive)
-	 * @param {number} upper upper bound (inclusive)
-	 */
-	numRange(num, argName, funName, lower, upper) {
-		let errStr = `${argName} must between ${lower} and ${upper}, inclusive, not ${num}`;
-		if (DEBUG_MODE) {
-			errStr += ` (function: ${funName})`;
-		}
+  /**
+   * verifies a numerical arg is within accepted range
+   * @param {number} num number to verify the range of
+   * @param {string} argName the name of the arg to print in error (when applicable)
+   * @param {string} funName the name of the function this argument is being called from
+   * @param {number} lower lower bound (inclusive)
+   * @param {number} upper upper bound (inclusive)
+   */
+  numRange(num, argName, funName, lower, upper) {
+    let errStr = `${argName} must between ${lower} and ${upper}, inclusive, not ${num}`;
+    if (DEBUG_MODE) {
+      errStr += ` (function: ${funName})`;
+    }
 
-		if (num < lower || num > upper) {
-			throw new Error(errStr);
-		}
-	}
+    if (num < lower || num > upper) {
+      throw new Error(errStr);
+    }
+  },
 };
