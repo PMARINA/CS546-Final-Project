@@ -11,7 +11,7 @@ const appointmentSchema = new Schema(
         required: true,
         validate: [
           async function() {
-            return await Building.exists({_id: this.buildingId}).exec();
+            return await Building.exists({_id: this.buildingId});
           },
           'Building ID was not found in the Buildings database',
         ],
@@ -21,7 +21,7 @@ const appointmentSchema = new Schema(
         required: true,
         validate: [
           async function() {
-            return await User.exists({_id: this.userId}).exec();
+            return await User.exists({_id: this.userId});
           },
           'The user was not found in the users database',
         ],
@@ -36,7 +36,7 @@ const appointmentSchema = new Schema(
                 {'washers._id': this.machineId},
                 {'driers._id': this.machineId},
               ],
-            }).exec();
+            });
           },
           'The machine was not found as a washer/drier in any of the buildings',
         ],
@@ -44,8 +44,8 @@ const appointmentSchema = new Schema(
       cycleId: {
         type: mongoose.ObjectId,
         required: true,
-        validate: [
-          async function() {
+        validate: {
+          validator: async function() {
             const b = await Building.findOne({
               $or: [
                 {'washers._id': this.machineId},
@@ -55,12 +55,12 @@ const appointmentSchema = new Schema(
             if (!b) return false;
             const m = getMachine(b, this.machineId);
             const modelId = m['modelId'];
-            const model = await MachineModel.findOneById(modelId).exec();
+            const model = await MachineModel.findById(modelId).exec();
             if (!model) return false;
             return modelContainsCycle(model, this.cycleId);
           },
-          'The specified cycle does not exist for the washer specified',
-        ],
+          message: 'The specified cycle does not exist for the washer specified',
+        },
       },
       startTimestamp: {
         type: Date,
@@ -91,15 +91,16 @@ module.exports = Appointment;
  */
 function getMachine(b, mId) {
   const fieldsToCheck = ['washers', 'driers'];
+  let res = null;
   fieldsToCheck.forEach((field) => {
     const listOfMachines = b[field];
     listOfMachines.forEach((machine) => {
-      if (machine._id === mId) {
-        return machine;
+      if (machine._id.toString() === mId.toString()) {
+        res = machine;
       }
     });
   });
-  return null;
+  return res;
 }
 
 /**
@@ -110,8 +111,9 @@ function getMachine(b, mId) {
  */
 function modelContainsCycle(model, cycle) {
   const arr = model['cycles'];
+  let res = false;
   arr.forEach((cycleDoc) => {
-    if (cycleDoc._id === cycle) return true;
+    if (cycleDoc._id.toString() === cycle.toString()) res = true;
   });
-  return false;
+  return res;
 }

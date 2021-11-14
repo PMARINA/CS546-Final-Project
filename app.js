@@ -6,6 +6,7 @@ const Building = require('./data/Building');
 const Maintenance = require('./data/Maintenance');
 const Report = require('./data/Report');
 const mongoose = require('mongoose');
+const Appointment = require('./data/Appointment');
 
 /**
  * Test function to test creation of users
@@ -99,6 +100,21 @@ async function createReport() {
   );
 }
 
+/**
+ * Test appointment creation
+ */
+async function createAppointment() {
+  apt = await Appointment.create(
+      '6190489816cb7505b4e3c0db',
+      '61907efdf67267e472c6d8ed',
+      '6190489816cb7505b4e3c0dc',
+      '6190449e96e50f05403d12c8',
+      '2021-11-15',
+      '2021-11-16',
+  );
+  console.log(apt);
+}
+
 const main = async function() {
   console.log('Connecting to DB');
   await mongoose.connect(config.MONGO.ServerURL);
@@ -109,7 +125,8 @@ const main = async function() {
   // await createMaintenance();
   // await comment();
   // await reply();
-  await createReport();
+  // await createReport();
+  await createAppointment();
   await mongoose.connection.close();
 };
 main().then(() => {

@@ -71,9 +71,7 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
     if (!(await Building.exists({_id: buildingId}))) {
       throw new Error('The building does not exist');
     }
-    if (!(await validateUserHasAccess(reporterId, buildingId))) {
-      throw new Error('The user does not have access to the building');
-    }
+    await validateUserHasAccess(reporterId, buildingId);
   } else if (type === 'machine') {
     if (
       !(await Building.exists({
@@ -85,11 +83,7 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
     buildingId = await Building.findOne({
       $or: [{'washers._id': entityId}, {'driers._id': entityId}],
     }).exec();
-    if (!validateUserHasAccess(reporterId, buildingId)) {
-      throw new Error(
-          'The user does not have access to the building containing the reported machine',
-      );
-    }
+    await validateUserHasAccess(reporterId, buildingId);
   } else {
     throw new Error(
         `Type (${type}) has not been implemented in data/Report/create.js`,

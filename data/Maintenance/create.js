@@ -19,8 +19,10 @@ async function checkParams(startDate, endDate, machineId, note) {
     throw new Error('machineId must be a string');
   }
   if (typeof note !== 'string') throw new Error('Note must be a string');
-  startDate = moment(startDate.trim());
-  endDate = moment(endDate.trim());
+  startDate = moment(startDate.trim()).toDate();
+  if (isNaN(startDate.valueOf())) throw new Error('Invalid start date');
+  endDate = moment(endDate.trim()).toDate();
+  if (isNaN(endDate.valueOf())) throw new Error('Invalid end date');
   machineId = machineId.trim();
   try {
     machineId = new ObjectId(machineId);

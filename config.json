@@ -1,5 +1,8 @@
 {
   "APPLICATION": {
+    "APPOINTMENTS": {
+      "MaxSimultaneous": 4
+    },
     "SECURITY": {
       "Password": {
         "BcryptNumHashingRounds": 12

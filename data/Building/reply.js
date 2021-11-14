@@ -62,7 +62,7 @@ async function validateAndClean(
         'Building with the specified comment and id does not exist',
     );
   }
-  validateAccess(posterId, buildingId);
+  await validateAccess(posterId, buildingId);
   return {buildingId, parentCommentId, posterId, message};
 }
 
