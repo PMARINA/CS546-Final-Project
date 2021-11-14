@@ -34,12 +34,11 @@ const reportSchema = new Schema(
       },
       severity: {
         type: String,
-        enum: ['Inconvenient', 'Minor', 'Catastrophic'],
+        enum: ['inconvenient', 'minor', 'catastrophic'],
         required: true,
       },
       resolved: {
         type: Boolean,
-        required: true,
         validate: (v) =>
           validation.general.verifyArg(v, 'Resolved', 'Report Schema', 'boolean'),
         default: false,

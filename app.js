@@ -4,6 +4,7 @@ const User = require('./data/User');
 const MachineModel = require('./data/MachineModel');
 const Building = require('./data/Building');
 const Maintenance = require('./data/Maintenance');
+const Report = require('./data/Report');
 const mongoose = require('mongoose');
 
 /**
@@ -85,16 +86,30 @@ async function reply() {
   );
 }
 
+/**
+ * Test report-creation
+ */
+async function createReport() {
+  await Report.create(
+      'machine',
+      '6190573a63c77d447a815c08',
+      '6190489816cb7505b4e3c0dc',
+      'The washer makes a lot of noise',
+      'inconvenient',
+  );
+}
+
 const main = async function() {
   console.log('Connecting to DB');
   await mongoose.connect(config.MONGO.ServerURL);
   console.log('Adding student to DB...');
-  await createUser();
+  // await createUser();
   // await createModel();
   // await createBuilding();
   // await createMaintenance();
   // await comment();
   // await reply();
+  await createReport();
   await mongoose.connection.close();
 };
 main().then(() => {
