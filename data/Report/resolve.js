@@ -12,7 +12,7 @@ async function resolveTo(reportId, reportStatus, strict = true) {
     throw new Error('Expected reportId to be a String or ObjectId');
   }
 
-  if (typeof reportId == 'object' && ! (reportId instanceof ObjectId)) {
+  if (typeof reportId == 'object' && !(reportId instanceof ObjectId)) {
     throw new Error('Expected ObjectId to be an ObjectId');
   } else {
     try {
@@ -30,15 +30,21 @@ async function resolveTo(reportId, reportStatus, strict = true) {
     throw new Error('Strict was not a Boolean');
   }
 
-  report = await Report.findOne({_id: reportId}, {_id: false, resolved: true});
-  if (! report) {
+  report = await Report.findOne(
+      {_id: reportId},
+      {_id: false, resolved: true},
+  );
+  if (!report) {
     throw new Error('Report with the given Id was not found');
   }
   if (strict && report.resolved === reportStatus) {
     throw new Error(`Report was already marked ${reportStatus}`);
   }
 
-  await Report.updateOne({_id: reportId}, {$set: {resolved: reportStatus}});
+  await Report.updateOne(
+      {_id: reportId},
+      {$set: {resolved: reportStatus}},
+  );
 }
 
 /**
