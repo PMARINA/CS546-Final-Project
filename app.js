@@ -115,6 +115,20 @@ async function createAppointment() {
   console.log(apt);
 }
 
+/**
+ * Test resolution
+ */
+async function markReportResolved() {
+  await Report.markResolved('619119fa198f4826d19a6851');
+}
+
+/**
+ * Test report re-opening
+ */
+async function markReportUnresolved() {
+  await Report.markUnresolved('619119fa198f4826d19a6851');
+}
+
 const main = async function() {
   console.log('Connecting to DB');
   await mongoose.connect(config.MONGO.ServerURL);
@@ -126,7 +140,9 @@ const main = async function() {
   // await comment();
   // await reply();
   // await createReport();
-  await createAppointment();
+  // await createAppointment();
+  // await markReportResolved();
+  await markReportUnresolved();
   await mongoose.connection.close();
 };
 main().then(() => {
