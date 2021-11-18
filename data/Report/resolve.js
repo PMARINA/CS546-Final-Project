@@ -38,7 +38,8 @@ async function resolveTo(reportId, reportStatus, strict = true) {
     throw new Error('Report with the given Id was not found');
   }
   if (strict && report.resolved === reportStatus) {
-    throw new Error(`Report was already marked ${reportStatus}`);
+    const reportStatusMsg = reportStatus ? 'resolved' : 'unresolved';
+    throw new Error(`Report was already marked ${reportStatusMsg}`);
   }
 
   await Report.updateOne(
