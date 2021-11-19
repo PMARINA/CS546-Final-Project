@@ -27,6 +27,7 @@
   },
   "scripts": {
     "dev": "nodemon app.js",
+    "seed": "node seed.js",
     "start": "node app.js"
   },
   "version": "1.0.0"

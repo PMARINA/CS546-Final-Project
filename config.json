@@ -3,6 +3,12 @@
     "APPOINTMENTS": {
       "MaxSimultaneous": 4
     },
+    "DEFAULTS": {
+      "ADMIN_CREDENTIALS": {
+        "Password": "greatPassword101!",
+        "Username": "pmyneni@stevens.edu"
+      }
+    },
     "SECURITY": {
       "Password": {
         "BcryptNumHashingRounds": 12
