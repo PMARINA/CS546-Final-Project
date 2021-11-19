@@ -13,7 +13,7 @@ const Appointment = require('./data/Appointment');
  */
 async function createUser() {
   const student = await User.createUser(
-      'pmyneni@test.com',
+      'pmyneni@tested.com',
       'Pridhvi',
       'Myneni',
       'QWEqwe123+',
@@ -119,14 +119,14 @@ const main = async function() {
   console.log('Connecting to DB');
   await mongoose.connect(config.MONGO.ServerURL);
   console.log('Adding student to DB...');
-  // await createUser();
+  await createUser();
   // await createModel();
   // await createBuilding();
   // await createMaintenance();
   // await comment();
   // await reply();
   // await createReport();
-  await createAppointment();
+  // await createAppointment();
   await mongoose.connection.close();
 };
 main().then(() => {

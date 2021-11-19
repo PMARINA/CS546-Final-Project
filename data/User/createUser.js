@@ -128,9 +128,18 @@ async function verifyAndCleanCreateUserParams(
  * @param {String} rawPwd The user's password as plaintext
  * @param {String[] | String} accessGroups The access groups the user belongs to
  * @param {String} role The user's role in the system
+ * @param {Boolean} isCreateeAdmin Whether the access groups should be granted or simply applied for
  * @return {Object}
  */
-async function createUser(email, fName, lName, rawPwd, accessGroups, role) {
+async function createUser(
+    email,
+    fName,
+    lName,
+    rawPwd,
+    accessGroups,
+    role,
+    isCreateeAdmin = false,
+) {
   if (typeof accessGroups === 'string') accessGroups = [accessGroups];
   ({email, fName, lName, rawPwd, accessGroups, role} =
     await verifyAndCleanCreateUserParams(
@@ -145,16 +154,20 @@ async function createUser(email, fName, lName, rawPwd, accessGroups, role) {
   numRounds = config.APPLICATION.SECURITY.Password.BcryptNumHashingRounds;
   // salt = await bcrypt.genSalt(numRounds);
   hashPwd = await bcrypt.hash(rawPwd, numRounds);
-  const createdUser = await User.create({
+  const accessGroupField = isCreateeAdmin ?
+    'accessGroups' :
+    'appliedAccessGroups';
+  const userObj = {
     email,
     name: {
       first: fName,
       last: lName,
     },
     password: hashPwd,
-    accessGroups: accessGroups,
     role: role,
-  });
+  };
+  userObj[accessGroupField] = accessGroups;
+  const createdUser = await User.create(userObj);
   return createdUser;
 }
 
