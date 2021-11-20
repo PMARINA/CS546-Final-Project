@@ -12,16 +12,18 @@ async function validateAndCleanComment(buildingId, posterId, message) {
   if (typeof buildingId !== 'string') {
     throw new Error('Expected BuildingId to be a string');
   }
+  let buildingIdAsObjectId;
   try {
-    buildingId = new ObjectId(buildingId);
+    buildingIdAsObjectId = new ObjectId(buildingId.trim());
   } catch (e) {
     throw new Error('Building ID was not a valid ObjectId');
   }
   if (typeof posterId !== 'string') {
     throw new Error('Expected posterId to be a string');
   }
+  let posterIdAsObjectId;
   try {
-    posterId = new ObjectId(posterId);
+    posterIdAsObjectId = new ObjectId(posterId.trim());
   } catch (e) {
     throw new Error('Poster ID was not a valid ObjectId');
   }
@@ -30,14 +32,14 @@ async function validateAndCleanComment(buildingId, posterId, message) {
   }
   message = message.trim();
   if (message === '') throw new Error('Empty comments are not allowed');
-  if (!(await Building.exists({_id: buildingId}))) {
+  if (!(await Building.exists({_id: buildingIdAsObjectId}))) {
     throw new Error('Cannot post review to nonexistent building');
   }
-  if (!(await User.exists({_id: posterId}))) {
+  if (!(await User.exists({_id: posterIdAsObjectId}))) {
     throw new Error('Cannot post comment by nonexistent user');
   }
-  await validateAccess(posterId, buildingId);
-  return {buildingId, posterId, message};
+  await validateAccess(posterIdAsObjectId, buildingIdAsObjectId);
+  return {buildingId: buildingIdAsObjectId, posterId: posterIdAsObjectId, message};
 }
 
 /**
@@ -65,4 +67,4 @@ async function comment(buildingId, posterId, message) {
   ).exec();
 }
 
-module.exports = comment;
+module.exports = {comment};

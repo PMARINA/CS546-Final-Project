@@ -1,6 +1,6 @@
-create = require('./create');
-comment = require('./comment');
-reply = require('./reply');
+create = require('./create').createBuilding;
+comment = require('./comment').comment;
+reply = require('./reply').reply;
 
 module.exports = {
   create,

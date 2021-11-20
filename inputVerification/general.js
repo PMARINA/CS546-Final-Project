@@ -34,7 +34,7 @@ const isArray = function isArray(arg, argName, funName) {
 
 /**
  * verifies arg is an object
- * @param {*} arg argunment to test
+ * @param {*} arg argument to test
  * @param {string} argName the name of the arg to print in error (when applicable)
  * @param {string} funName the name of the function this argument is being called from
  */

@@ -34,7 +34,7 @@ async function createModel() {
 }
 
 /**
- * Test function to test creation of a maintenace period
+ * Test function to test creation of a maintenance period
  */
 async function createMaintenance() {
   await Maintenance.create(
@@ -104,7 +104,7 @@ async function createReport() {
  * Test appointment creation
  */
 async function createAppointment() {
-  apt = await Appointment.create(
+  const apt = await Appointment.create(
       '6190489816cb7505b4e3c0db',
       '61907efdf67267e472c6d8ed',
       '6190489816cb7505b4e3c0dc',
@@ -131,5 +131,5 @@ const main = async function() {
 };
 main().then(() => {
   const x = 1;
-  x == x;
+  x === x;
 });
