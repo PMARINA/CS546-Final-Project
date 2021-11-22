@@ -4,6 +4,7 @@
     "url": "https://github.com/PMARINA/CS546-Final-Project/issues"
   },
   "dependencies": {
+    "bad-words": "^3.0.4",
     "bcrypt": "^5.0.1",
     "moment": "^2.29.1",
     "mongodb": "^4.1.4",

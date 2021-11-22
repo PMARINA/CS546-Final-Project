@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const Building = require('../../models/building');
 const User = require('../../models/user');
 const ObjectId = require('mongoose').Types.ObjectId;
@@ -45,6 +46,10 @@ async function validateAndClean(
   }
   message = message.trim();
   if (message.length === 0) throw new Error('Message cannot be blank');
+
+  // Filtering bad words with stars
+  const filter = new Filter();
+  filter.clean(message);
 
   if (!(await Building.exists({_id: buildingId}))) {
     throw new Error('Building with specified id does not exist');
@@ -95,4 +100,60 @@ async function reply(buildingId, parentCommentId, posterId, message) {
   ).exec();
 }
 
-module.exports = reply;
+/**
+ * Modify a reply to a comment
+ * @param {String} buildingId
+ * @param {String} parentCommentId
+ * @param {String} posterId
+ * @param {String} newMessage
+ * @param {String} oldMessage
+ * @return {Object}
+ */
+async function modifyReply(buildingId, parentCommentId, posterId, newMessage, oldMessage) {
+  ({buildingId, parentCommentId, posterId, newMessage, oldMessage} = await validateAndClean(
+      buildingId,
+      parentCommentId,
+      posterId,
+      newMessage,
+  ));
+  return await Building.updateOne(
+      {'_id': buildingId, 'comments._id': parentCommentId},
+      {
+        $set: {'comments.$.replies.indexOf(oldMessage)': {
+          posterId,
+          newMessage,
+          timestamp: Date.now(),
+        },
+        },
+      },
+  ).exec();
+}
+
+/**
+ * Delete a reply to a comment
+ * @param {String} buildingId
+ * @param {String} parentCommentId
+ * @param {String} posterId
+ * @param {String} message
+ * @return {Object}
+ */
+async function deleteReply(buildingId, parentCommentId, posterId, message) {
+  ({buildingId, parentCommentId, posterId, message} = await validateAndClean(
+      buildingId,
+      parentCommentId,
+      posterId,
+      message,
+  ));
+  return await Building.updateOne(
+      {'_id': buildingId, 'comments._id': parentCommentId},
+      {
+        $pull: {'comments.$.replies': message},
+      },
+  ).exec();
+}
+
+module.exports = {
+  reply,
+  modifyReply,
+  deleteReply,
+};
