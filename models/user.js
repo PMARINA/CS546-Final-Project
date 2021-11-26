@@ -59,6 +59,7 @@ const userSchema = new Schema(
       },
       accessGroups: accessGroupSchema,
       appliedAccessGroups: accessGroupSchema,
+      privilegedAccessGroups: accessGroupSchema,
       role: {
         type: String,
         required: true,

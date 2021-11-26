@@ -19,7 +19,7 @@ ObjectId = require('mongoose').Types.ObjectId;
  * @param {String} rawPwd The user's password as plaintext
  * @param {String[]} accessGroups The access groups the user belongs to
  * @param {String} role The user's role in the system
- * @param {String?} creatorId ObjectId of the person creating the user
+ * @param {String} [creatorId=''] ObjectId of the person creating the user
  * @return {Object} The params passed in, but trimmed, etc
  */
 async function verifyAndCleanCreateUserParams(
@@ -29,7 +29,7 @@ async function verifyAndCleanCreateUserParams(
     rawPwd,
     accessGroups,
     role,
-    creatorId,
+    creatorId = '',
 ) {
   email = await validateAndCleanEmail(email);
 
@@ -59,27 +59,49 @@ async function verifyAndCleanCreateUserParams(
 async function getAccessGroups(groups, creatorId) {
   // If the ObjectId isn't valid, then just apply for it
   let creatorObjectId = null;
+  const accessGroupsLabel = "accessGroups";
+  const appliedAccessGroupsLabel = "appliedAccessGroups";
   try {
     creatorObjectId = new ObjectId(creatorId);
   } catch (e) {
-    return {accessGroups: [], appliedAccessGroups: groups};
+    const toReturn = {};
+    toReturn[accessGroupsLabel] = [];
+    toReturn[appliedAccessGroupsLabel] = groups;
+    return toReturn;
   }
 
-  if (creatorObjectId) {
-    const creatorUserObject = await User.findOne(
-        {_id: creatorObjectId},
-        {_id: 0, role: 1, accessGroups: 1},
-    );
+  const creatorUserObject = await User.findOne(
+      {_id: creatorObjectId},
+      {_id: 0, role: 1, accessGroups: 1},
+  );
     // If the creator is an admin, they get everything
-    if (creatorUserObject.role === 'admin') {
-      return {accessGroups: groups, appliedAccessGroups: []};
-    }
-    // If the creator is an RA, they get whatever the RA has authority over, and nothing else
-    // TODO: Finish based on results of slack discussion @ https://stevenswebdevfall2021.slack.com/archives/C02HFHLQ0UC/p1637342974001900
+  const creatorRole = creatorUserObject.role;
+  const creatorAdminAccessGroups = creatorUserObject.privilegedAccessGroups;
+  if (creatorRole === 'admin') {
+    const toReturn = {};
+    toReturn[accessGroupsLabel] = groups;
+    toReturn[appliedAccessGroupsLabel] = [];
+    return toReturn;
+  }
+  if (creatorRole === 'ra') {
+    const admittedGroups = [];
+    const appliedGroups = [];
+    const raPrivilegedGroups = set(creatorAdminAccessGroups);
+    groups.forEach(function(group) {
+      if (raPrivilegedGroups.contains(group)) admittedGroups.push(group);
+      else appliedGroups.push(group);
+    });
+    const toReturn = {};
+    toReturn[accessGroupsLabel] = admittedGroups;
+    toReturn[appliedAccessGroupsLabel] = appliedGroups;
+    return toReturn;
   }
 
   // Fall through = no access, everything is applied for
-  return {accessGroups: [], appliedAccessGroups: groups};
+  const toReturn = {};
+  toReturn[accessGroupsLabel] = [];
+  toReturn[appliedAccessGroupsLabel] = groups;
+  return toReturn;
 }
 
 /**
