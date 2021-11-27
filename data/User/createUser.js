@@ -59,8 +59,8 @@ async function verifyAndCleanCreateUserParams(
 async function getAccessGroups(groups, creatorId) {
   // If the ObjectId isn't valid, then just apply for it
   let creatorObjectId = null;
-  const accessGroupsLabel = "accessGroups";
-  const appliedAccessGroupsLabel = "appliedAccessGroups";
+  const accessGroupsLabel = 'accessGroups';
+  const appliedAccessGroupsLabel = 'appliedAccessGroups';
   try {
     creatorObjectId = new ObjectId(creatorId);
   } catch (e) {
@@ -74,27 +74,29 @@ async function getAccessGroups(groups, creatorId) {
       {_id: creatorObjectId},
       {_id: 0, role: 1, accessGroups: 1},
   );
+  if (creatorUserObject !== null) {
     // If the creator is an admin, they get everything
-  const creatorRole = creatorUserObject.role;
-  const creatorAdminAccessGroups = creatorUserObject.privilegedAccessGroups;
-  if (creatorRole === 'admin') {
-    const toReturn = {};
-    toReturn[accessGroupsLabel] = groups;
-    toReturn[appliedAccessGroupsLabel] = [];
-    return toReturn;
-  }
-  if (creatorRole === 'ra') {
-    const admittedGroups = [];
-    const appliedGroups = [];
-    const raPrivilegedGroups = set(creatorAdminAccessGroups);
-    groups.forEach(function(group) {
-      if (raPrivilegedGroups.contains(group)) admittedGroups.push(group);
-      else appliedGroups.push(group);
-    });
-    const toReturn = {};
-    toReturn[accessGroupsLabel] = admittedGroups;
-    toReturn[appliedAccessGroupsLabel] = appliedGroups;
-    return toReturn;
+    const creatorRole = creatorUserObject.role;
+    const creatorAdminAccessGroups = creatorUserObject.privilegedAccessGroups;
+    if (creatorRole === 'admin') {
+      const toReturn = {};
+      toReturn[accessGroupsLabel] = groups;
+      toReturn[appliedAccessGroupsLabel] = [];
+      return toReturn;
+    }
+    if (creatorRole === 'ra') {
+      const admittedGroups = [];
+      const appliedGroups = [];
+      const raPrivilegedGroups = set(creatorAdminAccessGroups);
+      groups.forEach(function(group) {
+        if (raPrivilegedGroups.contains(group)) admittedGroups.push(group);
+        else appliedGroups.push(group);
+      });
+      const toReturn = {};
+      toReturn[accessGroupsLabel] = admittedGroups;
+      toReturn[appliedAccessGroupsLabel] = appliedGroups;
+      return toReturn;
+    }
   }
 
   // Fall through = no access, everything is applied for
@@ -130,7 +132,7 @@ async function createUser(
   } else {
     accessGroupsList = accessGroups;
   }
-  ({email, fName, lName, rawPwd, accessGroupsList, role} =
+  ({email, fName, lName, rawPwd, accessGroups, role} =
     await verifyAndCleanCreateUserParams(
         email,
         fName,
@@ -141,10 +143,11 @@ async function createUser(
         creatorId,
     ));
   let appliedAccessGroups;
-  ({accessGroupsList, appliedAccessGroups} = await getAccessGroups(
+  ({accessGroups, appliedAccessGroups} = await getAccessGroups(
       accessGroupsList,
       creatorId,
   ));
+  accessGroupsList = accessGroups;
   const numRounds = config.APPLICATION.SECURITY.Password.BcryptNumHashingRounds;
   // salt = await bcrypt.genSalt(numRounds);
   const hashPwd = await bcrypt.hash(rawPwd, numRounds);

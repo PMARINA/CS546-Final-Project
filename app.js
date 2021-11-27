@@ -13,12 +13,13 @@ const Appointment = require('./data/Appointment');
  */
 async function createUser() {
   const student = await User.createUser(
-      'pmyneni@tested.com',
+      'pmyneni@test.edu',
       'Pridhvi',
       'Myneni',
       'QWEqwe123+',
-      'jacobus',
+      'group',
       'student',
+      '61a29fe799cc42ca2949e556',
   );
   console.log(student);
 }
