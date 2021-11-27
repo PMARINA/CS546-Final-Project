@@ -1,6 +1,6 @@
-create = require('./create').createBuilding;
-comment = require('./comment').comment;
-reply = require('./reply').reply;
+const create = require('./create').createBuilding;
+const comment = require('./comment').comment;
+const reply = require('./reply').reply;
 
 module.exports = {
   create,
