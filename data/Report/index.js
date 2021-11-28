@@ -1,5 +1,5 @@
+const create = require('./create');
 const {markResolved, markUnresolved} = require('./resolve');
-create = require('./create');
 
 module.exports = {
   create,

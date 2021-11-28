@@ -42,12 +42,13 @@ parentCommentId = '61905bbd61948d77b2ff9482';
  */
 async function createUser() {
   const student = await User.createUser(
-      'pmyneni@test.com',
+      'pmyneni@test.edu',
       'Pridhvi',
       'Myneni',
       'QWEqwe123+',
-      'jacobus',
+      'group',
       'student',
+      '61a29fe799cc42ca2949e556',
   );
   console.log(student);
 }
@@ -71,7 +72,7 @@ async function createModel() {
 }
 
 /**
- * Test function to test creation of a maintenace period
+ * Test function to test creation of a maintenance period
  */
 async function createMaintenance() {
   await Maintenance.create('2021-11-10', '2021-11-13', machineId, 'Test');
@@ -132,7 +133,7 @@ async function createReport() {
  * Test appointment creation
  */
 async function createAppointment() {
-  apt = await Appointment.create(
+  const apt = await Appointment.create(
       buildingId,
       userId,
       machineId,
@@ -161,6 +162,7 @@ const main = async function() {
   configRoutes(app);
   console.log('Connecting to DB');
   await mongoose.connect(config.MONGO.ServerURL);
+  await createUser();
   app.listen(3000, () => {
     console.log('Server live @ http://localhost:3000');
   });

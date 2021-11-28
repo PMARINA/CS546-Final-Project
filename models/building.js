@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const SchemaObjectId = mongoose.ObjectId;
 const validation = require('../inputVerification').general;
 
 const machineSubDocSchema = new Schema({
@@ -17,7 +18,7 @@ const machineSubDocSchema = new Schema({
     unique: true, // Not a validator; will not error on duplicate
   },
   modelId: {
-    type: mongoose.ObjectId,
+    type: SchemaObjectId,
     required: true,
   },
 });
@@ -43,7 +44,7 @@ const timestampJSON = {
 
 const lowerCommentSchema = new Schema({
   posterId: {
-    type: mongoose.ObjectId,
+    type: SchemaObjectId,
     required: true,
   },
   message: messageJSON,
@@ -51,7 +52,7 @@ const lowerCommentSchema = new Schema({
 
 const upperCommentSchema = new Schema({
   posterId: {
-    type: mongoose.ObjectId,
+    type: SchemaObjectId,
     required: true,
   },
   message: messageJSON,

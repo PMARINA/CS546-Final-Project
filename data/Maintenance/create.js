@@ -2,6 +2,7 @@ const moment = require('moment');
 const ObjectId = require('mongoose').Types.ObjectId;
 const Maintenance = require('../../models/maintenance');
 const Building = require('../../models/building');
+
 /**
  * Check params for create
  * @param {String} startDate
@@ -19,13 +20,14 @@ async function checkParams(startDate, endDate, machineId, note) {
     throw new Error('machineId must be a string');
   }
   if (typeof note !== 'string') throw new Error('Note must be a string');
-  startDate = moment(startDate.trim()).toDate();
-  if (isNaN(startDate.valueOf())) throw new Error('Invalid start date');
-  endDate = moment(endDate.trim()).toDate();
-  if (isNaN(endDate.valueOf())) throw new Error('Invalid end date');
+  const startDateAsDate = moment(startDate.trim()).toDate();
+  if (isNaN(startDateAsDate.valueOf())) throw new Error('Invalid start date');
+  const endDateAsDate = moment(endDate.trim()).toDate();
+  if (isNaN(endDateAsDate.valueOf())) throw new Error('Invalid end date');
   machineId = machineId.trim();
+  let machineIdAsObjectId;
   try {
-    machineId = new ObjectId(machineId);
+    machineIdAsObjectId = new ObjectId(machineId);
   } catch (e) {
     throw new Error('The provided machine id was not valid');
   }
@@ -33,12 +35,12 @@ async function checkParams(startDate, endDate, machineId, note) {
   if (note === '') throw new Error('Note must not be empty');
   if (
     !(await Building.exists({
-      $or: [{'washers._id': machineId}, {'driers._id': machineId}],
+      $or: [{'washers._id': machineIdAsObjectId}, {'driers._id': machineIdAsObjectId}],
     }))
   ) {
     throw new Error('Machine does not exist');
   }
-  return {startDate, endDate, machineId, note};
+  return {startDateAsDate, endDateAsDate, machineIdAsObjectId, machineId};
 }
 
 /**
@@ -50,13 +52,18 @@ async function checkParams(startDate, endDate, machineId, note) {
  * @return {Object}
  */
 async function create(startDate, endDate, machineId, note) {
-  ({startDate, endDate, machineId, note} = await checkParams(
+  const cleanedParams = await checkParams(
       startDate,
       endDate,
       machineId,
       note,
-  ));
-  return await Maintenance.create({startDate, endDate, machineId, note});
+  );
+  return await Maintenance.create({
+    startDate: cleanedParams.startDate,
+    endDate: cleanedParams.endDate,
+    machineId: cleanedParams.machineId,
+    note: cleanedParams.note,
+  });
 }
 
 module.exports = create;

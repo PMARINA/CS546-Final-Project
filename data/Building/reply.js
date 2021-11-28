@@ -28,42 +28,47 @@ async function validateAndClean(
   }
   if (typeof message !== 'string') throw new Error('Message must be a string');
 
+  let buildingIdAsObjectId;
   try {
-    buildingId = new ObjectId(buildingId);
+    buildingIdAsObjectId = new ObjectId(buildingId);
   } catch (err) {
     throw new Error('Building id was an invalid object id');
   }
+
+  let parentCommentIdAsObjectId;
   try {
-    parentCommentId = new ObjectId(parentCommentId);
+    parentCommentIdAsObjectId = new ObjectId(parentCommentId);
   } catch (err) {
     throw new Error('Parent comment id was an invalid object id');
   }
+
+  let posterIdAsObjectId;
   try {
-    posterId = new ObjectId(posterId);
+    posterIdAsObjectId = new ObjectId(posterId);
   } catch (err) {
     throw new Error('Poster id was an invalid object id');
   }
   message = message.trim();
   if (message.length === 0) throw new Error('Message cannot be blank');
 
-  if (!(await Building.exists({_id: buildingId}))) {
+  if (!(await Building.exists({_id: buildingIdAsObjectId}))) {
     throw new Error('Building with specified id does not exist');
   }
-  if (!(await User.exists({_id: posterId}))) {
+  if (!(await User.exists({_id: posterIdAsObjectId}))) {
     throw new Error('User with specified id does not exist');
   }
   if (
     !(await Building.exists({
-      '_id': buildingId,
-      'comments._id': parentCommentId,
+      '_id': buildingIdAsObjectId,
+      'comments._id': parentCommentIdAsObjectId,
     }))
   ) {
     throw new Error(
         'Building with the specified comment and id does not exist',
     );
   }
-  await validateAccess(posterId, buildingId);
-  return {buildingId, parentCommentId, posterId, message};
+  await validateAccess(posterIdAsObjectId, buildingIdAsObjectId);
+  return {buildingId: buildingIdAsObjectId, parentCommentId: parentCommentIdAsObjectId, posterId: posterIdAsObjectId, message};
 }
 
 /**
@@ -95,4 +100,4 @@ async function reply(buildingId, parentCommentId, posterId, message) {
   ).exec();
 }
 
-module.exports = reply;
+module.exports = {reply};
