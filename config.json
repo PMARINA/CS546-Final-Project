@@ -3,6 +3,11 @@
     "APPOINTMENTS": {
       "MaxSimultaneous": 4
     },
+    "DEFAULTS": {
+      "ADMIN_CREDENTIALS": {
+        "Password": "greatPassword101!",
+        "Username": "pmyneni@stevens.edu"
+      }
     "COOKIE": {
       "maxAgeMillis": 60000,
       "name": "appCookie",

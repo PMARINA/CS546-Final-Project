@@ -31,6 +31,7 @@
     "url": "git+https://github.com/PMARINA/CS546-Final-Project.git"
   },
   "scripts": {
+    "seed": "node seed.js",
     "css-build": "node-sass --omit-source-map-url sass/main.scss public/css/site.css",
     "css-watch": "npm run css-build -- --watch",
     "dev": "npm run css-build && nodemon app.js",
