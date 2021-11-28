@@ -1,7 +1,7 @@
 const {ObjectId} = require('mongodb');
 
 // When set to true; all errors will also print which function they come from
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 
 /**
  * verifies a defined arg is passed to the function
