@@ -29,6 +29,14 @@ app.use(
 );
 
 
+userId = '6190573a63c77d447a815c08';
+modelId = '6190449e96e50f05403d12c5';
+reportId = '619119fa198f4826d19a6851';
+machineId = '6190489816cb7505b4e3c0dc';
+cycleId = '6190449e96e50f05403d12c8';
+buildingId = '6190489816cb7505b4e3c0db';
+parentCommentId = '61905bbd61948d77b2ff9482';
+
 /**
  * Test function to test creation of users
  */
@@ -58,12 +66,7 @@ async function createModel() {
  * Test function to test creation of a maintenace period
  */
 async function createMaintenance() {
-  await Maintenance.create(
-      '2021-11-10',
-      '2021-11-13',
-      '6190489816cb7505b4e3c0dc',
-      'Test',
-  );
+  await Maintenance.create('2021-11-10', '2021-11-13', machineId, 'Test');
 }
 
 /**
@@ -77,7 +80,7 @@ async function createBuilding() {
         type: 'Point',
         coordinates: [50, 24.4],
       },
-      [{name: 'A', modelId: '6190449e96e50f05403d12c5'}],
+      [{name: 'A', modelId}],
       undefined,
       undefined,
   );
@@ -87,11 +90,7 @@ async function createBuilding() {
  * Test commenting on building
  */
 async function comment() {
-  await Building.comment(
-      '6190489816cb7505b4e3c0db',
-      '6190573a63c77d447a815c08',
-      'COment',
-  );
+  await Building.comment(buildingId, userId, 'COment');
 }
 
 /**
@@ -100,9 +99,9 @@ async function comment() {
 async function reply() {
   console.log(
       await Building.reply(
-          '6190489816cb7505b4e3c0db',
-          '61905bbd61948d77b2ff9482',
-          '6190573a63c77d447a815c08',
+          buildingId,
+          parentCommentId,
+          userId,
           'Learn to use spellcheck!',
       ),
   );
@@ -114,8 +113,8 @@ async function reply() {
 async function createReport() {
   await Report.create(
       'machine',
-      '6190573a63c77d447a815c08',
-      '6190489816cb7505b4e3c0dc',
+      userId,
+      machineId,
       'The washer makes a lot of noise',
       'inconvenient',
   );
@@ -126,14 +125,28 @@ async function createReport() {
  */
 async function createAppointment() {
   apt = await Appointment.create(
-      '6190489816cb7505b4e3c0db',
-      '61907efdf67267e472c6d8ed',
-      '6190489816cb7505b4e3c0dc',
-      '6190449e96e50f05403d12c8',
+      buildingId,
+      userId,
+      machineId,
+      cycleId,
       '2021-11-15',
       '2021-11-16',
   );
   console.log(apt);
+}
+
+/**
+ * Test resolution
+ */
+async function markReportResolved() {
+  await Report.markResolved(reportId);
+}
+
+/**
+ * Test report re-opening
+ */
+async function markReportUnresolved() {
+  await Report.markUnresolved(reportId);
 }
 
 const main = async function() {
@@ -152,7 +165,9 @@ const main = async function() {
   // await reply();
   // await createReport();
   // await createAppointment();
-  await mongoose.connection.close();
+  // await markReportResolved();
+  // await markReportUnresolved();
+  // await mongoose.connection.close();
 };
 main().then(() => {
   const x = 1;
