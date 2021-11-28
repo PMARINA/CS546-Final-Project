@@ -1,4 +1,5 @@
 const Building = require('../../models/building');
+const User = require('../../models/user');
 
 /**
  * Determine if the user has access to the building

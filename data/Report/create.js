@@ -18,7 +18,7 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
     throw new Error('Report type was not a string');
   }
   type = type.trim().toLowerCase();
-  if (type != 'machine' && type != 'building') {
+  if (type !== 'machine' && type !== 'building') {
     throw new Error('Report type was invalid (building|machine)');
   }
 
@@ -26,9 +26,9 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
     throw new Error('Expected reporter id to be a string');
   }
   reporterId = reporterId.trim();
-
+  let reporterIdAsObjectId;
   try {
-    reporterId = new ObjectId(reporterId);
+    reporterIdAsObjectId = new ObjectId(reporterId);
   } catch (err) {
     throw new Error('Reporter ID was not a valid ObjectId');
   }
@@ -38,8 +38,9 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
   }
   entityId = entityId.trim();
 
+  let entityIdAsObject;
   try {
-    entityId = new ObjectId(entityId);
+    entityIdAsObject = new ObjectId(entityId);
   } catch (err) {
     throw new Error('Entity ID was not a valid ObjectId');
   }
@@ -55,42 +56,42 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
   }
   severity = severity.trim().toLowerCase();
   if (
-    severity != 'inconvenient' &&
-    severity != 'minor' &&
-    severity != 'catastrophic'
+    severity !== 'inconvenient' &&
+    severity !== 'minor' &&
+    severity !== 'catastrophic'
   ) {
     throw new Error('Expected severity to be inconvenient|minor|catastrophic');
   }
 
-  if (!(await User.exists({_id: reporterId}))) {
+  if (!(await User.exists({_id: reporterIdAsObjectId}))) {
     throw new Error('The reporter does not exist in the users DB');
   }
   let buildingId = undefined;
   if (type === 'building') {
-    buildingId = entityId;
+    buildingId = entityIdAsObject;
     if (!(await Building.exists({_id: buildingId}))) {
       throw new Error('The building does not exist');
     }
-    await validateUserHasAccess(reporterId, buildingId);
+    await validateUserHasAccess(reporterIdAsObjectId, buildingId);
   } else if (type === 'machine') {
     if (
       !(await Building.exists({
-        $or: [{'washers._id': entityId}, {'driers._id': entityId}],
+        $or: [{'washers._id': entityIdAsObject}, {'driers._id': entityIdAsObject}],
       }))
     ) {
       throw new Error('No building contains a machine with the specified id');
     }
     buildingId = await Building.findOne({
-      $or: [{'washers._id': entityId}, {'driers._id': entityId}],
+      $or: [{'washers._id': entityIdAsObject}, {'driers._id': entityIdAsObject}],
     }).exec();
-    await validateUserHasAccess(reporterId, buildingId);
+    await validateUserHasAccess(reporterIdAsObjectId, buildingId);
   } else {
     throw new Error(
         `Type (${type}) has not been implemented in data/Report/create.js`,
     );
   }
 
-  return {type, reporterId, entityId, comment, severity};
+  return {type, reporterId: reporterIdAsObjectId, entityId: entityIdAsObject, comment, severity};
 }
 
 /**

@@ -8,6 +8,10 @@
         "Password": "greatPassword101!",
         "Username": "pmyneni@stevens.edu"
       }
+    "COOKIE": {
+      "maxAgeMillis": 60000,
+      "name": "appCookie",
+      "secret": "superSecretCookieSecret"
     },
     "SECURITY": {
       "Password": {
