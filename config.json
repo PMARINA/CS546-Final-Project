@@ -3,6 +3,11 @@
     "APPOINTMENTS": {
       "MaxSimultaneous": 4
     },
+    "COOKIE": {
+      "maxAgeMillis": 60000,
+      "name": "appCookie",
+      "secret": "superSecretCookieSecret"
+    },
     "SECURITY": {
       "Password": {
         "BcryptNumHashingRounds": 12

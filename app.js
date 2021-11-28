@@ -7,6 +7,26 @@ const Maintenance = require('./data/Maintenance');
 const Report = require('./data/Report');
 const mongoose = require('mongoose');
 const Appointment = require('./data/Appointment');
+const express = require('express');
+const configRoutes = require('./routes');
+const expressHandlebars = require('express-handlebars');
+const expressSession = require('express-session');
+const app = express();
+app.engine('handlebars', expressHandlebars.engine());
+app.set('view engine', 'handlebars');
+// TODO: Remove in production
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+app.use(
+    expressSession({
+      name: config.APPLICATION.COOKIE.name,
+      secret: config.APPLICATION.COOKIE.secret,
+      saveUninitialized: false,
+      resave: false,
+      cookie: {maxAge: config.APPLICATION.COOKIE.maxAgeMillis},
+    }),
+);
+
 
 /**
  * Test function to test creation of users
@@ -116,9 +136,13 @@ async function createAppointment() {
 }
 
 const main = async function() {
+  configRoutes(app);
   console.log('Connecting to DB');
   await mongoose.connect(config.MONGO.ServerURL);
-  console.log('Adding student to DB...');
+  app.listen(3000, () => {
+    console.log('Server live @ http://localhost:3000');
+  });
+  // console.log('Adding student to DB...');
   // await createUser();
   // await createModel();
   // await createBuilding();
@@ -126,10 +150,10 @@ const main = async function() {
   // await comment();
   // await reply();
   // await createReport();
-  await createAppointment();
+  // await createAppointment();
   await mongoose.connection.close();
 };
 main().then(() => {
   const x = 1;
-  x == x;
+  return x === x;
 });
