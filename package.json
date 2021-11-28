@@ -14,9 +14,11 @@
   },
   "description": "Washer/Drier Management WebApp",
   "devDependencies": {
+    "bulma": "^0.9.3",
     "eslint": "^8.2.0",
     "eslint-config-google": "^0.14.0",
     "html-validator": "^5.0.3",
+    "node-sass": "^6.0.1",
     "nodemon": "^2.0.15",
     "prettier": "^2.4.1"
   },
@@ -29,8 +31,10 @@
     "url": "git+https://github.com/PMARINA/CS546-Final-Project.git"
   },
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js"
+    "css-build": "node-sass --omit-source-map-url sass/main.scss public/css/site.css",
+    "css-watch": "npm run css-build -- --watch",
+    "dev": "npm run css-build && nodemon app.js",
+    "start": "npm run css-build && node app.js"
   },
   "version": "1.0.0"
 }

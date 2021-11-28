@@ -16,6 +16,7 @@ app.engine('handlebars', expressHandlebars.engine());
 app.set('view engine', 'handlebars');
 // TODO: Remove in production
 app.use(express.json());
+app.use(express.static('public/'));
 app.use(express.urlencoded({extended: true}));
 app.use(
     expressSession({
