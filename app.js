@@ -53,6 +53,14 @@ async function createUser() {
 }
 
 /**
+ * Test modification of a student
+ * @return {Promise<void>}
+ */
+async function modifyUser() {
+  await User.modifyUser('61a2a1c2570a2dd1354421fe', '61a29fe799cc42ca249e556b', {name: {first: 'notPridhvi'}, role: 'ra'});
+}
+
+/**
  * Test function to test creation of washer/dryer models
  */
 async function createModel() {
@@ -158,6 +166,7 @@ const main = async function() {
   });
   // console.log('Adding student to DB...');
   // await createUser();
+  // await modifyUser();
   // await createModel();
   // await createBuilding();
   // await createMaintenance();
@@ -167,7 +176,7 @@ const main = async function() {
   // await createAppointment();
   // await markReportResolved();
   // await markReportUnresolved();
-  // await mongoose.connection.close();
+  await mongoose.connection.close();
 };
 main().then(() => {
   const x = 1;
