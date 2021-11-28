@@ -7,6 +7,27 @@ const Maintenance = require('./data/Maintenance');
 const Report = require('./data/Report');
 const mongoose = require('mongoose');
 const Appointment = require('./data/Appointment');
+const express = require('express');
+const configRoutes = require('./routes');
+const expressHandlebars = require('express-handlebars');
+const expressSession = require('express-session');
+const app = express();
+app.engine('handlebars', expressHandlebars.engine());
+app.set('view engine', 'handlebars');
+// TODO: Remove in production
+app.use(express.json());
+app.use(express.static('public/'));
+app.use(express.urlencoded({extended: true}));
+app.use(
+    expressSession({
+      name: config.APPLICATION.COOKIE.name,
+      secret: config.APPLICATION.COOKIE.secret,
+      saveUninitialized: false,
+      resave: false,
+      cookie: {maxAge: config.APPLICATION.COOKIE.maxAgeMillis},
+    }),
+);
+
 
 userId = '6190573a63c77d447a815c08';
 modelId = '6190449e96e50f05403d12c5';
@@ -129,9 +150,13 @@ async function markReportUnresolved() {
 }
 
 const main = async function() {
+  configRoutes(app);
   console.log('Connecting to DB');
   await mongoose.connect(config.MONGO.ServerURL);
-  console.log('Adding student to DB...');
+  app.listen(3000, () => {
+    console.log('Server live @ http://localhost:3000');
+  });
+  // console.log('Adding student to DB...');
   // await createUser();
   // await createModel();
   // await createBuilding();
@@ -141,10 +166,10 @@ const main = async function() {
   // await createReport();
   // await createAppointment();
   // await markReportResolved();
-  await markReportUnresolved();
-  await mongoose.connection.close();
+  // await markReportUnresolved();
+  // await mongoose.connection.close();
 };
 main().then(() => {
   const x = 1;
-  x == x;
+  return x === x;
 });
