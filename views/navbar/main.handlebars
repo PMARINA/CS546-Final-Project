@@ -1,0 +1,67 @@
+<header>
+    <nav class="navbar is-primary">
+        <div class="navbar-brand">
+            <a class="navbar-item" id="brandName" href="/">Duck Wash</a>
+        </div>
+        <div id="navbar" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item"
+                    {{#if currentPageIsHome}}
+                   id="currentPageNav"
+                    {{/if}}>
+                    Home
+                </a>
+                {{#if userLoggedIn}}
+
+
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            Appointments
+                        </a>
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item">Create an Appointment</a>
+                            <a class="navbar-item">View Appointments</a>
+                        </div>
+                    </div>
+
+
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <a class="navbar-link">
+                            Buildings
+                        </a>
+
+                        <div class="navbar-dropdown">
+                            <a class="navbar-item">
+                                Building 1
+                            </a>
+                            <a class="navbar-item">
+                                Building 2
+                            </a>
+                            <a class="navbar-item">
+                                Building 3
+                            </a>
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+
+            <div class="navbar-end">
+                {{#if userLoggedIn}}
+                    <a class="navbar-item" href="/preferences">Preferences</a>
+                {{/if}}
+                <div class="navbar-item">
+                    <div class="buttons">
+                        {{#if userLoggedIn}}
+                            <a class="button is-link" href="/logout">Log Out</a>
+                        {{else}}
+                            <a class="button is-info" href="/signup" id="signupButton">Sign Up</a>
+                            <a class="button is-link" href="/login" id="loginButton">Log In</a>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!--- Body goes here --->

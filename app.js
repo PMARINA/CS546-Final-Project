@@ -162,10 +162,10 @@ const main = async function() {
   configRoutes(app);
   console.log('Connecting to DB');
   await mongoose.connect(config.MONGO.ServerURL);
-  await createUser();
   app.listen(3000, () => {
     console.log('Server live @ http://localhost:3000');
   });
+  // await createUser();
   // console.log('Adding student to DB...');
   // await createUser();
   // await modifyUser();

@@ -1,0 +1,109 @@
+<header>
+    {{{navbar}}}
+</header>
+
+<div class="modal" id="loginModal">
+    <div class="modal-background" id="loginBackground"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Log In</p>
+            <button class="delete" aria-label="close" id="closeLogin"></button>
+        </header>
+        <form id="loginForm" class="form">
+            <section class="modal-card-body">
+                <!-- Login Form -->
+                <label for="loginEmail" class="label">Email</label>
+                <div class="control" id="loginEmailDiv">
+                    <input type="email" id="loginEmail" class="input" placeholder="Email">
+                </div>
+                <br>
+                <label for="loginPassword" class="label">Password</label>
+                <div class="control" id="loginPasswordDiv">
+                    <input type="password" id="loginPassword" class="input" placeholder="Password">
+                </div>
+            </section>
+            <footer class="modal-card-foot buttons">
+                <input type="submit" class="button is-success" value="Log In">
+                <!--                <button class="button is-success">Save changes</button>-->
+            </footer>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="signupModal">
+    <div class="modal-background" id="signupBackground"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Sign Up</p>
+            <button class="delete" aria-label="close" id="closeSignup"></button>
+        </header>
+        <form id="signupForm" class="form">
+            <section class="modal-card-body">
+                <!-- Sign Up Form -->
+                <div class="columns">
+                    <div class="column">
+                        <label class="label" for="signupNameFirst">First Name</label>
+                        <div class="control">
+                            <input class="input" type="text" id="signupNameFirst" placeholder="Atilla">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <label class="label" for="signupNameLast">Last Name</label>
+                        <div class="control">
+                            <input class="input" type="text" id="signupNameLast" placeholder="Duck">
+                        </div>
+                    </div>
+                </div>
+                <label class="label" for="signupEmail">Email</label>
+                <div class="control">
+                    <input type="email" class="input" id="signupEmail" placeholder="aduck@stevens.edu">
+                </div>
+                <br>
+                <div class="columns">
+                    <div class="column">
+                        <label class="label" for="signupPassword">Password</label>
+                        <div class="control">
+                            <input class="input" type="password" placeholder="Password" id="signupPassword">
+                        </div>
+                    </div>
+                    <div class="column">
+                        <label class="label" for="signupPasswordConfirmation">Confirm Password</label>
+                        <div class="control">
+                            <input class="input" type="password" placeholder="Password" id="signupPasswordConfirmation">
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer class="modal-card-foot buttons">
+                <input type="submit" class="button is-success" value="Sign Up">
+            </footer>
+        </form>
+    </div>
+</div>
+
+<article class="content m-5">
+    <h1 class="title">What is DuckWash?</h1>
+    <div class="serif">
+        <p>
+            Are you tired of lugging your laundry around just to find that the laundry machines are full?
+        </p>
+        <p>
+            Are you tired of waiting for other people to get their laundry out of the machine?
+        </p>
+        <p>
+            Does your life revolve around your laundry?
+        </p>
+
+        <p>With DuckWash, simply schedule the machines you need to do your laundry ahead of time and wash your clothes
+            when you need to. It's that simple. Sign up today and get your laundry out of the way!</p>
+    </div>
+
+</article>
+<script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+<script src="/js/home/login.js"></script>
+<script src="/js/home/signup.js"></script>
+
+<!--- Body goes here --->

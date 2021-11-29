@@ -1,9 +1,19 @@
 @charset "utf-8";
 
 .navbar a{
+  text-align: center;
   padding-left: 20px;
   padding-right: 20px;
 }
+#brandName {
+  font-family: "Oxanium", sans-serif;
+  font-size: xx-large;
+}
+
+//#loginModal{
+//  display: none;
+//}
+
 //.footer {
 //  background-color: #2E3138;
 //  color: #989898;
@@ -11,7 +21,9 @@
 
 
 // Import a Google Font
-@import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
+@import url('https://fonts.googleapis.com/css?family=Oxygen');
+@import url('https://fonts.googleapis.com/css?family=Oxanium');
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond');
 
 // Set your brand colors
 $purple: #8A4D76;
@@ -28,7 +40,7 @@ $stevensSecondaryBlue: #004380;
 $stevensSecondaryTurquoise: #008A90;
 $stevensSecondaryOrange: #E7842E;
 
-$stevensAccentBlue: #4896CF;
+$stevensAccentBlue: #007db8;// #4896CF;
 $stevensAccentPurple: #7A548B;
 
 $stevensLightGrey: #E4E5E6;
@@ -38,7 +50,7 @@ $stevensLightBeige: #F5F1E4;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Update Bulma's global variables
-//$family-sans-serif: "Nunito", sans-serif;
+$family-sans-serif: "Oxygen", sans-serif;
 //$grey-dark: $brown;
 //$grey-light: $beige-light;
 //$primary: $purple;
@@ -49,7 +61,7 @@ $stevensLightBeige: #F5F1E4;
 $primary: $stevensPrimaryRed;
 $grey: $stevensPrimaryGrey;
 $link: $stevensAccentBlue;
-
+$info: $stevensSecondaryBlue;
 // Update some of Bulma's component variables
 //
 $body-background-color: $stevensLightBeige;
@@ -69,4 +81,21 @@ $footer-background-color: darken($body-background-color, 10%);
 //@import "../node_modules/bulma/sass/components/navbar.sass";
 //@import "../node_modules/bulma/sass/layout/hero.sass";
 //@import "../node_modules/bulma/sass/layout/section.sass";
+
+
+
 @import "../node_modules/bulma/bulma.sass";
+
+
+#currentPageNav {
+  background-color: lighten($primary, 7%);;
+}
+
+#currentPageNav:hover {
+  background-color: darken($primary, 7%);
+}
+
+.serif{
+  font-family: "EB Garamond", serif;
+  font-size: large;
+}
