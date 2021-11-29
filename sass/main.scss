@@ -1,10 +1,12 @@
 @charset "utf-8";
 
-.navbar a{
+
+.navbar a {
   text-align: center;
   padding-left: 20px;
   padding-right: 20px;
 }
+
 #brandName {
   font-family: "Oxanium", sans-serif;
   font-size: xx-large;
@@ -40,7 +42,7 @@ $stevensSecondaryBlue: #004380;
 $stevensSecondaryTurquoise: #008A90;
 $stevensSecondaryOrange: #E7842E;
 
-$stevensAccentBlue: #007db8;// #4896CF;
+$stevensAccentBlue: #007db8; // #4896CF;
 $stevensAccentPurple: #7A548B;
 
 $stevensLightGrey: #E4E5E6;
@@ -83,7 +85,6 @@ $footer-background-color: darken($body-background-color, 10%);
 //@import "../node_modules/bulma/sass/layout/section.sass";
 
 
-
 @import "../node_modules/bulma/bulma.sass";
 
 
@@ -95,7 +96,21 @@ $footer-background-color: darken($body-background-color, 10%);
   background-color: darken($primary, 7%);
 }
 
-.serif{
+.serif {
   font-family: "EB Garamond", serif;
   font-size: large;
+}
+
+.modal-card {
+  overflow-y: scroll;
+}
+
+.navbar {
+  a {
+    color: white;
+  }
+
+  .navbar-menu, .buttons {
+    background-color: $stevensPrimaryRed;
+  }
 }

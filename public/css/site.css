@@ -7867,3 +7867,12 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .serif {
   font-family: "EB Garamond", serif;
   font-size: large; }
+
+.modal-card {
+  overflow-y: scroll; }
+
+.navbar a {
+  color: white; }
+
+.navbar .navbar-menu, .navbar .buttons {
+  background-color: #A32638; }

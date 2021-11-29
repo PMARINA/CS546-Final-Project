@@ -19,9 +19,9 @@ function formSubmit(emailField, pwdField, event) {
   const signupModal = $('#signupModal');
   const signupButton = $('#signupButton');
   formElement.on('submit', formSubmit.bind(undefined, emailField, pwdField));
-  formClose.on('click', (e)=>signupModal.removeClass('is-active'));
-  formBackground.on('click', (e)=>signupModal.removeClass('is-active'));
-  signupButton.on('click', (e)=> {
+  formClose.on('click', (e) => signupModal.removeClass('is-active'));
+  formBackground.on('click', (e) => signupModal.removeClass('is-active'));
+  signupButton.on('click', (e) => {
     e.preventDefault();
     signupModal.addClass('is-active');
   });
