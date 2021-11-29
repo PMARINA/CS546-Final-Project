@@ -105,12 +105,15 @@ $footer-background-color: darken($body-background-color, 10%);
   overflow-y: scroll;
 }
 
-.navbar {
-  a {
-    color: white;
+  @include until($desktop) {
+    .navbar .navbar-item, .navbar-link{
+      color: white;
+    }
+    .has-dropdown.navbar-link:active{
+      user-select: none;
+    }
   }
 
   .navbar-menu, .buttons {
     background-color: $stevensPrimaryRed;
   }
-}

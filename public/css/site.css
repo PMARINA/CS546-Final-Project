@@ -7871,8 +7871,11 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .modal-card {
   overflow-y: scroll; }
 
-.navbar a {
-  color: white; }
+@media screen and (max-width: 1023px) {
+  .navbar .navbar-item, .navbar-link {
+    color: white; }
+  .has-dropdown.navbar-link:active {
+    user-select: none; } }
 
-.navbar .navbar-menu, .navbar .buttons {
+.navbar-menu, .buttons {
   background-color: #A32638; }
