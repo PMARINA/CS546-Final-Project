@@ -37,8 +37,7 @@ async function validateAndCleanComment(buildingId, posterId, message) {
   }
 
   // Filtering bad words with stars
-  const filter = new Filter();
-  filter.clean(message);
+  message = Filter.clean(message);
 
   if (!(await User.exists({_id: posterId}))) {
     throw new Error('Cannot post comment by nonexistent user');
@@ -76,10 +75,10 @@ async function comment(buildingId, posterId, message) {
  * Modify a comment
  * @param {string} buildingId The id of the building to take the comment
  * @param {String} posterId The poster's ID
- * @param {String} oldMessage The old message to idenify which comment to change
+ * @param {String} commentId
  * @param {String} newMessage The new message replacing the old message
  */
-async function modifyComment(buildingId, posterId, oldMessage, newMessage) {
+async function modifyComment(buildingId, posterId, commentId, newMessage) {
   ({buildingId, posterId, newMessage} = await validateAndCleanComment(
       buildingId,
       posterId,
@@ -92,7 +91,7 @@ async function modifyComment(buildingId, posterId, oldMessage, newMessage) {
   };
   return await Building.updateOne(
       {_id: buildingId},
-      {$set: {'comments.indexOf(oldMessage)': commentObj}},
+      {$set: {'comments._id': commentObj}},
   );
 }
 
@@ -100,18 +99,20 @@ async function modifyComment(buildingId, posterId, oldMessage, newMessage) {
  * Delete a comment
  * @param {string} buildingId The id of the building to take the comment
  * @param {String} posterId The poster's ID
- * @param {String} message The old message to idenify which comment to change
+ * @param {String} commentId The old messages id
  */
-async function deleteComment(buildingId, posterId, message) {
-  ({buildingId, posterId, newMessage} = await validateAndCleanComment(
-      buildingId,
-      posterId,
-      message,
-  ));
+async function deleteComment(buildingId, posterId, commentId) {
+  if (!(await User.exists({_id: posterId}))) {
+    throw new Error('Cannot delete comment by nonexistent user');
+  }
+  await validateAccess(posterId, buildingId);
+  if (!(await Building.findOne({'comments._id': commentId}))) {
+    throw new Error('Cannot delete nonexistent comment.');
+  }
   // May need to address pulling all instances of exact comment. It is an open issue in mongodb.
   return await Building.updateOne(
       {_id: buildingId},
-      {$pull: {'comments': message}},
+      {$pull: {'comments._id': commentId}},
   );
 }
 

@@ -48,8 +48,7 @@ async function validateAndClean(
   if (message.length === 0) throw new Error('Message cannot be blank');
 
   // Filtering bad words with stars
-  const filter = new Filter();
-  filter.clean(message);
+  message = Filter.clean(message);
 
   if (!(await Building.exists({_id: buildingId}))) {
     throw new Error('Building with specified id does not exist');
@@ -105,23 +104,23 @@ async function reply(buildingId, parentCommentId, posterId, message) {
  * @param {String} buildingId
  * @param {String} parentCommentId
  * @param {String} posterId
- * @param {String} newMessage
- * @param {String} oldMessage
+ * @param {String} message
+ * @param {String} replyId
  * @return {Object}
  */
-async function modifyReply(buildingId, parentCommentId, posterId, newMessage, oldMessage) {
-  ({buildingId, parentCommentId, posterId, newMessage, oldMessage} = await validateAndClean(
+async function modifyReply(buildingId, parentCommentId, posterId, message, replyId) {
+  ({buildingId, parentCommentId, posterId, message} = await validateAndClean(
       buildingId,
       parentCommentId,
       posterId,
-      newMessage,
+      message,
   ));
   return await Building.updateOne(
-      {'_id': buildingId, 'comments._id': parentCommentId},
+      {'_id': buildingId, 'comments._id': parentCommentId, 'comments.$.replies._id': replyId},
       {
-        $set: {'comments.$.replies.indexOf(oldMessage)': {
+        $set: {'comments.$.replies._id': {
           posterId,
-          newMessage,
+          message,
           timestamp: Date.now(),
         },
         },
@@ -134,20 +133,24 @@ async function modifyReply(buildingId, parentCommentId, posterId, newMessage, ol
  * @param {String} buildingId
  * @param {String} parentCommentId
  * @param {String} posterId
- * @param {String} message
+ * @param {String} replyId
  * @return {Object}
  */
-async function deleteReply(buildingId, parentCommentId, posterId, message) {
-  ({buildingId, parentCommentId, posterId, message} = await validateAndClean(
-      buildingId,
-      parentCommentId,
-      posterId,
-      message,
-  ));
+async function deleteReply(buildingId, parentCommentId, posterId, replyId) {
+  if (!(await User.exists({_id: posterId}))) {
+    throw new Error('Cannot delete reply by nonexistent user');
+  }
+  await validateAccess(posterId, buildingId);
+  if (!(await Building.findOne({'comments._id': parentCommentId}))) {
+    throw new Error('Cannot delete reply for nonexistent comment.');
+  }
+  if (!(await Building.findOne({'comments.$.replies._id': parentCommentId}))) {
+    throw new Error('Cannot delete nonexistent reply.');
+  }
   return await Building.updateOne(
       {'_id': buildingId, 'comments._id': parentCommentId},
       {
-        $pull: {'comments.$.replies': message},
+        $pull: {'comments.$.replies._id': replyId},
       },
   ).exec();
 }
