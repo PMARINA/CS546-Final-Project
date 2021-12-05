@@ -36,15 +36,15 @@
                         </a>
 
                         <div class="navbar-dropdown">
-                            <a class="navbar-item">
-                                Building 1
-                            </a>
-                            <a class="navbar-item">
-                                Building 2
-                            </a>
-                            <a class="navbar-item">
-                                Building 3
-                            </a>
+                            {{#if navbarUserInfo.buildings}}
+                                {{#each navbarUserInfo.buildings}}
+                                    <a class="navbar-item" href="/buildings/{{this._id}}">
+                                        {{this.name}}
+                                    </a>
+                                {{/each}}
+                            {{else}}
+                                <p class="card-content">You don't currently have access to any buildings. Please wait for an Admin/RA to enable your access.</p>
+                            {{/if}}
                         </div>
                     </div>
                 {{/if}}
