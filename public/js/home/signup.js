@@ -1,4 +1,19 @@
 ((window) => {
+  function processSignUpResponse($, msg) {
+    const formHelpText = $('#signupFormHelpText');
+    if (!msg) formHelpText.text('Something went wrong with the server. Please refresh the page and try again.');
+    else {
+      if (typeof msg === 'object') {
+        window.location.replace(msg.redirect);
+      } else {
+        formHelpText.text(msg);
+      }
+    }
+    if (formHelpText.text() !== '') {
+      $('#closeSignup').get(0).scrollIntoView();
+    }
+  }
+
   /**
    * Remove all help text of the parent of the provided childElement
    * @param {Object} childElement
@@ -54,7 +69,7 @@
    *
    * @param {Object} p
    * @param {Object} $
-   * @returns {String|undefined}
+   * @return {String|undefined}
    */
   function validatePwd(p, $) {
     const password = p.val();
@@ -149,6 +164,7 @@
 
   /**
    * Process a sign up form submission
+   * @param {JQueryStatic} $
    * @param {Object} firstNameField
    * @param {Object} lastNameField
    * @param {Object} emailField
@@ -166,6 +182,25 @@
     let pwd = validatePwd(pwdField, $);
     let pwdIsConfirmed = validateConfirmation(pwdField, pwdConfField);
     let accessGroup = validateAccessGroup(accessGroupList, accessGroupOther);
+    const inputs = [firstName, lastName, email, pwd, accessGroup];
+    let validSignUpForm = pwdIsConfirmed;
+    for (let i = 0; i < inputs.length; i++) {
+      validSignUpForm = validSignUpForm && inputs[i];
+    }
+    if (validSignUpForm) {
+      try {
+        $.post('/signup', {
+          firstName,
+          lastName,
+          email,
+          pwd,
+          accessGroup,
+        }).done(processSignUpResponse.bind(undefined, $));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
   }
 
   window.jQuery.noConflict();

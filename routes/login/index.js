@@ -10,11 +10,11 @@ router.post('/', async (req, res) => {
   if (req.session && req.session.userInfo) {
     const userId = req.session.userInfo['_id'];
     if (await User.exists(userId)) {
-      // res.json({'redirect': '/'});
-      res.redirect('/');
+      res.json({'redirect': '/'});
+      // res.redirect('/');
       return;
     } else {
-      res.redirect('/logout');
+      res.json({'redirect': '/logout'});
       return;
     }
   }
@@ -24,10 +24,12 @@ router.post('/', async (req, res) => {
   const password = req.body['loginPassword'];
 
   if (username === undefined) {
-    res.json('loginEmail missing');
+    res.json('username missing');
     return;
-  } else if (password === undefined) {
+  }
+  if (password === undefined) {
     res.json('loginPassword missing');
+    return;
   }
 
   const checkResult = await User.checkCredentials(username, password);
