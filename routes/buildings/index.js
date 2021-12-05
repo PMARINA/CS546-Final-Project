@@ -1,8 +1,14 @@
 const express = require('express');
 const router = new express.Router();
+const Building = require('../../data/Building');
 
 router.get('/', async (req, res) => {
   res.json('all buildings');
+});
+
+router.get('/listOfAccessGroups', async (req, res)=>{
+  const accessGroups = await Building.getAllAccessGroups();
+  res.json(accessGroups);
 });
 
 router.delete('/:id', async (req, res) => {

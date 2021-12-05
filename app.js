@@ -30,7 +30,7 @@ app.use(
 
 
 userId = '6190573a63c77d447a815c08';
-modelId = '6190449e96e50f05403d12c5';
+modelId = '61ac0195cef4a3f35275f680';
 reportId = '619119fa198f4826d19a6851';
 machineId = '6190489816cb7505b4e3c0dc';
 cycleId = '6190449e96e50f05403d12c8';
@@ -178,7 +178,7 @@ const main = async function() {
   // await createAppointment();
   // await markReportResolved();
   // await markReportUnresolved();
-  await mongoose.connection.close();
+  // await mongoose.connection.close();
 };
 main().then(() => {
   const x = 1;

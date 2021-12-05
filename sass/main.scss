@@ -114,6 +114,6 @@ $footer-background-color: darken($body-background-color, 10%);
     }
   }
 
-  .navbar-menu, .buttons {
+  .navbar-menu, .navbar-menu .buttons {
     background-color: $stevensPrimaryRed;
   }

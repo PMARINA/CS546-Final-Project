@@ -149,7 +149,6 @@ async function createUser(
   ));
   accessGroupsList = accessGroups;
   const numRounds = config.APPLICATION.SECURITY.Password.BcryptNumHashingRounds;
-  // salt = await bcrypt.genSalt(numRounds);
   const hashPwd = await bcrypt.hash(rawPwd, numRounds);
   const userObj = {
     email,

@@ -7,9 +7,10 @@ const User = require('../../models/user');
  * - Email isn't already taken by someone in the Users DB
  *
  * @param {String} email
+ * @param {Boolean} checkAlreadyExists If the function should check if the user is already in the database
  * @return {Promise<string>}
  */
-async function validateAndCleanEmail(email) {
+async function validateAndCleanEmail(email, checkAlreadyExists = true) {
   if (typeof email !== 'string') {
     throw new Error('Email was expected to be a string');
   }
@@ -23,7 +24,7 @@ async function validateAndCleanEmail(email) {
     throw new Error('Invalid user email');
   }
 
-  if (await User.exists({email})) throw new Error('User already exists');
+  if (checkAlreadyExists && await User.exists({email})) throw new Error('User already exists');
   return email;
 }
 

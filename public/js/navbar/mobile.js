@@ -10,11 +10,13 @@ function clickedBurger(navburger, navbar, e) {
   navbar.toggleClass('is-active');
 }
 
+window.jQuery.noConflict();
 (
-  function($) {
-    const navbar = $('#navbar');
-    const navburger = $('#navburger');
+  ($) => {
+    $(function () {
+      const navbar = $('#navbar');
+      const navburger = $('#navburger');
 
-    navburger.on('click', clickedBurger.bind(undefined, navburger, navbar));
-  }
-)(window.jQuery);
+      navburger.on('click', clickedBurger.bind(undefined, navburger, navbar));
+    });
+  })(window.jQuery);
