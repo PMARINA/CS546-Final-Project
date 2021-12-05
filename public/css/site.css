@@ -10,6 +10,14 @@
   font-family: "Oxanium", sans-serif;
   font-size: xx-large; }
 
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column; }
+
+.spacer {
+  flex: 1; }
+
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,

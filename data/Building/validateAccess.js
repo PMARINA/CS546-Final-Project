@@ -18,10 +18,10 @@ async function validateAccess(posterId, buildingId) {
       buildingAccessGroups === undefined
     )
   ) {
-    const buildingAccessGroups = new Set(buildingAccessGroups);
+    const buildingAccessGroupsSet = new Set(buildingAccessGroups);
     let userHasAccess = false;
     for (let i = 0; i < userAccessGroups.length; i++) {
-      if (buildingAccessGroups.has(userAccessGroups[i])) userHasAccess = true;
+      if (buildingAccessGroupsSet.has(userAccessGroups[i])) userHasAccess = true;
     }
     if (!userHasAccess) {
       throw new Error('User does not have access to the building');

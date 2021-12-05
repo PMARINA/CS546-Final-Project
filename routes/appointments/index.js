@@ -1,5 +1,6 @@
 const express = require('express');
 const router = new express.Router();
+const Appointment = require('../../data/Appointment');
 
 router.get('/', async (req, res) => {
   res.json('all appointments');

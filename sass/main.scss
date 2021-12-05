@@ -12,6 +12,16 @@
   font-size: xx-large;
 }
 
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.spacer {
+  flex: 1;
+}
+
 //#loginModal{
 //  display: none;
 //}
@@ -81,7 +91,7 @@ $navbar-tab-hover-background-color: lighten($primary, 35%);
 $navbar-item-active-color: black;
 $navbar-item-color: white;
 $navbar-divider-background-color: $primary;
-$navbar-item-color: rgb(255,255,255);//invert($navbar-background-color);
+$navbar-item-color: rgb(255, 255, 255); //invert($navbar-background-color);
 $footer-color: true;
 $modal-card-head-background-color: lighten($grey, 30%);
 //$navbar-background-color: $stevensPrimaryRed;
@@ -110,13 +120,15 @@ $input-disabled-background-color: lighten($scheme-main, 15%);
   //background-color: lighten($primary, 7%);;
   background-color: darken(findDarkColor($primary), 20%);
 }
+
 @include until($desktop) {
   #currentPageNav:hover {
     //background-color: darken($primary, 7%);
     background-color: lighten($primary, 35%);
   }
 }
-@include from($desktop){
+
+@include from($desktop) {
   #currentPageNav:hover {
     //background-color: darken($primary, 7%);
     background-color: darken($primary, 20%);
@@ -132,15 +144,15 @@ $input-disabled-background-color: lighten($scheme-main, 15%);
   overflow-y: scroll;
 }
 
-  //@include until($desktop) {
-  //  .navbar .navbar-item, .navbar-link{
-  //    color: white;
-  //  }
-  //  .has-dropdown.navbar-link:active{
-  //    user-select: none;
-  //  }
-  //}
+//@include until($desktop) {
+//  .navbar .navbar-item, .navbar-link{
+//    color: white;
+//  }
+//  .has-dropdown.navbar-link:active{
+//    user-select: none;
+//  }
+//}
 
-  //.navbar-menu, .navbar-menu .buttons {
-  //  background-color: $stevensPrimaryRed;
-  //}
+//.navbar-menu, .navbar-menu .buttons {
+//  background-color: $stevensPrimaryRed;
+//}
