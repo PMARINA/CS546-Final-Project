@@ -1,20 +1,9 @@
 const express = require('express');
-const User = require("../../data/User");
+const User = require('../../data/User');
 const router = new express.Router();
+const authMiddleware = require('../middleware').auth;
 
-router.post('/', async (req, res) => {
-  if (req.session && req.session.userInfo) {
-    const userId = req.session.userInfo['_id'];
-    if (await User.exists(userId)) {
-      res.json({'redirect': '/'});
-      // res.redirect('/');
-      return;
-    } else {
-      res.json({'redirect': '/logout'});
-      return;
-    }
-  }
-  // if (!res.session) res.session = {};
+router.post('/', authMiddleware.apiAnonymousOnly, async (req, res) => {
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
@@ -31,7 +20,13 @@ router.post('/', async (req, res) => {
     try {
       return await f(s);
     } catch (e) {
-      res.json(`${e.message}: ${s}:`);
+      e = e.message.toString();
+      if (e.includes('User already exists')){
+        res.json(`The user (${email}) already exists. Please exit the signup menu and try to log in.`);
+      } else {
+        res.json(`${e}: ${s}`);
+        return;
+      }
     }
   };
   email = await tryfnc(User.validate.validateAndCleanEmail, email);
@@ -42,7 +37,8 @@ router.post('/', async (req, res) => {
   try {
     req.session.userInfo = await User.createUser(email, firstName, lastName, pwd, accessGroup, 'student');
   } catch (e) {
-    res.json(e.message);
+    e = e.message.toString();
+    res.json(e);
     return;
   }
   res.json({'redirect': '/'});

@@ -18,6 +18,11 @@ body {
 .spacer {
   flex: 1; }
 
+#errSpacer {
+  min-height: 15vh;
+  display: flex;
+  flex-direction: column; }
+
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
@@ -7884,3 +7889,6 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 
 .modal-card {
   overflow-y: scroll; }
+
+p {
+  overflow-wrap: break-word; }

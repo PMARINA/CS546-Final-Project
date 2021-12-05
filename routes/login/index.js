@@ -1,25 +1,9 @@
 const express = require('express');
 const router = new express.Router();
 const User = require('../../data/User');
+const auth = require('../middleware').auth;
 
-// router.get('/', async (req, res) => {
-//   res.json('Log in');
-// });
-router.post('/', async (req, res) => {
-  // If the user is already logged in, just redirect them home... no need to re-log them in.
-  if (req.session && req.session.userInfo) {
-    const userId = req.session.userInfo['_id'];
-    if (await User.exists(userId)) {
-      res.json({'redirect': '/'});
-      // res.redirect('/');
-      return;
-    } else {
-      res.json({'redirect': '/logout'});
-      return;
-    }
-  }
-  // if (!res.session) res.session = {};
-
+router.post('/', auth.apiAnonymousOnly, async (req, res) => {
   const username = req.body['loginEmail'];
   const password = req.body['loginPassword'];
 
@@ -33,11 +17,12 @@ router.post('/', async (req, res) => {
   }
 
   const checkResult = await User.checkCredentials(username, password);
-  req.session.userInfo = checkResult.cookieData;
-  if (checkResult.valid) res.json({'redirect': '/'});
-  else res.json(checkResult.resBody);
-  console.log(`Username: ${username}`);
-  console.log(`Password: ${password}`);
+  if (checkResult.valid) {
+    req.session.userInfo = checkResult.cookieData;
+    res.json({'redirect': '/'});
+  } else {
+    res.json(checkResult.resBody);
+  }
 });
 
 module.exports = router;

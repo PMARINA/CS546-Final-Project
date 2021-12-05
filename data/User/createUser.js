@@ -5,11 +5,11 @@ const {
   validateAndCleanRole,
   validateAndCleanAccessGroups,
 } = require('./validate');
-User = require('../../models/user');
-v = require('../../inputVerification').general;
-bcrypt = require('bcrypt');
-config = require('../../config.json');
-ObjectId = require('mongoose').Types.ObjectId;
+const User = require('../../models/user');
+const v = require('../../inputVerification').general;
+const bcrypt = require('bcrypt');
+const config = require('../../config.json');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 /**
  * Validate & Return user params

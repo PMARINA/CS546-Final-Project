@@ -1,7 +1,7 @@
 window.jQuery.noConflict();
-const accessGroupSelector = '#accessGroupSelection';
-const otherFieldSelector = '#otherGroupField';
 (function($) {
+  const accessGroupSelector = '#accessGroupSelection';
+  const otherFieldSelector = '#otherGroupField';
   $(function() {
     /**
        * When the selection is changed, evaluate if the other field should be enabled/disabled...
@@ -16,14 +16,13 @@ const otherFieldSelector = '#otherGroupField';
       } else {
         other.prop('disabled', false);
       }
-
     }
 
     /**
-     * Convert the string to title case (without consideration for small words (i.e., 'a', 'for', ...)
-     * @param {String} s
-     * @return {String}
-     */
+       * Convert the string to title case (without consideration for small words (i.e., 'a', 'for', ...)
+       * @param {String} s
+       * @return {String}
+       */
     function toTitleCase(s) {
       s = s.toLowerCase();
       let lastWasSpace = true;

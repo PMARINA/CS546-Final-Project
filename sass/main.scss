@@ -22,6 +22,12 @@ body {
   flex: 1;
 }
 
+#errSpacer {
+  min-height: 15vh;
+  display: flex;
+  flex-direction: column;
+}
+
 //#loginModal{
 //  display: none;
 //}
@@ -142,6 +148,10 @@ $input-disabled-background-color: lighten($scheme-main, 15%);
 
 .modal-card {
   overflow-y: scroll;
+}
+
+p {
+  overflow-wrap:break-word;
 }
 
 //@include until($desktop) {

@@ -18,7 +18,6 @@ window.jQuery.noConflict();
         const loginButton = $('#loginSubmit');
         loginButton.removeClass('is-loading');
         loginButton.prop('disabled', false);
-        console.log(event);
       }
     }
 
@@ -157,7 +156,6 @@ window.jQuery.noConflict();
 
         passwordHelp.append($('<p class="help is-danger">Your password is missing:</p>'));
         const ul = $('<ul class="ul"></ul>');
-        console.log(passwordValidation);
         if (passwordValidation.tooShort === true) ul.append(getElement('8+ characters in length'));
         if (passwordValidation.containsUpper === false) ul.append(getElement('Uppercase Character'));
         if (passwordValidation.containsLower === false) ul.append(getElement('Lowercase Character'));
@@ -171,8 +169,6 @@ window.jQuery.noConflict();
         passwordHelp.removeClass('is-danger');
         passwordHelp.hide();
       }
-      console.log(`Email: ${emailField.val()}`);
-      console.log(`Password: ${pwdField.val()}`);
     }
 
     const formElement = $('#loginForm');
@@ -194,7 +190,6 @@ window.jQuery.noConflict();
     $(document).on('keydown', function (event) {
       if (event.key === 'Escape') {
         loginModal.removeClass('is-active');
-        console.log("Got an escape key");
       }
     });
   });

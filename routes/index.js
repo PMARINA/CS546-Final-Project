@@ -8,6 +8,10 @@ const buildings = require('./buildings');
 const reports = require('./reports');
 const machineModel = require('./machineModels');
 const preferences = require('./preferences');
+const StatusCodes = require('http-status-codes');
+const getStatusPhrase = StatusCodes.getStatusText;
+const authMiddleware = require('./middleware').auth;
+const navMiddleware = require('./middleware').navbar;
 const constructorMethod = (app) => {
   // app.uses go here
   app.use('/', home);
@@ -20,8 +24,14 @@ const constructorMethod = (app) => {
   app.use('/appointments', appointments);
   app.use('/reports', reports);
   app.use('/preferences', preferences);
-  app.all('*', (req, res) => {
-    res.status(404).json('Error 404: Site path not found');
+  app.all('*', authMiddleware.getInfoOnly, navMiddleware.renderNavbarToReq, (req, res) => {
+    const url = req.protocol + '://' + req.get('host') + req.originalUrl; // from https://stackoverflow.com/a/10185427
+    res.status(StatusCodes.NOT_FOUND).render('error', {
+      navbar: req.navbar,
+      errCode: StatusCodes.NOT_FOUND,
+      errMsg: getStatusPhrase(StatusCodes.NOT_FOUND),
+      errMsgDescriptive: `${req.method} @ ${url} is not valid on this server`,
+    });
   });
 };
 

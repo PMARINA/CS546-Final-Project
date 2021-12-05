@@ -10,6 +10,7 @@
     <div id="navbar" class="navbar-menu">
         <div class="navbar-start">
             <a class="navbar-item"
+               href="/"
                 {{#if currentPageIsHome}}
                id="currentPageNav"
                 {{/if}}>
@@ -50,22 +51,131 @@
 
         <div class="navbar-end">
             {{#if userLoggedIn}}
-                <a class="navbar-item" href="/report">Report a Concern</a>
+                <a class="navbar-item" href="/reports/new">Report a Concern</a>
                 <a class="navbar-item" href="/preferences">Preferences</a>
             {{/if}}
             <div class="navbar-item">
                 <div class="buttons is-centered">
                     {{#if userLoggedIn}}
-                        <a class="button is-link" href="/logout">Log Out</a>
+                        <a class="button is-link is-rounded" href="/logout">Log Out</a>
                     {{else}}
                         <a class="button is-info" href="/signup" id="signupButton">Sign Up</a>
-                        <a class="button is-link" href="/login" id="loginButton">Log In</a>
+                        <a class="button is-link is-rounded" href="/login" id="loginButton">Log In</a>
                     {{/if}}
                 </div>
             </div>
         </div>
     </div>
 </nav>
+{{#unless userLoggedIn}}
+    <script src="/js/home/login.js" defer></script>
+    <script src="/js/home/signup.js" defer></script>
+    <script src="/js/home/accessGroups.js" defer></script>
+
+    <div class="modal" id="loginModal">
+        <div class="modal-background" id="loginBackground"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Log In</p>
+                <button class="delete is-large" aria-label="close" id="closeLogin"></button>
+            </header>
+            <form id="loginForm" class="form">
+                <section class="modal-card-body">
+                    <p id="loginFormHelp"></p>
+                    <!-- Login Form -->
+                    <label for="loginEmail" class="label">Email</label>
+                    <div class="control" id="loginEmailDiv">
+                        <input type="email" id="loginEmail" class="input" placeholder="Email" autocomplete="username"
+                               name="email">
+                        <p class="help" id="loginEmailHelp"></p>
+                    </div>
+                    <br>
+                    <label for="loginPassword" class="label">Password</label>
+                    <div class="control" id="loginPasswordDiv">
+                        <input type="password" id="loginPassword" class="input" placeholder="Password"
+                               autocomplete="current-password" name="password">
+                        <div class="content" id="loginPasswordHelp"></div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot buttons is-justify-content-right">
+                    <input type="submit" class="button is-success" value="Log In" id="loginSubmit">
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="signupModal">
+        <div class="modal-background" id="signupBackground"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Sign Up</p>
+                <button class="delete" aria-label="close" id="closeSignup"></button>
+            </header>
+            <form id="signupForm" class="form">
+                <section class="modal-card-body">
+                    <p id="signupFormHelpText" class="help is-danger is-size-6 block"></p>
+                    <!-- Sign Up Form -->
+                    <div class="columns">
+                        <div class="column">
+                            <label class="label" for="signupNameFirst">First Name</label>
+                            <div class="control">
+                                <input class="input" type="text" id="signupNameFirst" placeholder="Atilla"
+                                       autocomplete="given-name">
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="label" for="signupNameLast">Last Name</label>
+                            <div class="control">
+                                <input class="input" type="text" id="signupNameLast" placeholder="Duck"
+                                       autocomplete="family-name">
+                            </div>
+                        </div>
+                    </div>
+                    <label class="label" for="signupEmail">Email</label>
+                    <div class="control">
+                        <input type="email" class="input" id="signupEmail" placeholder="aduck@stevens.edu"
+                               autocomplete="username">
+                    </div>
+                    <br>
+                    <div class="columns">
+                        <div class="column">
+                            <label class="label" for="signupPassword">Password</label>
+                            <div class="control">
+                                <input class="input" type="password" placeholder="Password" id="signupPassword"
+                                       autocomplete="new-password">
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label class="label" for="signupPasswordConfirmation">Confirm Password</label>
+                            <div class="control">
+                                <input class="input" type="password" placeholder="Password" id="signupPasswordConfirmation"
+                                       autocomplete="new-password">
+                            </div>
+                        </div>
+                    </div>
+                    <label class="label" for="accessGroupSelection">Access Group</label>
+                    <div class="control">
+                        <select class="select input" id="accessGroupSelection">
+                            <optgroup label="Group not found?" class="optgroup">
+                                <option class="option" value="Other">other...</option>
+                            </optgroup>
+                        </select>
+                        <p class="help">Apply to your main access groups/buildings (subject to approval by an RA/Admin). You
+                            can apply for additional groups later, from the settings menu.</p>
+                    </div>
+                    <br>
+                    <label class="label" for="otherGroupField">Other Access Group</label>
+                    <div class="control">
+                        <input type="text" class="input" placeholder="Access Group" id="otherGroupField" disabled>
+                    </div>
+                </section>
+                <footer class="modal-card-foot buttons is-justify-content-right">
+                    <input type="submit" class="button is-success" value="Sign Up">
+                </footer>
+            </form>
+        </div>
+    </div>
+{{/unless}}
 <script src="/js/navbar/mobile.js" defer></script>
 
 <!--- Body goes here --->

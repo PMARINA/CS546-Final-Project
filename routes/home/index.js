@@ -1,43 +1,23 @@
 const express = require('express');
 const User = require('../../data/User');
 const router = new express.Router();
-const expressHandlebars = require('express-handlebars').create();
 const Appointment = require('../../data/Appointment');
 const moment = require('moment');
 const Building = require('../../models/building');
 const cookieName = require('../../config.json').APPLICATION.COOKIE.name;
+const auth = require('../middleware').auth;
+const navbar = require('../middleware').navbar;
 
-router.get('/', async (req, res) => {
-  let userLoggedIn = false;
-  if (req.session && req.session.userInfo) {
-    const userId = req.session.userInfo['_id'];
-    if (await User.exists(userId)) {
-      // res.json({'redirect': '/'});
-      // res.redirect('/');
-      userLoggedIn = true;
-    } else {
-      res.redirect('/logout');
+router.get('/', auth.getInfoOnly, navbar.renderNavbarToReq, async (req, res) => {
+  if (req.loggedIn) {
+    if (!req.userValidated) {
+      res.redirect('/logout'); // User account is deleted (by admin for ex) while user logged in
       return;
     }
   }
-  let navbarUserInfo = undefined;
-  if (userLoggedIn) {
-    navbarUserInfo = {};
-    navbarUserInfo.buildings = (await User.getAllBuildingsForUser(userId));
-    for (let i = 0; i < navbarUserInfo.buildings.length; i++) {
-      navbarUserInfo.buildings[i] = navbarUserInfo.buildings[i].toJSON();
-    }
-    console.log(navbarUserInfo);
-  }
-  const context = {
-    userLoggedIn,
-    currentPageIsHome: true,
-    navbarUserInfo,
-  };
-  console.log(context);
-  const navbar = await expressHandlebars.render('views/navbar/main.handlebars', context);
-  if (userLoggedIn) {
-    const nearbyAppointments = await Appointment.get(req.session.userInfo['_id'], moment().startOf('day').toDate());
+
+  if (req.userValidated) {
+    const nearbyAppointments = await Appointment.get(req.userId, moment().startOf('day').toDate());
     for (let i = 0; i < nearbyAppointments.length; i++) {
       const a = nearbyAppointments[i];
       a._id = a._id.toString();
@@ -48,22 +28,24 @@ router.get('/', async (req, res) => {
       for (let j = 0; j < building.washers.length && !a.machine; j++) {
         if (building.washers[j]._id.toString() === a.machineId.toString()) {
           a.machine = building.washers[j].name;
+          a.machineType = 'washer';
         }
       }
       for (let j = 0; j < building.driers.length && !a.machine; j++) {
-        if (building.washers[j]._id.toString() === a.machineId.toString()) {
-          a.machine = building.washers[j].name;
+        if (building.driers[j]._id.toString() === a.machineId.toString()) {
+          a.machine = building.driers[j].name;
+          a.machineType = 'drier';
         }
       }
     }
-    console.log(nearbyAppointments);
     res.render('homeLoggedIn', {
-      navbar, title: 'Duck Wash', appointments: nearbyAppointments, allowedProtoProperties: {
+      navbar: req.navbar, title: 'Duck Wash', appointments: nearbyAppointments, allowedProtoProperties: {
         _id: true,
       },
     });
   } else {
-    res.render('homeAnonymous', {navbar, title: 'Duck Wash'});
+    console.log(req.navbar);
+    res.render('homeAnonymous', {navbar: req.navbar, title: 'Duck Wash'});
   }
 });
 

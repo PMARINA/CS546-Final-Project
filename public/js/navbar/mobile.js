@@ -13,7 +13,7 @@ function clickedBurger(navburger, navbar, e) {
 window.jQuery.noConflict();
 (
   ($) => {
-    $(function () {
+    $(function() {
       const navbar = $('#navbar');
       const navburger = $('#navburger');
 
