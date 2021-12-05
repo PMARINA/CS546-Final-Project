@@ -4,7 +4,7 @@
       "MaxSimultaneous": 4
     },
     "COOKIE": {
-      "maxAgeMillis": 60000,
+      "maxAgeMillis": 3600000,
       "name": "appCookie",
       "secret": "superSecretCookieSecret"
     },

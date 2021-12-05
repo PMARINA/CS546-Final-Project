@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-
+//@import "../node_modules/bulma/bulma.sass";
 .navbar a {
   text-align: center;
   padding-left: 20px;
@@ -66,15 +66,34 @@ $link: $stevensAccentBlue;
 $info: $stevensSecondaryBlue;
 // Update some of Bulma's component variables
 //
-$body-background-color: $stevensLightBeige;
-$footer-background-color: darken($body-background-color, 10%);
+$scheme-main: $stevensLightBeige;
+$scheme-main-bis: darken($scheme-main, 10%);
+$input-background-color: white;
+$scheme-invert: invert($stevensLightBeige);
+$background: $stevensLightBeige;
+$navbar-background-color: $primary;
+$navbar-dropdown-background-color: $primary;
+$navbar-item-hover-background-color: lighten($primary, 35%);
+$navbar-dropdown-item-hover-background-color: lighten($primary, 35%);
+$navbar-dropdown-item-active-background-color: lighten($primary, 35%);
+$navbar-item-hover-color: black;
+$navbar-tab-hover-background-color: lighten($primary, 35%);
+$navbar-item-active-color: black;
+$navbar-item-color: white;
+$navbar-divider-background-color: $primary;
+$navbar-item-color: rgb(255,255,255);//invert($navbar-background-color);
+$footer-color: true;
+$modal-card-head-background-color: lighten($grey, 30%);
+//$navbar-background-color: $stevensPrimaryRed;
+//$navbar-colors:
+//$body-background-color: $stevensLightBeige;
+//$footer-background-color: darken($body-background-color, 10%);
 //$control-border-width: 2px;
 //$input-border-color: transparent;
 //$input-shadow: none;
 
 
 // Import only what you need from Bulma
-//@import "../node_modules/bulma/sass/utilities/_all.sass";
 //@import "../node_modules/bulma/sass/base/_all.sass";
 //@import "../node_modules/bulma/sass/elements/button.sass";
 //@import "../node_modules/bulma/sass/elements/container.sass";
@@ -85,15 +104,23 @@ $footer-background-color: darken($body-background-color, 10%);
 //@import "../node_modules/bulma/sass/layout/section.sass";
 
 
+$input-disabled-background-color: lighten($scheme-main, 15%);
 @import "../node_modules/bulma/bulma.sass";
-
-
 #currentPageNav {
-  background-color: lighten($primary, 7%);;
+  //background-color: lighten($primary, 7%);;
+  background-color: darken(findDarkColor($primary), 20%);
 }
-
-#currentPageNav:hover {
-  background-color: darken($primary, 7%);
+@include until($desktop) {
+  #currentPageNav:hover {
+    //background-color: darken($primary, 7%);
+    background-color: lighten($primary, 35%);
+  }
+}
+@include from($desktop){
+  #currentPageNav:hover {
+    //background-color: darken($primary, 7%);
+    background-color: darken($primary, 20%);
+  }
 }
 
 .serif {
@@ -105,15 +132,15 @@ $footer-background-color: darken($body-background-color, 10%);
   overflow-y: scroll;
 }
 
-  @include until($desktop) {
-    .navbar .navbar-item, .navbar-link{
-      color: white;
-    }
-    .has-dropdown.navbar-link:active{
-      user-select: none;
-    }
-  }
+  //@include until($desktop) {
+  //  .navbar .navbar-item, .navbar-link{
+  //    color: white;
+  //  }
+  //  .has-dropdown.navbar-link:active{
+  //    user-select: none;
+  //  }
+  //}
 
-  .navbar-menu, .navbar-menu .buttons {
-    background-color: $stevensPrimaryRed;
-  }
+  //.navbar-menu, .navbar-menu .buttons {
+  //  background-color: $stevensPrimaryRed;
+  //}

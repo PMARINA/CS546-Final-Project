@@ -1,5 +1,23 @@
 <header>
     {{{navbar}}}
 </header>
-
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-header-title">My Appointments</h1>
+    </div>
+<!--    <div class="has-background-grey-light"></div>-->
+    <div class="card-content">
+        {{#if appointments}}
+            <dl>
+                {{#each appointment}}
+                    <dt class="dt"><a href="{{appointment.viewLink}}">{{appointment.datetime}}</a></dt>
+                    <dd><a href="{{appointment.buildingLink}}">{{appointment.location}} - {{appointment.machine}}</a>
+                    </dd>
+                {{/each}}
+            </dl>
+        {{else}}
+            You do not have any appointments.
+        {{/if}}
+    </div>
+</div>
 <!--- Body goes here --->
