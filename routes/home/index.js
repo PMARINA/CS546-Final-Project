@@ -56,7 +56,6 @@ router.get(
         },
       });
     } else {
-      console.log(req.navbar);
       res.render("homeAnonymous", { navbar: req.navbar, title: "Duck Wash" });
     }
   }

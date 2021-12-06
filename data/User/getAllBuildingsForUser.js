@@ -14,7 +14,6 @@ async function getAllBuildingsForUser(uid) {
   } else {
     const userObject = await user.findById(uid);
     const groups = userObject.accessGroups;
-    console.log(groups);
     return Buildings.find({ accessGroups: { $in: groups } });
   }
 }

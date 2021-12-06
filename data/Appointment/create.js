@@ -16,7 +16,6 @@ function findMachine(doc, machineId) {
   const mId = machineId.toString();
   let found = undefined;
   doc["washers"].forEach((washer) => {
-    console.log(washer);
     if (washer._id.toString() === mId) {
       found = washer;
     }
@@ -156,7 +155,6 @@ async function cleanAndVerify(
     throw new Error("Building with specified machine does not exist");
   }
   const building = await Building.findById(buildingIdAsObjectId);
-  console.log("Machine ID: " + machineIdAsObjectId);
   const machine = findMachine(building, machineIdAsObjectId);
   const machineModelId = machine.modelId;
   if (!(await MachineModel.exists({ _id: machineModelId }))) {

@@ -49,7 +49,6 @@ async function createUser() {
     "student",
     "61a29fe799cc42ca2949e556"
   );
-  console.log(student);
 }
 
 /**

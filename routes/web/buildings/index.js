@@ -34,9 +34,6 @@ router.get("/:id/:type", middleware.auth.apiLoggedInOnly, async (req, res) => {
   // An issue with access... just reload the form in case something is wonky
   else {
     res.json(building[machineType]);
-    console.log(building[machineType]);
   }
-  console.log(`Building ID: ${buildingId}`);
-  console.log(`Machine Type: ${machineType}`);
 });
 module.exports = router;

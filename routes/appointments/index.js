@@ -18,13 +18,13 @@ router.get("/", async (req, res) => {
     newObj.name = building.name.toString();
     results.push(newObj);
   }
-  console.log(results);
+  // console.log(results);
   res.render("appointments", { buildings: results, navbar: req.navbar });
 });
 
 router.post("/", async (req, res) => {
-  console.log("here");
-  console.log(res.body);
+  // console.log("here");
+  // console.log(res.body);
   res.json("posted appointment form");
 });
 router.delete("/:id", async (req, res) => {

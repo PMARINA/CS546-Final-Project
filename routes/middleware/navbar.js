@@ -16,7 +16,6 @@ async function renderNavbarToReq(req, res, next) {
     for (let i = 0; i < navbarUserInfo.buildings.length; i++) {
       navbarUserInfo.buildings[i] = navbarUserInfo.buildings[i].toJSON();
     }
-    console.log(navbarUserInfo);
   }
   const currentPageIsHome = req.url === "/";
   const context = {
