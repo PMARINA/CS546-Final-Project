@@ -1,16 +1,19 @@
 ((window) => {
   function processSignUpResponse($, msg) {
-    const formHelpText = $('#signupFormHelpText');
-    if (!msg) formHelpText.text('Something went wrong with the server. Please refresh the page and try again.');
+    const formHelpText = $("#signupFormHelpText");
+    if (!msg)
+      formHelpText.text(
+        "Something went wrong with the server. Please refresh the page and try again."
+      );
     else {
-      if (typeof msg === 'object') {
+      if (typeof msg === "object") {
         window.location.replace(msg.redirect);
       } else {
         formHelpText.text(msg);
       }
     }
-    if (formHelpText.text() !== '') {
-      $('#closeSignup').get(0).scrollIntoView();
+    if (formHelpText.text() !== "") {
+      $("#closeSignup").get(0).scrollIntoView();
     }
   }
 
@@ -20,7 +23,7 @@
    */
   function removeExistingHelpText(childElement) {
     const parentElement = childElement.parent();
-    for (const child of parentElement.children('.help, ul')) {
+    for (const child of parentElement.children(".help, ul")) {
       child.remove();
     }
   }
@@ -37,11 +40,13 @@
     const parentElement = n.parent();
     removeExistingHelpText(n);
     if (name.length === 0) {
-      n.addClass('is-danger');
-      parentElement.append('<p class="is-danger help">Name must not be empty/spaces.</p>');
+      n.addClass("is-danger");
+      parentElement.append(
+        '<p class="is-danger help">Name must not be empty/spaces.</p>'
+      );
       return undefined;
     }
-    n.removeClass('is-danger');
+    n.removeClass("is-danger");
     return name;
   }
 
@@ -56,12 +61,17 @@
     e.val(email);
     removeExistingHelpText(e);
     const parent = e.parent();
-    if (email.length === 0 || !email.match(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/)) {
-      e.addClass('is-danger');
+    if (
+      email.length === 0 ||
+      !email.match(
+        /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+      )
+    ) {
+      e.addClass("is-danger");
       parent.append('<p class="is-danger help">Email is not valid</p>');
       return undefined;
     }
-    e.removeClass('is-danger');
+    e.removeClass("is-danger");
     return email;
   }
 
@@ -81,14 +91,14 @@
     let containsLower = false;
     let containsNumber = false;
     let containsSymbol = false;
-    const charCodeOf0 = '0'.charCodeAt(0);
-    const charCodeOf9 = '9'.charCodeAt(0);
+    const charCodeOf0 = "0".charCodeAt(0);
+    const charCodeOf9 = "9".charCodeAt(0);
 
-    const charCodeOfA = 'A'.charCodeAt(0);
-    const charCodeOfZ = 'Z'.charCodeAt(0);
+    const charCodeOfA = "A".charCodeAt(0);
+    const charCodeOfZ = "Z".charCodeAt(0);
 
-    const charCodeOfa = 'a'.charCodeAt(0);
-    const charCodeOfz = 'z'.charCodeAt(0);
+    const charCodeOfa = "a".charCodeAt(0);
+    const charCodeOfz = "z".charCodeAt(0);
 
     for (let i = 0; i < password.length; i++) {
       const c = password.charCodeAt(i);
@@ -106,22 +116,28 @@
       }
       containsSymbol = true;
     }
-    const valid = containsUpper && containsLower && containsNumber && containsSymbol && !tooShort;
-    if (valid) p.removeClass('is-danger');
-    else p.addClass('is-danger');
+    const valid =
+      containsUpper &&
+      containsLower &&
+      containsNumber &&
+      containsSymbol &&
+      !tooShort;
+    if (valid) p.removeClass("is-danger");
+    else p.addClass("is-danger");
     removeExistingHelpText(p);
     if (!valid) {
       const parent = p.parent();
       parent.append('<p class="is-danger help">Password is missing: </p>');
-      const ul = $('<ul></ul>');
+      const ul = $("<ul></ul>");
       getElement = (s) => `<li><p class="help is-danger">${s}</p></li>`;
-      if (tooShort) ul.append(getElement('8+ Characters'));
-      if (containsUpper === false) ul.append(getElement('Uppercase Character'));
-      if (containsLower === false) ul.append(getElement('Lowercase Character'));
-      if (containsNumber === false) ul.append(getElement('Numeric Character'));
-      if (containsSymbol === false) ul.append(getElement('Special Character/Symbol'));
+      if (tooShort) ul.append(getElement("8+ Characters"));
+      if (containsUpper === false) ul.append(getElement("Uppercase Character"));
+      if (containsLower === false) ul.append(getElement("Lowercase Character"));
+      if (containsNumber === false) ul.append(getElement("Numeric Character"));
+      if (containsSymbol === false)
+        ul.append(getElement("Special Character/Symbol"));
       parent.append(ul);
-      parent.addClass('content');
+      parent.addClass("content");
     }
     return valid ? password : undefined;
   }
@@ -130,10 +146,12 @@
     const isCorrect = pwdField.val() === pwdConfField.val();
     removeExistingHelpText(pwdConfField);
     if (!isCorrect) {
-      pwdConfField.parent().append('<p class="help is-danger">Passwords do not match</p>');
-      pwdConfField.addClass('is-danger');
+      pwdConfField
+        .parent()
+        .append('<p class="help is-danger">Passwords do not match</p>');
+      pwdConfField.addClass("is-danger");
     } else {
-      pwdConfField.removeClass('is-danger');
+      pwdConfField.removeClass("is-danger");
     }
     return isCorrect;
   }
@@ -147,19 +165,21 @@
   function validateAccessGroup(accessGroupList, accessGroupOther) {
     removeExistingHelpText(accessGroupOther);
     let val = undefined;
-    if (accessGroupOther.prop('disabled')) {
+    if (accessGroupOther.prop("disabled")) {
       val = accessGroupList.val();
     } else {
       val = accessGroupOther.val();
     }
     val = val.trim();
-    if (val === '') {
-      accessGroupOther.parent().append('<p class="help is-danger">Access Group must not be empty</p>');
-      accessGroupOther.addClass('is-danger');
+    if (val === "") {
+      accessGroupOther
+        .parent()
+        .append('<p class="help is-danger">Access Group must not be empty</p>');
+      accessGroupOther.addClass("is-danger");
     } else {
-      accessGroupOther.removeClass('is-danger');
+      accessGroupOther.removeClass("is-danger");
     }
-    return val === '' ? undefined : val;
+    return val === "" ? undefined : val;
   }
 
   /**
@@ -174,7 +194,17 @@
    * @param {Object} accessGroupOther
    * @param {Object} event
    */
-  function formSubmit($, firstNameField, lastNameField, emailField, pwdField, pwdConfField, accessGroupList, accessGroupOther, event) {
+  function formSubmit(
+    $,
+    firstNameField,
+    lastNameField,
+    emailField,
+    pwdField,
+    pwdConfField,
+    accessGroupList,
+    accessGroupOther,
+    event
+  ) {
     event.preventDefault();
     let firstName = validateName(firstNameField);
     let lastName = validateName(lastNameField);
@@ -189,7 +219,7 @@
     }
     if (validSignUpForm) {
       try {
-        $.post('/signup', {
+        $.post("/signup", {
           firstName,
           lastName,
           email,
@@ -200,36 +230,48 @@
         console.log(e);
       }
     }
-
   }
 
   window.jQuery.noConflict();
   (($) => {
     const x = () => {
-      const formElement = $('#signupForm');
-      const firstNameField = $('#signupNameFirst');
-      const lastNameField = $('#signupNameLast');
-      const pwdConfField = $('#signupPasswordConfirmation');
-      const accessGroupList = $('#accessGroupSelection');
-      const accessGroupOther = $('#otherGroupField');
-      const emailField = $('#signupEmail');
-      const pwdField = $('#signupPassword');
-      const formBackground = $('#signupBackground');
-      const formClose = $('#closeSignup');
-      const signupModal = $('#signupModal');
-      const signupButton = $('#signupButton');
-      formElement.on('submit', formSubmit.bind(undefined, $, firstNameField, lastNameField, emailField, pwdField, pwdConfField, accessGroupList, accessGroupOther));
-      formClose.on('click', (e) => signupModal.removeClass('is-active'));
-      formBackground.on('click', (e) => signupModal.removeClass('is-active'));
-      signupButton.on('click', (e) => {
+      const formElement = $("#signupForm");
+      const firstNameField = $("#signupNameFirst");
+      const lastNameField = $("#signupNameLast");
+      const pwdConfField = $("#signupPasswordConfirmation");
+      const accessGroupList = $("#accessGroupSelection");
+      const accessGroupOther = $("#otherGroupField");
+      const emailField = $("#signupEmail");
+      const pwdField = $("#signupPassword");
+      const formBackground = $("#signupBackground");
+      const formClose = $("#closeSignup");
+      const signupModal = $("#signupModal");
+      const signupButton = $("#signupButton");
+      formElement.on(
+        "submit",
+        formSubmit.bind(
+          undefined,
+          $,
+          firstNameField,
+          lastNameField,
+          emailField,
+          pwdField,
+          pwdConfField,
+          accessGroupList,
+          accessGroupOther
+        )
+      );
+      formClose.on("click", (e) => signupModal.removeClass("is-active"));
+      formBackground.on("click", (e) => signupModal.removeClass("is-active"));
+      signupButton.on("click", (e) => {
         e.preventDefault();
-        signupModal.addClass('is-active');
+        signupModal.addClass("is-active");
         firstNameField.focus();
       });
 
-      $(document).on('keydown', function (event) {
-        if (event.key === 'Escape') {
-          signupModal.removeClass('is-active');
+      $(document).on("keydown", function (event) {
+        if (event.key === "Escape") {
+          signupModal.removeClass("is-active");
         }
       });
     };

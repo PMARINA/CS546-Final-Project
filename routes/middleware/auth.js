@@ -1,8 +1,8 @@
-const User = require('../../data/User');
-const userModel = require('../../models/user');
-const StatusCodes = require('http-status-codes');
+const User = require("../../data/User");
+const userModel = require("../../models/user");
+const StatusCodes = require("http-status-codes");
 const getStatusPhrase = StatusCodes.getStatusText;
-const navbar = require('./navbar').renderNavbarToReq;
+const navbar = require("./navbar").renderNavbarToReq;
 
 // {StatusCodes, ReasonPhrases, getReasonPhrase, getStatusPhrase}
 
@@ -32,11 +32,9 @@ function getUserId(req) {
  * @param {String} description A description of the error
  */
 async function sendError(req, res, errCode, description) {
-  await getInfoOnly(req, res, () => {
-  });
-  await navbar(req, res, () => {
-  });
-  res.status(errCode).render('error', {
+  await getInfoOnly(req, res, () => {});
+  await navbar(req, res, () => {});
+  res.status(errCode).render("error", {
     errCode: errCode,
     errMsg: getStatusPhrase(errCode),
     errMsgDescriptive: description,
@@ -52,11 +50,22 @@ async function sendError(req, res, errCode, description) {
  * @return {Promise<void>}
  */
 async function loggedInOnly(req, res, next) {
-  await getInfoOnly(req, res, () => {
-  });
+  await getInfoOnly(req, res, () => {});
   if (req.userValidated) await next();
-  else if (req.loggedIn) await sendError(req, res, StatusCodes.UNAUTHORIZED, 'You have an invalid login token. Please clear your cookies and try again.');
-  else await sendError(req, res, StatusCodes.UNAUTHORIZED, `You need to be logged in to see this page (${req.originalUrl}).`);
+  else if (req.loggedIn)
+    await sendError(
+      req,
+      res,
+      StatusCodes.UNAUTHORIZED,
+      "You have an invalid login token. Please clear your cookies and try again."
+    );
+  else
+    await sendError(
+      req,
+      res,
+      StatusCodes.UNAUTHORIZED,
+      `You need to be logged in to see this page (${req.originalUrl}).`
+    );
 }
 
 /**
@@ -67,20 +76,19 @@ async function loggedInOnly(req, res, next) {
  * @return {Promise<void>}
  */
 async function apiLoggedInOnly(req, res, next) {
-  await getInfoOnly(req, res, () => {
-  });
+  await getInfoOnly(req, res, () => {});
   if (req.session && req.session.userInfo) {
-    const userId = req.session.userInfo['_id'];
+    const userId = req.session.userInfo["_id"];
     req.loggedIn = true;
     if (await User.exists(userId)) {
       req.userValidated = true;
       await next();
     } else {
-      res.status(403).json({redirect: '/logout'});
+      res.status(403).json({ redirect: "/logout" });
       // Something funky is going on... let them logout and redirect back home
     }
   } else {
-    res.status(401).json({redirect: '/logout'}); // They can't access the page...
+    res.status(401).json({ redirect: "/logout" }); // They can't access the page...
   }
 }
 
@@ -93,11 +101,11 @@ async function apiLoggedInOnly(req, res, next) {
  */
 async function apiAnonymousOnly(req, res, next) {
   if (req.session && req.session.userInfo) {
-    const userId = req.session.userInfo['_id'];
+    const userId = req.session.userInfo["_id"];
     if (await User.exists(userId)) {
-      res.json({'redirect': '/'});
+      res.json({ redirect: "/" });
     } else {
-      res.status(401).json({'redirect': '/logout'});
+      res.status(401).json({ redirect: "/logout" });
       // Something funky is going on... let them logout and redirect back home
     }
   } else {
@@ -114,14 +122,21 @@ async function apiAnonymousOnly(req, res, next) {
  * @returns {Promise<void>}
  */
 async function onlyAllowRole(role, req, res, next) {
-  if (typeof role === 'string') {
+  if (typeof role === "string") {
     role = [role];
   }
   role = new Set(role);
   if (role.has(req.role)) {
     await next();
   } else {
-    await sendError(req, res, StatusCodes.FORBIDDEN, `You are not allowed to view this page. Only people in {${Array.from(role).toString()}} can see this page`);
+    await sendError(
+      req,
+      res,
+      StatusCodes.FORBIDDEN,
+      `You are not allowed to view this page. Only people in {${Array.from(
+        role
+      ).toString()}} can see this page`
+    );
   }
 }
 
@@ -146,4 +161,11 @@ async function getInfoOnly(req, res, next) {
   await next();
 }
 
-module.exports = {loggedInOnly, apiLoggedInOnly, apiAnonymousOnly, getInfoOnly, sendError, onlyAllowRole};
+module.exports = {
+  loggedInOnly,
+  apiLoggedInOnly,
+  apiAnonymousOnly,
+  getInfoOnly,
+  sendError,
+  onlyAllowRole,
+};

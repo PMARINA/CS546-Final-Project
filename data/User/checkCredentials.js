@@ -1,6 +1,6 @@
-const {validateAndCleanEmail, validatePassword} = require('./validate');
-const User = require('../../models/user');
-const bcrypt = require('bcrypt');
+const { validateAndCleanEmail, validatePassword } = require("./validate");
+const User = require("../../models/user");
+const bcrypt = require("bcrypt");
 
 /**
  * Check the users' credentials
@@ -22,7 +22,7 @@ const bcrypt = require('bcrypt');
  * @return {Promise<Object>}
  */
 async function checkCredentials(username, password) {
-  const incorrectCredentialsMessage = 'Username or Password was incorrect';
+  const incorrectCredentialsMessage = "Username or Password was incorrect";
   let usernameHelp = undefined;
   let passwordHelp = undefined;
   try {
@@ -44,17 +44,20 @@ async function checkCredentials(username, password) {
       cookieData: {},
     };
   }
-  const userWithUsername = await User.findOne({email: username});
+  const userWithUsername = await User.findOne({ email: username });
   if (!userWithUsername) {
     // Compare against an arbitrary hardcoded hash to protect against timing attacks
-    await bcrypt.compare(password, `$2b$12$pLq3BKhZYcBL7yVI5S7xLOFfQa7kcfPyyi5DlyzanapX.zgxpvJY6`);
-    return {valid: false, resBody: incorrectCredentialsMessage};
+    await bcrypt.compare(
+      password,
+      `$2b$12$pLq3BKhZYcBL7yVI5S7xLOFfQa7kcfPyyi5DlyzanapX.zgxpvJY6`
+    );
+    return { valid: false, resBody: incorrectCredentialsMessage };
   } else {
     const hash = userWithUsername.password;
     if (await bcrypt.compare(password, hash)) {
-      return {cookieData: userWithUsername, valid: true};
+      return { cookieData: userWithUsername, valid: true };
     } else {
-      return {valid: false, resBody: incorrectCredentialsMessage};
+      return { valid: false, resBody: incorrectCredentialsMessage };
     }
   }
 }

@@ -37,34 +37,33 @@ body {
 //  color: #989898;
 //}
 
-
 // Import a Google Font
-@import url('https://fonts.googleapis.com/css?family=Oxygen');
-@import url('https://fonts.googleapis.com/css?family=Oxanium');
-@import url('https://fonts.googleapis.com/css?family=EB+Garamond');
+@import url("https://fonts.googleapis.com/css?family=Oxygen");
+@import url("https://fonts.googleapis.com/css?family=Oxanium");
+@import url("https://fonts.googleapis.com/css?family=EB+Garamond");
 
 // Set your brand colors
-$purple: #8A4D76;
-$pink: #FA7C91;
+$purple: #8a4d76;
+$pink: #fa7c91;
 $brown: #757763;
-$beige-light: #D0D1CD;
-$beige-lighter: #EFF0EB;
+$beige-light: #d0d1cd;
+$beige-lighter: #eff0eb;
 
-$stevensPrimaryRed: #A32638;
-$stevensPrimaryGrey: #9A989A;
+$stevensPrimaryRed: #a32638;
+$stevensPrimaryGrey: #9a989a;
 
-$stevensSecondaryGrey: #363D45;
+$stevensSecondaryGrey: #363d45;
 $stevensSecondaryBlue: #004380;
-$stevensSecondaryTurquoise: #008A90;
-$stevensSecondaryOrange: #E7842E;
+$stevensSecondaryTurquoise: #008a90;
+$stevensSecondaryOrange: #e7842e;
 
 $stevensAccentBlue: #007db8; // #4896CF;
-$stevensAccentPurple: #7A548B;
+$stevensAccentPurple: #7a548b;
 
-$stevensLightGrey: #E4E5E6;
-$stevensLightBlue: #E7F2FB;
-$stevensLightTurquoise: #E8F2F3;
-$stevensLightBeige: #F5F1E4;
+$stevensLightGrey: #e4e5e6;
+$stevensLightBlue: #e7f2fb;
+$stevensLightTurquoise: #e8f2f3;
+$stevensLightBeige: #f5f1e4;
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Update Bulma's global variables
@@ -108,7 +107,6 @@ $modal-card-head-background-color: $stevensLightGrey;
 //$input-border-color: transparent;
 //$input-shadow: none;
 
-
 // Import only what you need from Bulma
 //@import "../node_modules/bulma/sass/base/_all.sass";
 //@import "../node_modules/bulma/sass/elements/button.sass";
@@ -119,8 +117,7 @@ $modal-card-head-background-color: $stevensLightGrey;
 //@import "../node_modules/bulma/sass/layout/hero.sass";
 //@import "../node_modules/bulma/sass/layout/section.sass";
 
-
-$input-disabled-background-color: $stevensLightGrey;//lighten($scheme-main, 7%);
+$input-disabled-background-color: $stevensLightGrey; //lighten($scheme-main, 7%);
 @import "../node_modules/bulma/bulma.sass";
 #currentPageNav {
   //background-color: lighten($primary, 7%);;
@@ -155,7 +152,7 @@ $input-disabled-background-color: $stevensLightGrey;//lighten($scheme-main, 7%);
 }
 
 p {
-  overflow-wrap:break-word;
+  overflow-wrap: break-word;
 }
 
 //@include until($desktop) {

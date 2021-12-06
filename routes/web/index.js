@@ -1,7 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = new express.Router();
-const buildings = require('./buildings');
+const buildings = require("./buildings");
 
-router.use('/buildings', buildings);
+router.use("/buildings", buildings);
 
 module.exports = router;

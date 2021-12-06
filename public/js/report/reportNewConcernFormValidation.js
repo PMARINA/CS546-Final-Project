@@ -1,23 +1,22 @@
 window.jQuery.noConflict();
 (($) => {
   $(function (events, handler) {
-
     // HTML DOM Elements
-    const buildingHelpText = $('#buildingHelpText');
-    const buildingSelection = $('select[name=\'building\']');
-    const washerRadioElement = $('#washer');
-    const whichSpecificMachineDropdown = $('#whichMachine');
-    const machineCategorySelection = $('input[name=\'machineType\']');
-    const reportType = $('input[name=\'reportType\']');
-    const complaintField = $('#complaint');
-    const form = $('#newReportForm');
+    const buildingHelpText = $("#buildingHelpText");
+    const buildingSelection = $("select[name='building']");
+    const washerRadioElement = $("#washer");
+    const whichSpecificMachineDropdown = $("#whichMachine");
+    const machineCategorySelection = $("input[name='machineType']");
+    const reportType = $("input[name='reportType']");
+    const complaintField = $("#complaint");
+    const form = $("#newReportForm");
 
     /**
      * Is the user reporting a building or a machine
      * @return {('building'|'machine'|undefined)} String
      */
     function getCurrentlySelectedOptionBuildingMachine() {
-      return $('input[name=\'reportType\']:checked').val();
+      return $("input[name='reportType']:checked").val();
     }
 
     /**
@@ -25,7 +24,7 @@ window.jQuery.noConflict();
      * @return {('washer'|'drier'|undefined)}
      */
     function getCurrentlySelectedOptionWasherDrier() {
-      return $('input[name=\'machineType\']:checked').val();
+      return $("input[name='machineType']:checked").val();
     }
 
     /**
@@ -33,9 +32,8 @@ window.jQuery.noConflict();
      * @return {String}
      */
     function getCurrentlySelectedMachineId() {
-      return $('input[name=\'machineModel\']:selected').val();
+      return $("input[name='machineModel']:selected").val();
     }
-
 
     /**
      * Get the complaint
@@ -68,13 +66,15 @@ window.jQuery.noConflict();
     function validateBuilding() {
       const selectedBuilding = getSelectedBuilding();
       if (!selectedBuilding) {
-        buildingHelpText.text('You must select a building. If none are available, then you do not have access to any buildings.');
-        buildingSelection.addClass('is-danger');
+        buildingHelpText.text(
+          "You must select a building. If none are available, then you do not have access to any buildings."
+        );
+        buildingSelection.addClass("is-danger");
       } else {
-        buildingSelection.removeClass('is-danger');
+        buildingSelection.removeClass("is-danger");
         buildingHelpText.hide();
       }
-      return !!(selectedBuilding);
+      return !!selectedBuilding;
     }
 
     /**
@@ -87,7 +87,7 @@ window.jQuery.noConflict();
       let valid = true;
       valid = validateBuilding() && valid;
       valid = validateReportCategory() && valid;
-      if (getCurrentlySelectedOptionBuildingMachine() === 'machine') {
+      if (getCurrentlySelectedOptionBuildingMachine() === "machine") {
         valid = validateMachineType() && valid;
         valid = validateWhichMachine() && valid;
       }
@@ -106,6 +106,6 @@ window.jQuery.noConflict();
       }
     }
 
-    form.on('submit', processFormSubmit);
+    form.on("submit", processFormSubmit);
   });
 })(window.jQuery);

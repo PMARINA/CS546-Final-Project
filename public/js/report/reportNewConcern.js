@@ -1,20 +1,19 @@
 window.jQuery.noConflict();
 (($) => {
   $(function (events, handler) {
-
     // HTML DOM Elements
-    const buildingSelection = $('select[name=\'building\']');
-    const washerRadioElement = $('#washer');
-    const whichSpecificMachineDropdown = $('#whichMachine');
-    const machineCategorySelection = $('input[name=\'machineType\']');
-    const reportType = $('input[name=\'reportType\']');
+    const buildingSelection = $("select[name='building']");
+    const washerRadioElement = $("#washer");
+    const whichSpecificMachineDropdown = $("#whichMachine");
+    const machineCategorySelection = $("input[name='machineType']");
+    const reportType = $("input[name='reportType']");
 
     /**
      * Is the user reporting a building or a machine
      * @return {('building'|'machine'|undefined)} String
      */
     function getCurrentlySelectedOptionBuildingMachine() {
-      return $('input[name=\'reportType\']:checked').val();
+      return $("input[name='reportType']:checked").val();
     }
 
     /**
@@ -22,7 +21,7 @@ window.jQuery.noConflict();
      * @return {('washer'|'drier'|undefined)}
      */
     function getCurrentlySelectedOptionWasherDrier() {
-      return $('input[name=\'machineType\']:checked').val();
+      return $("input[name='machineType']:checked").val();
     }
 
     /**
@@ -31,9 +30,12 @@ window.jQuery.noConflict();
      */
     function autoShowAllMachineOptions() {
       const machineTypeField = washerRadioElement.parent().parent().parent();
-      const whichMachineField = whichSpecificMachineDropdown.parent().parent().parent();
+      const whichMachineField = whichSpecificMachineDropdown
+        .parent()
+        .parent()
+        .parent();
       const selectedOption = getCurrentlySelectedOptionBuildingMachine();
-      if (selectedOption !== 'machine') {
+      if (selectedOption !== "machine") {
         machineTypeField.hide();
         whichMachineField.hide();
       } else {
@@ -49,7 +51,7 @@ window.jQuery.noConflict();
       const selectedBuilding = buildingSelection.val();
       if (!selectedBuilding) return; // No building available;
       const c = getCurrentlySelectedOptionBuildingMachine();
-      if (c === undefined || c === 'building') return; // No need to find list of machines if not reporting a machine
+      if (c === undefined || c === "building") return; // No need to find list of machines if not reporting a machine
       const wd = getCurrentlySelectedOptionWasherDrier();
       if (wd === undefined) return; // Why render everything when the user still has to fill out the above part of the form?
       renderWasherDriers(selectedBuilding, wd);
@@ -61,19 +63,23 @@ window.jQuery.noConflict();
      */
     function renderWasherDriers(selectedBuildingId, whichOne) {
       try {
-        $.get(`/web/buildings/${selectedBuildingId}/${whichOne}`).done(function (data) {
-          console.log(data);
-          if (data.redirect !== undefined) {
-            window.location.redirect(data.redirect);
+        $.get(`/web/buildings/${selectedBuildingId}/${whichOne}`).done(
+          function (data) {
+            console.log(data);
+            if (data.redirect !== undefined) {
+              window.location.redirect(data.redirect);
+            }
+            // Render the machines in the dropdown
+            const dropdown = whichSpecificMachineDropdown;
+            dropdown.empty();
+            data.forEach((d) =>
+              dropdown.append($(`<option value="${d._id}">${d.name}</option>`))
+            );
+            // Now show the rendered list
+            const whichMachineField = dropdown.parent().parent().parent();
+            whichMachineField.show();
           }
-          // Render the machines in the dropdown
-          const dropdown = whichSpecificMachineDropdown;
-          dropdown.empty();
-          data.forEach((d) => dropdown.append($(`<option value="${d._id}">${d.name}</option>`)));
-          // Now show the rendered list
-          const whichMachineField = dropdown.parent().parent().parent();
-          whichMachineField.show();
-        });
+        );
       } catch (e) {
         console.log(e);
       }
@@ -81,10 +87,11 @@ window.jQuery.noConflict();
 
     function populateBuildingsIntoForm() {
       try {
-        $.get('/web/buildings').done(function (data) {
+        $.get("/web/buildings").done(function (data) {
           console.log(data);
           if (!data) return;
-          if (typeof data === 'object' && data.redirect) window.location.redirect(data.redirect);
+          if (typeof data === "object" && data.redirect)
+            window.location.redirect(data.redirect);
           if (!Array.isArray(data)) return;
           for (let i = 0; i < data.length; i++) {
             const obj = data[i];
@@ -94,7 +101,7 @@ window.jQuery.noConflict();
           }
         });
       } catch (e) {
-        console.log("Error attempting to populate the form with buildings: ")
+        console.log("Error attempting to populate the form with buildings: ");
         console.log(e);
       }
     }
@@ -103,9 +110,9 @@ window.jQuery.noConflict();
 
     autoShowAllMachineOptions();
     reportType.each(function () {
-      $(this).on('change', autoShowAllMachineOptions);
+      $(this).on("change", autoShowAllMachineOptions);
     });
-    machineCategorySelection.on('change', getAndRenderMachines);
-    buildingSelection.on('change', getAndRenderMachines);
+    machineCategorySelection.on("change", getAndRenderMachines);
+    buildingSelection.on("change", getAndRenderMachines);
   });
 })(window.jQuery);

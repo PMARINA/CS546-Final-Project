@@ -6,17 +6,16 @@
  */
 function clickedBurger(navburger, navbar, e) {
   e.preventDefault();
-  navburger.toggleClass('is-active');
-  navbar.toggleClass('is-active');
+  navburger.toggleClass("is-active");
+  navbar.toggleClass("is-active");
 }
 
 window.jQuery.noConflict();
-(
-  ($) => {
-    $(function() {
-      const navbar = $('#navbar');
-      const navburger = $('#navburger');
+(($) => {
+  $(function () {
+    const navbar = $("#navbar");
+    const navburger = $("#navburger");
 
-      navburger.on('click', clickedBurger.bind(undefined, navburger, navbar));
-    });
-  })(window.jQuery);
+    navburger.on("click", clickedBurger.bind(undefined, navburger, navbar));
+  });
+})(window.jQuery);

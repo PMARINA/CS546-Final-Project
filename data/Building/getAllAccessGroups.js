@@ -1,4 +1,4 @@
-const Building = require('../../models/building');
+const Building = require("../../models/building");
 
 /**
  * Get a list of all access groups among buildings
