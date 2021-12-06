@@ -147,7 +147,6 @@ async function checkUserAllowedToBeModified(
     throw new Error("The user requesting the modify operation does not exist");
   }
   const roleOfObjectToModify = objectToBeModified.role;
-  // console.log(`User: ${JSON.stringify(objectToBeModified, null, 2)}, Admin: ${userAttemptingToModify}`);
   if (roleOfObjectToModify === "admin")
     throw new Error("Only the admin who uses this account modify its params");
 }
