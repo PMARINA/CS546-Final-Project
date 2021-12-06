@@ -1,3 +1,5 @@
+{{{navbar}}}
+
 <div class="section">
     <div class="container">
         <div class="columns is-centered">
@@ -16,12 +18,13 @@
         </div>
         <div class="columns is-centered">
             {{!-- appointment form --}}
+            {{#if buildings}}
             <form method="POST" action="/appointments" id="appointment" name="appointment">
                 <label for="apptBuilding">Select Building: </label>
                 <select id="apptBuilding" name="apptBuilding">
-                    {{ #each buildings }}
+                    {{#each buildings}}
                         <option value="this._id">{{this.name}}</option>
-                    {{ /each }}
+                    {{/each}}
                 </select>
                 <label for="apptDate">Select date: &nbsp;</label>
                 <input type="date" id="apptDate">&nbsp;
@@ -42,6 +45,14 @@
                 </select>
                 <input type="submit"></input>
             </form>
+            {{else}}
+            <div>
+                <h1 class="title is-danger">You do not have access to any laundry facilities</h1>
+                <p>Please add a building in preferences and/or contact your RA or an admin to get access to buildings.</p>
+            </div>
+            {{/if}} 
         </div>
     </div>
 </div>
+
+<script src="/public/js/calendar.js"></script>

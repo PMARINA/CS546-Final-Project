@@ -15,6 +15,8 @@ const navMiddleware = require('./middleware').navbar;
 const web = require('./web');
 const constructorMethod = (app) => {
   // app.uses go here
+  app.use(authMiddleware.getInfoOnly);
+  app.use(navMiddleware.renderNavbarToReq);
   app.use('/', home);
   app.use('/signup', signup);
   app.use('/login', login);

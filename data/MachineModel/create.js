@@ -52,7 +52,7 @@ async function validateAndCleanCreate(name, cycles) {
  */
 async function create(name, cycles) {
   ({name, cycles} = await validateAndCleanCreate(name, cycles));
-  await Model.create({name, cycles});
+  return await Model.create({name, cycles});
 }
 
 module.exports = create;

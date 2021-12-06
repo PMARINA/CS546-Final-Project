@@ -1,8 +1,12 @@
 const express = require('express');
 const router = new express.Router();
 const Appointment = require('../../data/Appointment');
+const middleware = require('../middleware');
+
+router.use(middleware.auth.loggedInOnly);
 
 router.get('/', async (req, res) => {
+  const accessGroups = req.userData.accessGroups;
   const buildingsWithAccessGroups = await Building.find({accessGroup: {$in: accessGroups}});
   const results = [];
   for (let i = 0; i < buildingsWithAccessGroups.length; i++) {
@@ -12,7 +16,8 @@ router.get('/', async (req, res) => {
     newObj.name = building.name.toString();
     results.push(newObj);
   }
-  res.render('appointments', {buildings: results});
+  console.log(results);
+  res.render('appointments', {buildings: results, navbar: req.navbar});
 });
 
 router.post('/', async (req, res) => {

@@ -1,4 +1,5 @@
 const User = require('../../data/User');
+const userModel = require('../../models/user');
 const StatusCodes = require('http-status-codes');
 const getStatusPhrase = StatusCodes.getStatusText;
 const navbar = require('./navbar').renderNavbarToReq;
@@ -118,6 +119,7 @@ async function getInfoOnly(req, res, next) {
     if (await User.exists(userId)) {
       req.userValidated = true;
       req.userId = userId;
+      req.userData = userModel.findById(userId.toString());
     }
   }
   await next();
