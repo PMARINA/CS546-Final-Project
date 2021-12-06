@@ -2,6 +2,18 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const validation = require('../inputVerification');
 
+const accessGroupSchema = {
+  type: [String],
+  required: false,
+  validate: (v) => {
+    if (typeof v !== 'object' || !Array.isArray(v)) return false;
+    v.forEach((s) =>
+      validation.general.verifyArg(s, 'accessGroup', 'User Schema', 'string'),
+    );
+  },
+  default: [],
+};
+
 const userSchema = new Schema(
     {
     // "_id": "6176b2a43910c60213c68c7c",
@@ -45,21 +57,9 @@ const userSchema = new Schema(
           return v.match(/^\$2[ayb]\$.{56}$/); // https://stackoverflow.com/a/32190124
         },
       },
-      accessGroups: {
-        type: [String],
-        required: true,
-        validate: (v) => {
-          validation.general.verifyArg(v, 'accessGroups', 'User Schema', 'array');
-          v.forEach((s) =>
-            validation.general.verifyArg(
-                s,
-                'accessGroup',
-                'User Schema',
-                'string',
-            ),
-          );
-        },
-      },
+      accessGroups: accessGroupSchema,
+      appliedAccessGroups: accessGroupSchema,
+      privilegedAccessGroups: accessGroupSchema,
       role: {
         type: String,
         required: true,

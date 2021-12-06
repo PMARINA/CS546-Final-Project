@@ -4,9 +4,15 @@
       "MaxSimultaneous": 4
     },
     "COOKIE": {
-      "maxAgeMillis": 60000,
+      "maxAgeMillis": 3600000,
       "name": "appCookie",
       "secret": "superSecretCookieSecret"
+    },
+    "DEFAULTS": {
+      "ADMIN_CREDENTIALS": {
+        "Password": "greatPassword101!",
+        "Username": "pmyneni@stevens.edu"
+      }
     },
     "SECURITY": {
       "Password": {

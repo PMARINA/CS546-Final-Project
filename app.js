@@ -29,12 +29,12 @@ app.use(
 );
 
 
-userId = '6190573a63c77d447a815c08';
-modelId = '6190449e96e50f05403d12c5';
+userId = '61abc8a6d7ea6b4caa45b254';
+modelId = '61ac0195cef4a3f35275f680';
 reportId = '619119fa198f4826d19a6851';
-machineId = '6190489816cb7505b4e3c0dc';
-cycleId = '6190449e96e50f05403d12c8';
-buildingId = '6190489816cb7505b4e3c0db';
+machineId = '61ac01b03ea44e395876e757';
+cycleId = '61ac0195cef4a3f35275f681';
+buildingId = '61ac01b03ea44e395876e756';
 parentCommentId = '61905bbd61948d77b2ff9482';
 
 /**
@@ -42,14 +42,23 @@ parentCommentId = '61905bbd61948d77b2ff9482';
  */
 async function createUser() {
   const student = await User.createUser(
-      'pmyneni@test.com',
+      'pmyneni@test.edu',
       'Pridhvi',
       'Myneni',
       'QWEqwe123+',
-      'jacobus',
+      'group',
       'student',
+      '61a29fe799cc42ca2949e556',
   );
   console.log(student);
+}
+
+/**
+ * Test modification of a student
+ * @return {Promise<void>}
+ */
+async function modifyUser() {
+  await User.modifyUser('61a2a1c2570a2dd1354421fe', '61a29fe799cc42ca249e556b', {name: {first: 'notPridhvi'}, role: 'ra'});
 }
 
 /**
@@ -63,7 +72,7 @@ async function createModel() {
 }
 
 /**
- * Test function to test creation of a maintenace period
+ * Test function to test creation of a maintenance period
  */
 async function createMaintenance() {
   await Maintenance.create('2021-11-10', '2021-11-13', machineId, 'Test');
@@ -124,7 +133,7 @@ async function createReport() {
  * Test appointment creation
  */
 async function createAppointment() {
-  apt = await Appointment.create(
+  const apt = await Appointment.create(
       buildingId,
       userId,
       machineId,
@@ -156,8 +165,10 @@ const main = async function() {
   app.listen(3000, () => {
     console.log('Server live @ http://localhost:3000');
   });
+  // await createUser();
   // console.log('Adding student to DB...');
   // await createUser();
+  // await modifyUser();
   // await createModel();
   // await createBuilding();
   // await createMaintenance();

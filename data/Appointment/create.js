@@ -17,20 +17,19 @@ function findMachine(doc, machineId) {
   let found = undefined;
   doc['washers'].forEach((washer) => {
     console.log(washer);
-    if (washer._id.toString() == mId) {
+    if (washer._id.toString() === mId) {
       found = washer;
     }
   });
   if (found) return found;
 
   doc['driers'].forEach((drier) => {
-    if (drier._id.toString() == mId) {
+    if (drier._id.toString() === mId) {
       found = drier;
     }
   });
   if (found) return found;
   throw new Error('Found building with machine but unable to extract it');
-  return null;
 }
 /**
  *
@@ -42,11 +41,10 @@ function findCycle(doc, cycleId) {
   const cId = cycleId.toString();
   let found = undefined;
   doc['cycles'].forEach((c) => {
-    if (c._id.toString() == cId) found = c;
+    if (c._id.toString() === cId) found = c;
   });
   if (found) return found;
   throw new Error('Found machine with cycle but unable to extract it');
-  return null;
 }
 
 /**
@@ -83,13 +81,13 @@ function cleanAndVerifyObjectId(oid, oidName) {
   if (typeof oid !== 'string') {
     throw new Error(`Expected ObjectId (${oidName}) to be a string`);
   }
-
+  let oidAsObject;
   try {
-    oid = new ObjectId(oid);
+    oidAsObject = new ObjectId(oid);
   } catch (err) {
     throw new Error(`${oidName} was an invalid object id`);
   }
-  return oid;
+  return oidAsObject;
 }
 
 /**
@@ -99,11 +97,11 @@ function cleanAndVerifyObjectId(oid, oidName) {
  * @param {Date} endTimestamp When the appointment is supposed to end
  */
 function verifyEnoughTime(startTimestamp, cycleDurationString, endTimestamp) {
-  durationMatches = cycleDurationString.match(/(\d{2}):(\d{2}):(\d{2})/);
-  hours = parseInt(durationMatches[1], 10);
-  minutes = parseInt(durationMatches[2], 10);
-  seconds = parseInt(durationMatches[3], 10);
-  earliestEndDate = moment(startTimestamp)
+  const durationMatches = cycleDurationString.match(/(\d{2}):(\d{2}):(\d{2})/);
+  const hours = parseInt(durationMatches[1], 10);
+  const minutes = parseInt(durationMatches[2], 10);
+  const seconds = parseInt(durationMatches[3], 10);
+  const earliestEndDate = moment(startTimestamp)
       .add(hours, 'hours')
       .add(minutes, 'minutes')
       .add(seconds, 'seconds')
@@ -138,45 +136,45 @@ async function cleanAndVerify(
       'Starting timestamp',
   );
   endTimestamp = cleanAndVerifyTimestamp(endTimestamp, 'Ending timestamp');
-  buildingId = cleanAndVerifyObjectId(buildingId, 'Building id');
-  userId = cleanAndVerifyObjectId(userId, 'User id');
-  machineId = cleanAndVerifyObjectId(machineId, 'Machine id');
-  cycleId = cleanAndVerifyObjectId(cycleId, 'Cycle id');
+  const buildingIdAsObjectId = cleanAndVerifyObjectId(buildingId, 'Building id');
+  const userIdAsObjectId = cleanAndVerifyObjectId(userId, 'User id');
+  const machineIdAsObjectId = cleanAndVerifyObjectId(machineId, 'Machine id');
+  const cycleIdAsObjectId = cleanAndVerifyObjectId(cycleId, 'Cycle id');
 
   if (
     !(await Building.exists({
-      _id: buildingId,
-      $or: [{'washers._id': machineId}, {'driers._id': machineId}],
+      _id: buildingIdAsObjectId,
+      $or: [{'washers._id': machineIdAsObjectId}, {'driers._id': machineIdAsObjectId}],
     }))
   ) {
     throw new Error('Building with specified machine does not exist');
   }
-  const building = await Building.findById(buildingId);
-  console.log('Machine ID: ' + machineId);
-  machine = findMachine(building, machineId);
-  machineModelId = machine.modelId;
+  const building = await Building.findById(buildingIdAsObjectId);
+  console.log('Machine ID: ' + machineIdAsObjectId);
+  const machine = findMachine(building, machineIdAsObjectId);
+  const machineModelId = machine.modelId;
   if (!(await MachineModel.exists({_id: machineModelId}))) {
     throw new Error('Machine model does not exist. Was it removed?');
   }
   if (
-    !(await MachineModel.exists({'_id': machineModelId, 'cycles._id': cycleId}))
+    !(await MachineModel.exists({'_id': machineModelId, 'cycles._id': cycleIdAsObjectId}))
   ) {
     throw new Error('The specified machine does not have the requested cycle');
   }
-  machineModelDoc = await MachineModel.findById(machineModelId);
-  cycle = findCycle(machineModelDoc, cycleId);
-  cycleDurationString = cycle.time;
+  const machineModelDoc = await MachineModel.findById(machineModelId);
+  const cycle = findCycle(machineModelDoc, cycleIdAsObjectId);
+  const cycleDurationString = cycle.time;
   verifyEnoughTime(startTimestamp, cycleDurationString, endTimestamp);
-  if (!(await User.exists({_id: userId}))) {
+  if (!(await User.exists({_id: userIdAsObjectId}))) {
     throw new Error('The user making the appointment does not exist');
   }
-  await validateUserAccessBuilding(userId, buildingId);
+  await validateUserAccessBuilding(userIdAsObjectId, buildingIdAsObjectId);
 
   return {
-    buildingId,
-    userId,
-    machineId,
-    cycleId,
+    buildingId: buildingIdAsObjectId,
+    userId: userIdAsObjectId,
+    machineId: machineIdAsObjectId,
+    cycleId: cycleIdAsObjectId,
     startTimestamp,
     endTimestamp,
   };
@@ -200,7 +198,7 @@ async function create(
     startTimestamp,
     endTimestamp,
 ) {
-  ({buildingId, userId, machineId, cycleId, startTimestamp, endTimestamp} =
+  const returned =
     await cleanAndVerify(
         buildingId,
         userId,
@@ -208,14 +206,14 @@ async function create(
         cycleId,
         startTimestamp,
         endTimestamp,
-    ));
+    );
   return await Appointment.create({
-    buildingId,
-    userId,
-    machineId,
-    cycleId,
-    startTimestamp,
-    endTimestamp,
+    buildingId: returned.buildingId,
+    userId: returned.userId,
+    machineId: returned.machineId,
+    cycleId: returned.cycleId,
+    startTimestamp: returned.startTimestamp,
+    endTimestamp: returned.endTimestamp,
   });
 }
 

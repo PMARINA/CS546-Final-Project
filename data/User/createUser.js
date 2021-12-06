@@ -1,7 +1,15 @@
-User = require('../../models/user');
-v = require('../../inputVerification').general;
-bcrypt = require('bcrypt');
-config = require('../../config.json');
+const {
+  validateAndCleanEmail,
+  validateAndCleanName,
+  validatePassword,
+  validateAndCleanRole,
+  validateAndCleanAccessGroups,
+} = require('./validate');
+const User = require('../../models/user');
+const v = require('../../inputVerification').general;
+const bcrypt = require('bcrypt');
+const config = require('../../config.json');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 /**
  * Validate & Return user params
@@ -11,6 +19,7 @@ config = require('../../config.json');
  * @param {String} rawPwd The user's password as plaintext
  * @param {String[]} accessGroups The access groups the user belongs to
  * @param {String} role The user's role in the system
+ * @param {String} [creatorId=''] ObjectId of the person creating the user
  * @return {Object} The params passed in, but trimmed, etc
  */
 async function verifyAndCleanCreateUserParams(
@@ -20,96 +29,17 @@ async function verifyAndCleanCreateUserParams(
     rawPwd,
     accessGroups,
     role,
+    creatorId = '',
 ) {
-  if (typeof email !== 'string') {
-    throw new Error('Received nonstring for email');
-  }
-  email = email.trim().toLowerCase();
-  if (email.length === 0) throw new Error('Received empty email string');
-  if (
-    !email.match(
-        /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
-    )
-  ) {
-    throw new Error('Invalid user email');
-  }
+  email = await validateAndCleanEmail(email);
 
-  if (await User.exists({email})) throw new Error('User already exists.');
+  fName = validateAndCleanName(fName, 'first name');
+  lName = validateAndCleanName(lName, 'last name');
+  validatePassword(rawPwd);
 
-  if (typeof fName !== 'string') {
-    throw new Error('Received nonstring for First Name');
-  }
-  fName = fName.trim();
-  if (fName.length === 0) throw new Error('Received empty first name');
+  validateAndCleanAccessGroups(accessGroups);
 
-  if (typeof lName !== 'string') {
-    throw new Error('Received nonstring for Last Name');
-  }
-  lName = lName.trim();
-  if (lName.length === 0) throw new Error('Received empty last name');
-
-  if (typeof rawPwd !== 'string') {
-    throw new Error('Received nonstring for password');
-  }
-  if (rawPwd.length < 8) throw new Error('Password was too short.');
-  let containsUpper = false;
-  let containsLower = false;
-  let containsNumber = false;
-  let containsSymbol = false;
-  const charCodeOf0 = '0'.charCodeAt(0);
-  const charCodeOf9 = '9'.charCodeAt(0);
-
-  const charCodeOfA = 'A'.charCodeAt(0);
-  const charCodeOfZ = 'Z'.charCodeAt(0);
-
-  const charCodeOfa = 'a'.charCodeAt(0);
-  const charCodeOfz = 'z'.charCodeAt(0);
-
-  for (let i = 0; i < rawPwd.length; i++) {
-    c = rawPwd.charCodeAt(i);
-    if (c >= charCodeOf0 && c <= charCodeOf9) {
-      containsNumber = true;
-      continue;
-    }
-    if (c >= charCodeOfA && c <= charCodeOfZ) {
-      containsUpper = true;
-      continue;
-    }
-    if (c >= charCodeOfa && c <= charCodeOfz) {
-      containsLower = true;
-      continue;
-    }
-    containsSymbol = true;
-  }
-
-  if (!(containsUpper && containsLower && containsNumber && containsSymbol)) {
-    throw new Error('Password does not meet criteria');
-  }
-
-  if (typeof accessGroups != 'object' || !Array.isArray(accessGroups)) {
-    throw new Error('Access groups was not an array');
-  }
-
-  for (let i = 0; i < accessGroups.length; i++) {
-    let ag = accessGroups[i];
-    if (typeof ag !== 'string') {
-      throw new Error('Member of access groups was not a String');
-    }
-    ag = ag.trim().toLowerCase();
-    if (ag.length === 0) {
-      throw new Error('One of the access groups was empty (spaces)');
-    }
-    accessGroups[i] = ag;
-  }
-
-  if (typeof role !== 'string') throw new Error('Role was not a string');
-  role = role.trim().toLowerCase();
-  if (role.length === 0) {
-    throw new Error('Role was empty or spaces');
-  }
-  if (!role.match(/(student|ra|maintenance|admin)/)) {
-    throw new Error('Role did not match valid roles');
-  }
+  role = validateAndCleanRole(role);
   return {
     email,
     fName,
@@ -121,6 +51,62 @@ async function verifyAndCleanCreateUserParams(
 }
 
 /**
+ * Given the creator, figure out what access groups should be automatically granted or applied for but not granted
+ * @param {String[]} groups Validated/Cleaned list of access groups
+ * @param {String} creatorId ObjectId of the user creating the new user
+ * @return {Promise<{accessGroups: String[], appliedAccessGroups: String[]}>}
+ */
+async function getAccessGroups(groups, creatorId) {
+  // If the ObjectId isn't valid, then just apply for it
+  let creatorObjectId = null;
+  const accessGroupsLabel = 'accessGroups';
+  const appliedAccessGroupsLabel = 'appliedAccessGroups';
+  try {
+    creatorObjectId = new ObjectId(creatorId);
+  } catch (e) {
+    const toReturn = {};
+    toReturn[accessGroupsLabel] = [];
+    toReturn[appliedAccessGroupsLabel] = groups;
+    return toReturn;
+  }
+
+  const creatorUserObject = await User.findOne(
+      {_id: creatorObjectId},
+      {_id: 0, role: 1, accessGroups: 1},
+  );
+  if (creatorUserObject !== null) {
+    // If the creator is an admin, they get everything
+    const creatorRole = creatorUserObject.role;
+    const creatorAdminAccessGroups = creatorUserObject.privilegedAccessGroups;
+    if (creatorRole === 'admin') {
+      const toReturn = {};
+      toReturn[accessGroupsLabel] = groups;
+      toReturn[appliedAccessGroupsLabel] = [];
+      return toReturn;
+    }
+    if (creatorRole === 'ra') {
+      const admittedGroups = [];
+      const appliedGroups = [];
+      const raPrivilegedGroups = set(creatorAdminAccessGroups);
+      groups.forEach(function(group) {
+        if (raPrivilegedGroups.contains(group)) admittedGroups.push(group);
+        else appliedGroups.push(group);
+      });
+      const toReturn = {};
+      toReturn[accessGroupsLabel] = admittedGroups;
+      toReturn[appliedAccessGroupsLabel] = appliedGroups;
+      return toReturn;
+    }
+  }
+
+  // Fall through = no access, everything is applied for
+  const toReturn = {};
+  toReturn[accessGroupsLabel] = [];
+  toReturn[appliedAccessGroupsLabel] = groups;
+  return toReturn;
+}
+
+/**
  * Make a user and return their JSON
  * @param {String} email The user's sign-up email address
  * @param {String} fName The user's first name
@@ -128,34 +114,54 @@ async function verifyAndCleanCreateUserParams(
  * @param {String} rawPwd The user's password as plaintext
  * @param {String[] | String} accessGroups The access groups the user belongs to
  * @param {String} role The user's role in the system
+ * @param {String?} creatorId ObjectId of the creator of the user.
  * @return {Object}
  */
-async function createUser(email, fName, lName, rawPwd, accessGroups, role) {
-  if (typeof accessGroups === 'string') accessGroups = [accessGroups];
+async function createUser(
+    email,
+    fName,
+    lName,
+    rawPwd,
+    accessGroups,
+    role,
+    creatorId = '',
+) {
+  let accessGroupsList;
+  if (typeof accessGroups === 'string') {
+    accessGroupsList = [accessGroups];
+  } else {
+    accessGroupsList = accessGroups;
+  }
   ({email, fName, lName, rawPwd, accessGroups, role} =
     await verifyAndCleanCreateUserParams(
         email,
         fName,
         lName,
         rawPwd,
-        accessGroups,
+        accessGroupsList,
         role,
+        creatorId,
     ));
-  hashPwd = 'NotAHashedPassword';
-  numRounds = config.APPLICATION.SECURITY.Password.BcryptNumHashingRounds;
-  // salt = await bcrypt.genSalt(numRounds);
-  hashPwd = await bcrypt.hash(rawPwd, numRounds);
-  const createdUser = await User.create({
+  let appliedAccessGroups;
+  ({accessGroups, appliedAccessGroups} = await getAccessGroups(
+      accessGroupsList,
+      creatorId,
+  ));
+  accessGroupsList = accessGroups;
+  const numRounds = config.APPLICATION.SECURITY.Password.BcryptNumHashingRounds;
+  const hashPwd = await bcrypt.hash(rawPwd, numRounds);
+  const userObj = {
     email,
     name: {
       first: fName,
       last: lName,
     },
+    accessGroups: accessGroupsList,
+    appliedAccessGroups,
     password: hashPwd,
-    accessGroups: accessGroups,
     role: role,
-  });
-  return createdUser;
+  };
+  return await User.create(userObj);
 }
 
 module.exports = createUser;

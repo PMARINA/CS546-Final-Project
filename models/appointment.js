@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+// noinspection JSUnresolvedVariable
+const SchemaObjectId = mongoose.ObjectId;
 const Schema = mongoose.Schema;
 const Building = require('./building');
 const User = require('./user');
@@ -7,7 +9,7 @@ const MachineModel = require('./machineModel');
 const appointmentSchema = new Schema(
     {
       buildingId: {
-        type: mongoose.ObjectId,
+        type: SchemaObjectId,
         required: true,
         validate: [
           async function() {
@@ -17,7 +19,7 @@ const appointmentSchema = new Schema(
         ],
       },
       userId: {
-        type: mongoose.ObjectId,
+        type: SchemaObjectId,
         required: true,
         validate: [
           async function() {
@@ -27,7 +29,7 @@ const appointmentSchema = new Schema(
         ],
       },
       machineId: {
-        type: mongoose.ObjectId,
+        type: SchemaObjectId,
         required: true,
         validate: [
           async function() {
@@ -42,7 +44,7 @@ const appointmentSchema = new Schema(
         ],
       },
       cycleId: {
-        type: mongoose.ObjectId,
+        type: SchemaObjectId,
         required: true,
         validate: {
           validator: async function() {

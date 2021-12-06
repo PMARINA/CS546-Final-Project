@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const SchemaObjectId = mongoose.ObjectId;
 const validation = require('../inputVerification');
 
 const reportSchema = new Schema(
@@ -18,11 +19,11 @@ const reportSchema = new Schema(
         },
       },
       reporterId: {
-        type: mongoose.ObjectId,
+        type: SchemaObjectId,
         required: true,
       },
       entityId: {
-        type: mongoose.ObjectId,
+        type: SchemaObjectId,
         required: true,
       },
       comment: {

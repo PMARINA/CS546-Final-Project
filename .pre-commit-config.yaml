@@ -10,7 +10,7 @@ repos:
         args: ["--fix=lf"]
       - id: pretty-format-json
         args: ["--autofix", "--indent", "2"]
-      - id: no-commit-to-branch # By default: Main & Master covered
+      - id: no-commit-to-branch # Main & Master covered if no args passed in
   - repo: https://github.com/jorisroovers/gitlint
     rev: v0.15.1
     hooks:

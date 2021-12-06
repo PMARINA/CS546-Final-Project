@@ -1,6 +1,6 @@
 const express = require('express');
 const router = new express.Router();
-// const apptData = require('../../data/Appointment');
+const Appointment = require('../../data/Appointment');
 
 router.get('/', async (req, res) => {
   const buildingsWithAccessGroups = await Building.find({accessGroup: {$in: accessGroups}});

@@ -58,10 +58,10 @@ async function checkListOfMachines(machines) {
 /**
  * Validate params for making a building
  * @param {String} name The name of the building
- * @param {Number[]} location Lat/Lon of building
- * @param {[Object[]]} washers Washer object
- * @param {[Object[]]} driers Drier object
- * @param {[String[]]} accessGroups Valid access groups
+ * @param {Object} location geo-json containing Lat/Lon of building
+ * @param {Object[]} [washers] Washer object
+ * @param {Object[]} [driers] Drier object
+ * @param {String[]} [accessGroups] Valid access groups
  */
 async function validateAndCleanCreateBuilding(
     name,
@@ -97,7 +97,7 @@ async function validateAndCleanCreateBuilding(
     if (typeof n !== 'number') throw new Error('Coordinate was not a number');
   });
   [lat, lon] = location.coordinates;
-  if (lat > 90 || lat < -90) throw new Error('Lattitude out of range');
+  if (lat > 90 || lat < -90) throw new Error('Latitude out of range');
   if (lon > 180 || lon < -180) throw new Error('Longitude out of range');
   if (washers === []) washers = undefined;
   if (driers === []) driers = undefined;
@@ -128,19 +128,19 @@ async function validateAndCleanCreateBuilding(
 /**
  * Make a building
  * @param {String} name The name of the building
- * @param {Number[]} location Lat/Lon of building
- * @param {[Object[]]} washers Washer object
- * @param {[Object[]]} driers Drier object
- * @param {[String[]]} accessGroups Valid access groups
+ * @param {Object} location (geo-json obj) Lat/Lon of building
+ * @param {Object[]} [washers] List of washer objects
+ * @param {Object[]} [driers] List of drier objects
+ * @param {String[]} [accessGroups] Valid access groups
  *
  * @return {Object} The created object
  */
 async function createBuilding(
     name,
     location,
-    washers = undefined,
-    driers = undefined,
-    accessGroups = undefined,
+    washers,
+    driers,
+    accessGroups,
 ) {
   ({name, location, washers, driers, accessGroups} =
     await validateAndCleanCreateBuilding(
@@ -159,4 +159,4 @@ async function createBuilding(
   });
 }
 
-module.exports = createBuilding;
+module.exports = {createBuilding};
