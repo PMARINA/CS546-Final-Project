@@ -75,7 +75,7 @@ async function validateAndCleanCreateBuilding(
   if (name.length === 0) throw new Error('Empty name specified');
 
   if (await Building.exists({name})) {
-    throw new Error('Refusing to create a duplicate building');
+    throw new Error(`Refusing to create a duplicate building: ${name}`);
   }
 
   if (typeof location !== 'object') {

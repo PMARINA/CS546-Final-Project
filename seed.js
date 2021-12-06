@@ -20,13 +20,13 @@ app.use(express.json());
 app.use(express.static('public/'));
 app.use(express.urlencoded({extended: true}));
 app.use(
-    expressSession({
-      name: config.APPLICATION.COOKIE.name,
-      secret: config.APPLICATION.COOKIE.secret,
-      saveUninitialized: false,
-      resave: false,
-      cookie: {maxAge: config.APPLICATION.COOKIE.maxAgeMillis},
-    }),
+  expressSession({
+    name: config.APPLICATION.COOKIE.name,
+    secret: config.APPLICATION.COOKIE.secret,
+    saveUninitialized: false,
+    resave: false,
+    cookie: {maxAge: config.APPLICATION.COOKIE.maxAgeMillis},
+  }),
 );
 
 
@@ -38,20 +38,20 @@ cycleId = '61ac0195cef4a3f35275f681';
 buildingId = '61ac01b03ea44e395876e756';
 parentCommentId = '61905bbd61948d77b2ff9482';
 
-/**
- * Test function to test creation of users
- */
-async function createUser() {
-  const student = await User.createUser(
-      'pmyneni@test.edu',
-      'Pridhvi',
-      'Myneni',
-      'QWEqwe123+',
-      'group',
-      'student',
-      '61a29fe799cc42ca2949e556',
+async function createUser(fname, lname, email, accessGroups, role, creatorId) {
+  if (typeof accessGroups === 'string') {
+    accessGroups = [accessGroups];
+  }
+  creatorId = creatorId ? creatorId : '';
+  return await User.createUser(
+    email,
+    fname,
+    lname,
+    'QWEqwe123+',
+    accessGroups,
+    role,
+    creatorId,
   );
-  console.log(student);
 }
 
 /**
@@ -59,13 +59,17 @@ async function createUser() {
  * @return {Promise<void>}
  */
 async function modifyUser() {
-  await User.modifyUser('61a2a1c2570a2dd1354421fe', '61a29fe799cc42ca249e556b', {name: {first: 'notPridhvi'}, role: 'ra'});
+  await User.modifyUser('61a2a1c2570a2dd1354421fe', '61a29fe799cc42ca249e556b', {
+    name: {first: 'notPridhvi'},
+    role: 'ra'
+  });
 }
 
 /**
  * Test function to test creation of washer/dryer models
  */
 async function createModel() {
+  console.log("Creating a model");
   return await MachineModel.create('MainModel', [
     {name: 'Quick', time: '00:15:00'},
     {name: 'Normal', time: '00:45:00'},
@@ -85,35 +89,27 @@ async function createMaintenance() {
  */
 async function createBuilding(name, washers, driers, accessGroups) {
   // name, location, washers, driers, accessGroups
-  await Building.create(
-      name,
-      {
-        type: 'Point',
-        coordinates: [50, 24.4],
-      },
-      washers,
-      driers,
-      accessGroups,
+  return await Building.create(
+    name,
+    {
+      type: 'Point',
+      coordinates: [50, 24.4],
+    },
+    washers,
+    driers,
+    accessGroups,
   );
 }
 
-async function createPalmer(modelId){
-  return await createBuilding('Palmer Hall', [{name:'Washer A', modelId}], [{name:'Drier A', modelId}], 'palmer');
-}
-async function createJonas(modelId){
-  return await createBuilding('Jonas', [{name: 'Washer A', modelId}], [{name: 'Drier A', modelId}], 'jonas')
-}
-async function createCPH(modelId){
-  return await createBuilding('CPH', [{name: 'Washer A', modelId}], [{name: 'Drier A', modelId}], 'cph')
-}
-async function createRiverTerrace(modelId){
-  return await createBuilding('RiverTerrace', [{name: 'Washer A', modelId}], [{name: 'Drier A', modelId}], 'riverterrace')
-}
-async function createDavis(modelId){
-  return await createBuilding('Davis', [{name: 'Washer A', modelId}], [{name: 'Drier A', modelId}], 'davis')
-}
-async function createHumphreys(modelId){
-  return await createBuilding('Humphreys', [{name: 'Washer A', modelId}], [{name: 'Drier A', modelId}], 'humphreys')
+/**
+ *
+ * @param {String} name The name of the building
+ * @param {String} modelId The object id of the model
+ * @returns {Promise<void>}
+ */
+async function createStevensBuilding(name, modelId) {
+  name = name.trim();
+  return await createBuilding(name, [{name: 'Washer A', modelId}], [{name: 'Drier A', modelId}], [name.toLowerCase()]);
 }
 
 /**
@@ -128,12 +124,12 @@ async function comment() {
  */
 async function reply() {
   console.log(
-      await Building.reply(
-          buildingId,
-          parentCommentId,
-          userId,
-          'Learn to use spellcheck!',
-      ),
+    await Building.reply(
+      buildingId,
+      parentCommentId,
+      userId,
+      'Learn to use spellcheck!',
+    ),
   );
 }
 
@@ -142,25 +138,25 @@ async function reply() {
  */
 async function createReport() {
   await Report.create(
-      'machine',
-      userId,
-      machineId,
-      'The washer makes a lot of noise',
-      'inconvenient',
+    'machine',
+    userId,
+    machineId,
+    'The washer makes a lot of noise',
+    'inconvenient',
   );
 }
 
 /**
  * Test appointment creation
  */
-async function createAppointment() {
+async function createAppointment(buildingId, userId, machineId, cycleId) {
   const apt = await Appointment.create(
-      buildingId,
-      userId,
-      machineId,
-      cycleId,
-      '2021-11-15',
-      '2021-11-16',
+    buildingId,
+    userId,
+    machineId,
+    cycleId,
+    '2021-12-15T11:00:00Z',
+    '2021-12-15T13:00:00Z',
   );
   console.log(apt);
 }
@@ -182,36 +178,46 @@ async function markReportUnresolved() {
 /**
  * Test function to test creation of users
  */
- async function createAdminUser() {
-  const student = await User.createUser(
-      config.APPLICATION.DEFAULTS.ADMIN_CREDENTIALS.Username,
-      'Admin',
-      'User',
-      config.APPLICATION.DEFAULTS.ADMIN_CREDENTIALS.Password,
-      [],
-      'admin',
+async function createAdminUser() {
+  return await User.createUser(
+    config.APPLICATION.DEFAULTS.ADMIN_CREDENTIALS.Username,
+    'Admin',
+    'User',
+    config.APPLICATION.DEFAULTS.ADMIN_CREDENTIALS.Password,
+    [],
+    'admin',
   );
-  console.log(student);
 }
 
-const main = async function() {
-  configRoutes(app);
+const main = async function () {
+  // configRoutes(app);
   console.log('Connecting to DB');
   await mongoose.connect(config.MONGO.ServerURL);
 
-  await createAdminUser();
+  const adminUser = await createAdminUser();
+  const adminId = adminUser._id.toString();
   // create the only model of washer or drier in existence.
-  const modelId = (await createModel())._id;
+  const model = (await createModel());
+  const modelId = model._id.toString();
 
   // create all the buildings;
-  await createPalmer(modelId);
-  await createJonas(modelId);
-  await createCPH(modelId);
-  await createRiverTerrace(modelId);
-  await createDavis(modelId);
-  await createHumphreys(modelId);
+  const palmer = await createStevensBuilding('Palmer', modelId);
+  const jonas = await createStevensBuilding('Jonas', modelId);
+  const cph = await createStevensBuilding('CPH', modelId);
+  const riverTerrace = await createStevensBuilding('River Terrace', modelId);
+  const davis = await createStevensBuilding('Davis', modelId);
+  const humphreys = await createStevensBuilding('Humphreys', modelId);
 
-  // create all the 
+  // create some sample users
+  const studentUser = await createUser("Student", "User", "suser@test.edu", "palmer", "student", adminId);
+  const raUser = await createUser('RA', 'User', 'rauser@test.edu', "palmer", "ra");
+  const maintenanceUser = await createUser("Maintenance", "User", "muser@test.edu", "palmer", "maintenance");
+
+  const userId = studentUser._id.toString();
+  const buildingId = palmer._id.toString();
+  const washerId = palmer.washers[0]._id.toString();
+  const cycleId = model.cycles[0]._id.toString();
+  const appointment = await createAppointment(buildingId, userId, washerId, cycleId);
   // app.listen(3000, () => {
   //   console.log('Server live @ http://localhost:3000');
   // });
@@ -233,8 +239,4 @@ const main = async function() {
 main().then(() => {
   const x = 1;
   return x === x;
-});
-main().then(() => {
-  const x = 1;
-  x == x;
 });

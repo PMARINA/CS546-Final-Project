@@ -55,4 +55,4 @@ async function create(name, cycles) {
   return await Model.create({name, cycles});
 }
 
-module.exports = create;
+module.exports = {create};

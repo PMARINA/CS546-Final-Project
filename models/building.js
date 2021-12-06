@@ -15,7 +15,6 @@ const machineSubDocSchema = new Schema({
       );
     },
     required: true,
-    unique: true, // Not a validator; will not error on duplicate
   },
   modelId: {
     type: SchemaObjectId,
