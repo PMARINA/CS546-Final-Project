@@ -13,6 +13,7 @@ const getStatusPhrase = StatusCodes.getStatusText;
 const authMiddleware = require('./middleware').auth;
 const navMiddleware = require('./middleware').navbar;
 const web = require('./web');
+const middleware = require('./middleware');
 const constructorMethod = (app) => {
   // app.uses go here
   app.use(authMiddleware.getInfoOnly);

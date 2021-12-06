@@ -3,11 +3,13 @@ const User = require("../../data/User");
 const middleware = require('../middleware');
 const router = new express.Router();
 
+router.use(middleware.auth.loggedInOnly);
+
 router.get('/', async (req, res) => {
   res.json('all reports');
 });
 
-router.get('/new', middleware.auth.loggedInOnly, middleware.navbar.renderNavbarToReq, async (req, res) => {
+router.get('/new', async (req, res) => {
   if (req.session && req.session.userInfo) {
     const userId = req.session.userInfo['_id'];
     if (await User.exists(userId)) {
