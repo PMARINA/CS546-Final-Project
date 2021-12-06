@@ -1,0 +1,120 @@
+<header>
+    {{{navbar}}}
+</header>
+<div class="columns mt-5">
+    <div class="column is-6 is-offset-3">
+        <div class="card">
+
+            <div class="card-header">
+                <h1 class="title card-header-title">Report a Concern</h1>
+            </div>
+
+            <form class="form m-5" id="newReportForm">
+
+                <div class="card-body">
+                    <div class="field">
+                        <label for="building" class="label">Building</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="building" id="building" class="select"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Report Category</label>
+                        <div class="control">
+                            <label class="radio">
+                                <input type="radio" name="reportType" id="buildingType" value="building" class="radio">
+                                Building
+                            </label>
+                            <br>
+                            <label class="radio">
+                                <input type="radio" name="reportType" id="machineType" value="machine" class="radio">
+                                Machine
+                            </label>
+                            <p class="help is-serif is-size-6">Are you reporting an issue with a particular machine within the building, or
+                                the building
+                                <wbr>
+                                /
+                                <wbr>
+                                laundry facility itself?
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Machine Type</label>
+                        <div class="control">
+                            <label class="radio">
+                                <input type="radio" name="machineType" id="washer" value="washer" class="radio">
+                                Washing Machine
+                            </label>
+                            <br>
+                            <label class="radio">
+                                <input type="radio" name="machineType" id="drier" value="drier" class="radio">
+                                Drier
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="whichMachine" class="label">Which Machine?</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="machineModel" id="whichMachine">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label" for="complaint">
+                            Your Complaint
+                        </label>
+                        <div class="control">
+                            <textarea class="textarea" placeholder="How can we help?" id="complaint"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="field mb-3">
+                        <label class="label" for="severity">Severity</label>
+                        <div class="control">
+                            <label class="radio">
+                                <input type="radio" name="severity" id="catastrophic" value="catastrophic"
+                                       class="radio">
+                                Catastrophic
+                            </label>
+                            <br>
+                            <label class="radio">
+                                <input type="radio" name="severity" id="minor" value="minor" class="radio">
+                                Minor
+                            </label>
+                            <br>
+                            <label class="radio">
+                                <input type="radio" name="severity" id="inconvenient" value="inconvenient"
+                                       class="radio">
+                                Inconvenient
+                            </label>
+                        </div>
+                        <p class="help is-serif is-size-6">How would you characterize the urgency of the issue?</p>
+                    </div>
+                    <!--                    <br>-->
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-footer-item is-justify-content-right">
+                        <div class="buttons">
+                            <input type="submit" class="button is-primary">
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/js/report/reportNewConcern.js" defer></script>
+<!--- Body goes here --->

@@ -2,6 +2,7 @@ const User = require('../../data/User');
 const StatusCodes = require('http-status-codes');
 const getStatusPhrase = StatusCodes.getStatusText;
 const navbar = require('./navbar').renderNavbarToReq;
+
 // {StatusCodes, ReasonPhrases, getReasonPhrase, getStatusPhrase}
 
 /**
@@ -30,8 +31,10 @@ function getUserId(req) {
  * @param {String} description A description of the error
  */
 async function sendError(req, res, errCode, description) {
-  await getInfoOnly(req, res, ()=>{});
-  await navbar(req, res, ()=>{});
+  await getInfoOnly(req, res, () => {
+  });
+  await navbar(req, res, () => {
+  });
   res.status(errCode).render('error', {
     errCode: errCode,
     errMsg: getStatusPhrase(errCode),
@@ -48,19 +51,11 @@ async function sendError(req, res, errCode, description) {
  * @return {Promise<void>}
  */
 async function loggedInOnly(req, res, next) {
-  if (userHasCookie(req)) {
-    const userId = getUserId(req);
-    req.loggedIn = true;
-    req.userId = userId;
-    if (await User.exists(userId)) {
-      req.userValidated = true;
-      await next();
-    } else {
-      await sendError(req, res, StatusCodes.UNAUTHORIZED, 'You have an invalid login token. Please clear your cookies and try again.');
-    }
-  } else {
-    await sendError(req, res, StatusCodes.UNAUTHORIZED, 'You need to be logged in to see this page.');
-  }
+  await getInfoOnly(req, res, () => {
+  });
+  if (req.userValidated) await next();
+  else if (req.loggedIn) await sendError(req, res, StatusCodes.UNAUTHORIZED, 'You have an invalid login token. Please clear your cookies and try again.');
+  else await sendError(req, res, StatusCodes.UNAUTHORIZED, `You need to be logged in to see this page (${req.originalUrl}).`);
 }
 
 /**
@@ -71,6 +66,8 @@ async function loggedInOnly(req, res, next) {
  * @return {Promise<void>}
  */
 async function apiLoggedInOnly(req, res, next) {
+  await getInfoOnly(req, res, () => {
+  });
   if (req.session && req.session.userInfo) {
     const userId = req.session.userInfo['_id'];
     req.loggedIn = true;
@@ -126,4 +123,4 @@ async function getInfoOnly(req, res, next) {
   await next();
 }
 
-module.exports = {loggedInOnly, apiLoggedInOnly, apiAnonymousOnly, getInfoOnly};
+module.exports = {loggedInOnly, apiLoggedInOnly, apiAnonymousOnly, getInfoOnly, sendError};

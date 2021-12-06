@@ -9,7 +9,8 @@ window.jQuery.noConflict();
      */
     function manageLoginCallback(event) {
       if (typeof event === 'object' && event.redirect) {
-        window.location.replace(event.redirect);
+        // window.location.replace(event.redirect);
+        window.location.reload(true);
       } else {
         const formHelp = $('#loginFormHelp');
         formHelp.show();

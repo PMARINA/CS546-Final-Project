@@ -99,7 +99,7 @@ $navbar-item-color: white;
 $navbar-divider-background-color: $primary;
 $navbar-item-color: rgb(255, 255, 255); //invert($navbar-background-color);
 $footer-color: true;
-$modal-card-head-background-color: lighten($grey, 30%);
+$modal-card-head-background-color: $stevensLightGrey;
 //$navbar-background-color: $stevensPrimaryRed;
 //$navbar-colors:
 //$body-background-color: $stevensLightBeige;
@@ -120,7 +120,7 @@ $modal-card-head-background-color: lighten($grey, 30%);
 //@import "../node_modules/bulma/sass/layout/section.sass";
 
 
-$input-disabled-background-color: lighten($scheme-main, 15%);
+$input-disabled-background-color: $stevensLightGrey;//lighten($scheme-main, 7%);
 @import "../node_modules/bulma/bulma.sass";
 #currentPageNav {
   //background-color: lighten($primary, 7%);;
@@ -144,6 +144,10 @@ $input-disabled-background-color: lighten($scheme-main, 15%);
 .serif {
   font-family: "EB Garamond", serif;
   font-size: large;
+}
+
+.is-serif {
+  font-family: "EB Garamond", serif;
 }
 
 .modal-card {

@@ -10,11 +10,13 @@ window.jQuery.noConflict();
     function updateOther(event) {
       const select = $(accessGroupSelector);
       const other = $(otherFieldSelector);
-      selected = select.val();
+      const selected = select.val();
       if (selected === selected.toLowerCase()) {
         other.prop('disabled', true);
+        other.parent().parent().hide();
       } else {
         other.prop('disabled', false);
+        other.parent().parent().show();
       }
     }
 
@@ -52,6 +54,7 @@ window.jQuery.noConflict();
       }
       select.val(data[0]);
       select.on('change', updateOther);
+      updateOther();
     }
 
     $.get('/buildings/listOfAccessGroups').done(processAccessGroups);

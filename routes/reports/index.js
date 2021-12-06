@@ -1,22 +1,22 @@
 const express = require('express');
 const User = require("../../data/User");
+const middleware = require('../middleware');
 const router = new express.Router();
 
 router.get('/', async (req, res) => {
   res.json('all reports');
 });
 
-router.get('/new', async (req, res) => {
+router.get('/new', middleware.auth.loggedInOnly, middleware.navbar.renderNavbarToReq, async (req, res) => {
   if (req.session && req.session.userInfo) {
     const userId = req.session.userInfo['_id'];
     if (await User.exists(userId)) {
       // Continue onto creating the report for them
-      res.json('Don\'t Ask Again')
+      res.render('newReport', {navbar: req.navbar});
     } else {
       // res.json({'redirect': '/logout'});
       res.redirect('/logout');
       // Something funky is going on... let them logout and redirect back home
-      return;
     }
   } else {
     res.redirect('/'); // They can't access the page...

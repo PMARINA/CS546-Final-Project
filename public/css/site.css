@@ -2207,7 +2207,7 @@ a.tag:hover {
   fieldset[disabled] .textarea,
   fieldset[disabled] .select select,
   .select fieldset[disabled] select {
-    background-color: white;
+    background-color: #E4E5E6;
     border-color: #F5F1E4;
     box-shadow: none;
     color: #9A989A; }
@@ -3515,7 +3515,7 @@ button.dropdown-item {
 .modal-card-head,
 .modal-card-foot {
   align-items: center;
-  background-color: #e6e5e6;
+  background-color: #E4E5E6;
   display: flex;
   flex-shrink: 0;
   justify-content: flex-start;
@@ -7886,6 +7886,9 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 .serif {
   font-family: "EB Garamond", serif;
   font-size: large; }
+
+.is-serif {
+  font-family: "EB Garamond", serif; }
 
 .modal-card {
   overflow-y: scroll; }

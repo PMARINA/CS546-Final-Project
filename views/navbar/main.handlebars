@@ -83,18 +83,22 @@
                 <section class="modal-card-body">
                     <p id="loginFormHelp"></p>
                     <!-- Login Form -->
-                    <label for="loginEmail" class="label">Email</label>
-                    <div class="control" id="loginEmailDiv">
-                        <input type="email" id="loginEmail" class="input" placeholder="Email" autocomplete="username"
-                               name="email">
-                        <p class="help" id="loginEmailHelp"></p>
+                    <div class="field">
+                        <label for="loginEmail" class="label">Email</label>
+                        <div class="control" id="loginEmailDiv">
+                            <input type="email" id="loginEmail" class="input" placeholder="Email" autocomplete="username"
+                                   name="email">
+                            <p class="help" id="loginEmailHelp"></p>
+                        </div>
                     </div>
                     <br>
-                    <label for="loginPassword" class="label">Password</label>
-                    <div class="control" id="loginPasswordDiv">
-                        <input type="password" id="loginPassword" class="input" placeholder="Password"
-                               autocomplete="current-password" name="password">
-                        <div class="content" id="loginPasswordHelp"></div>
+                    <div class="field">
+                        <label for="loginPassword" class="label">Password</label>
+                        <div class="control" id="loginPasswordDiv">
+                            <input type="password" id="loginPassword" class="input" placeholder="Password"
+                                   autocomplete="current-password" name="password">
+                            <div class="content" id="loginPasswordHelp"></div>
+                        </div>
                     </div>
                 </section>
                 <footer class="modal-card-foot buttons is-justify-content-right">
@@ -116,14 +120,14 @@
                     <p id="signupFormHelpText" class="help is-danger is-size-6 block"></p>
                     <!-- Sign Up Form -->
                     <div class="columns">
-                        <div class="column">
+                        <div class="column field">
                             <label class="label" for="signupNameFirst">First Name</label>
                             <div class="control">
                                 <input class="input" type="text" id="signupNameFirst" placeholder="Atilla"
                                        autocomplete="given-name">
                             </div>
                         </div>
-                        <div class="column">
+                        <div class="column field">
                             <label class="label" for="signupNameLast">Last Name</label>
                             <div class="control">
                                 <input class="input" type="text" id="signupNameLast" placeholder="Duck"
@@ -131,21 +135,23 @@
                             </div>
                         </div>
                     </div>
-                    <label class="label" for="signupEmail">Email</label>
-                    <div class="control">
-                        <input type="email" class="input" id="signupEmail" placeholder="aduck@stevens.edu"
-                               autocomplete="username">
+                    <div class="field">
+                        <label class="label" for="signupEmail">Email</label>
+                        <div class="control">
+                            <input type="email" class="input" id="signupEmail" placeholder="aduck@stevens.edu"
+                                   autocomplete="username">
+                        </div>
                     </div>
                     <br>
                     <div class="columns">
-                        <div class="column">
+                        <div class="column field">
                             <label class="label" for="signupPassword">Password</label>
                             <div class="control">
                                 <input class="input" type="password" placeholder="Password" id="signupPassword"
                                        autocomplete="new-password">
                             </div>
                         </div>
-                        <div class="column">
+                        <div class="column field">
                             <label class="label" for="signupPasswordConfirmation">Confirm Password</label>
                             <div class="control">
                                 <input class="input" type="password" placeholder="Password" id="signupPasswordConfirmation"
@@ -153,20 +159,26 @@
                             </div>
                         </div>
                     </div>
-                    <label class="label" for="accessGroupSelection">Access Group</label>
-                    <div class="control">
-                        <select class="select input" id="accessGroupSelection">
-                            <optgroup label="Group not found?" class="optgroup">
-                                <option class="option" value="Other">other...</option>
-                            </optgroup>
-                        </select>
-                        <p class="help">Apply to your main access groups/buildings (subject to approval by an RA/Admin). You
-                            can apply for additional groups later, from the settings menu.</p>
+                    <div class="field">
+                        <label class="label" for="accessGroupSelection">Access Group</label>
+                        <div class="control">
+                            <div class="select">
+                                <select class="select" id="accessGroupSelection">
+                                    <optgroup label="Group not found?" class="optgroup">
+                                        <option class="option" value="Other">other...</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <p class="help">Apply to your main access groups/buildings (subject to approval by an RA/Admin). You
+                                can apply for additional groups later, from the settings menu.</p>
+                        </div>
                     </div>
-                    <br>
-                    <label class="label" for="otherGroupField">Other Access Group</label>
-                    <div class="control">
-                        <input type="text" class="input" placeholder="Access Group" id="otherGroupField" disabled>
+                    <div class="field">
+                        <br>
+                        <label class="label" for="otherGroupField">Other Access Group</label>
+                        <div class="control">
+                            <input type="text" class="input" placeholder="Access Group" id="otherGroupField" disabled>
+                        </div>
                     </div>
                 </section>
                 <footer class="modal-card-foot buttons is-justify-content-right">
