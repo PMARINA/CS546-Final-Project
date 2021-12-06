@@ -106,6 +106,26 @@ async function apiAnonymousOnly(req, res, next) {
 }
 
 /**
+ * Only allow users with the prescribed roles to continue. Others get the 403.
+ * @param {String | String[]} role The allowed role(s)
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Function} next
+ * @returns {Promise<void>}
+ */
+async function onlyAllowRole(role, req, res, next) {
+  if (typeof role === 'string') {
+    role = [role];
+  }
+  role = new Set(role);
+  if (role.has(req.role)) {
+    await next();
+  } else {
+    await sendError(req, res, StatusCodes.FORBIDDEN, `You are not allowed to view this page. Only people in {${Array.from(role).toString()}} can see this page`);
+  }
+}
+
+/**
  * Only allow logged in users through
  * @param {Object} req
  * @param {Object} res
@@ -120,9 +140,10 @@ async function getInfoOnly(req, res, next) {
       req.userValidated = true;
       req.userId = userId;
       req.userData = await userModel.findById(userId.toString());
+      req.role = req.userData.role;
     }
   }
   await next();
 }
 
-module.exports = {loggedInOnly, apiLoggedInOnly, apiAnonymousOnly, getInfoOnly, sendError};
+module.exports = {loggedInOnly, apiLoggedInOnly, apiAnonymousOnly, getInfoOnly, sendError, onlyAllowRole};

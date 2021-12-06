@@ -5,7 +5,7 @@ const router = new express.Router();
 
 router.use(middleware.auth.loggedInOnly);
 
-router.get('/', async (req, res) => {
+router.get('/', middleware.auth.onlyAllowRole.bind(undefined, 'admin'), async (req, res) => {
   res.json('all reports');
 });
 

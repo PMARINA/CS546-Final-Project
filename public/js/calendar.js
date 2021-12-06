@@ -22,7 +22,7 @@
     //     });
     //     $('#addStr').html(htmlstr);
     //     })
-        
+
     //     .catch(function (err) {
     //     console.log(err);
     //     });
