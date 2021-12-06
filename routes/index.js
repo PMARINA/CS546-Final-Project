@@ -13,8 +13,12 @@ const getStatusPhrase = StatusCodes.getStatusText;
 const authMiddleware = require('./middleware').auth;
 const navMiddleware = require('./middleware').navbar;
 const web = require('./web');
+const middleware = require('./middleware');
 const constructorMethod = (app) => {
   // app.uses go here
+  app.use(middleware.auth.getInfoOnly);
+  app.use(middleware.navbar.renderNavbarToReq); // Render navbar for all requests -- easier to see,
+                                                // but web/api responses don't need it
   app.use('/', home);
   app.use('/signup', signup);
   app.use('/login', login);

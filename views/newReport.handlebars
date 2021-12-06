@@ -18,6 +18,7 @@
                             <div class="select">
                                 <select name="building" id="building" class="select"></select>
                             </div>
+                            <p class="help is-danger" id="buildingHelpText"></p>
                         </div>
                     </div>
 
@@ -33,7 +34,8 @@
                                 <input type="radio" name="reportType" id="machineType" value="machine" class="radio">
                                 Machine
                             </label>
-                            <p class="help is-serif is-size-6">Are you reporting an issue with a particular machine within the building, or
+                            <p class="help is-serif is-size-6">Are you reporting an issue with a particular machine
+                                within the building, or
                                 the building
                                 <wbr>
                                 /
@@ -117,4 +119,5 @@
 </div>
 
 <script src="/js/report/reportNewConcern.js" defer></script>
+<script src="/js/report/reportNewConcernFormValidation.js" defer></script>
 <!--- Body goes here --->
