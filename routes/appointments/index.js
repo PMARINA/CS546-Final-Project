@@ -7,7 +7,7 @@ router.use(middleware.auth.loggedInOnly);
 
 router.get('/', async (req, res) => {
   const accessGroups = req.userData.accessGroups;
-  const buildingsWithAccessGroups = await Building.find({accessGroup: {$in: accessGroups}});
+  const buildingsWithAccessGroups = await Building.find({accessGroups: {$in: accessGroups}});
   const results = [];
   for (let i = 0; i < buildingsWithAccessGroups.length; i++) {
     const building = buildingsWithAccessGroups[i];

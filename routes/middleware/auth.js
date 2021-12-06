@@ -119,7 +119,7 @@ async function getInfoOnly(req, res, next) {
     if (await User.exists(userId)) {
       req.userValidated = true;
       req.userId = userId;
-      req.userData = userModel.findById(userId.toString());
+      req.userData = await userModel.findById(userId.toString());
     }
   }
   await next();

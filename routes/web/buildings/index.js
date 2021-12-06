@@ -6,8 +6,8 @@ const Building = require('../../../models/building');
 
 router.get('/', middleware.auth.apiLoggedInOnly, async (req, res) => {
   const userObject = await User.findById(req.userId);
-  const accessGroups = userObject.accessGroups;
-  const buildingsWithAccessGroups = await Building.find({accessGroup: {$in: accessGroups}});
+  const userAccessGroups = userObject.accessGroups;
+  const buildingsWithAccessGroups = await Building.find({accessGroups: {$in: userAccessGroups}});
   const results = [];
   for (let i = 0; i < buildingsWithAccessGroups.length; i++) {
     const building = buildingsWithAccessGroups[i];
