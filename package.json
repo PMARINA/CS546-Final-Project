@@ -10,7 +10,8 @@
     "express-session": "^1.17.2",
     "moment": "^2.29.1",
     "mongodb": "^4.1.4",
-    "mongoose": "^6.0.12"
+    "mongoose": "^6.0.12",
+    "nodemailer-smtp-transport": "^2.7.4"
   },
   "description": "Washer/Drier Management WebApp",
   "devDependencies": {
