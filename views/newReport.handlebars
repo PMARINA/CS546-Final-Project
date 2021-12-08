@@ -9,7 +9,12 @@
         <h1 class="title card-header-title">Report a Concern</h1>
       </div>
 
-      <form class="form m-5" id="newReportForm">
+      <form
+        class="form m-5"
+        id="newReportForm"
+        action="/reports/new"
+        method="post"
+      >
 
         <div class="card-body">
           <div class="field">
@@ -53,6 +58,8 @@
                 <wbr />
                 laundry facility itself?
               </p>
+              <p class="help is-danger" id="categorySelectionHelpText"></p>
+
             </div>
           </div>
 
@@ -80,6 +87,7 @@
                 />
                 Drier
               </label>
+              <p class="is-danger help" id="selectedMachineTypeText"></p>
             </div>
           </div>
 
@@ -92,6 +100,7 @@
                 </select>
               </div>
             </div>
+            <p class="is-danger help" id="whichMachineText"></p>
           </div>
 
           <div class="field">
@@ -103,8 +112,10 @@
                 class="textarea"
                 placeholder="How can we help?"
                 id="complaint"
+                name="complaint"
               ></textarea>
             </div>
+            <p class="is-danger help" id="complaintText"></p>
           </div>
 
           <div class="field mb-3">
@@ -145,6 +156,7 @@
             </div>
             <p class="help is-serif is-size-6">How would you characterize the
               urgency of the issue?</p>
+            <p class="help is-danger" id="severityText"></p>
           </div>
           <!--                    <br>-->
         </div>

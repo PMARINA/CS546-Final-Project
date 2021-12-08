@@ -2,13 +2,18 @@ window.jQuery.noConflict();
 (($) => {
   $(function (events, handler) {
     // HTML DOM Elements
-    const buildingHelpText = $("#buildingHelpText");
-    const buildingSelection = $("select[name='building']");
-    const washerRadioElement = $("#washer");
-    const whichSpecificMachineDropdown = $("#whichMachine");
-    const machineCategorySelection = $("input[name='machineType']");
-    const reportType = $("input[name='reportType']");
+    const buildingHelpText = $("#buildingHelpText"); // Validation
+    const buildingSelection = $("select[name='building']"); // Which building is the problem in
+    const washerRadioElement = $("#washer"); // The washer element (to select washer/drier)
+    const whichSpecificMachineDropdown = $("#whichMachine"); // User selects which machine is causing issue
+    const machineCategorySelection = $("input[name='machineType']"); // User wants to report washer/drier
+    const reportType = $("input[name='reportType']"); // user wants to report building/machine
+    const categorySelectionHelpText = $("#categorySelectionHelpText"); // reportType Help Text Validation
+    const selectedMachineTypeText = $("#selectedMachineTypeText");
+    const whichMachineText = $("#whichMachineText");
     const complaintField = $("#complaint");
+    const complaintText = $("#complaintText");
+    const severityText = $("#severityText");
     const form = $("#newReportForm");
 
     /**
@@ -16,7 +21,8 @@ window.jQuery.noConflict();
      * @return {('building'|'machine'|undefined)} String
      */
     function getCurrentlySelectedOptionBuildingMachine() {
-      return $("input[name='reportType']:checked").val();
+      const field = $("input[name='reportType']:checked");
+      return field === undefined ? undefined : field.val();
     }
 
     /**
@@ -24,7 +30,8 @@ window.jQuery.noConflict();
      * @return {('washer'|'drier'|undefined)}
      */
     function getCurrentlySelectedOptionWasherDrier() {
-      return $("input[name='machineType']:checked").val();
+      const field = $("input[name='machineType']:checked");
+      return field === undefined ? undefined : field.val();
     }
 
     /**
@@ -32,7 +39,8 @@ window.jQuery.noConflict();
      * @return {String}
      */
     function getCurrentlySelectedMachineId() {
-      return $("input[name='machineModel']:selected").val();
+      const field = $("#whichMachine");
+      return field === undefined ? undefined : field.val();
     }
 
     /**
@@ -40,7 +48,7 @@ window.jQuery.noConflict();
      * @return {String}
      */
     function getComplaint() {
-      return complaintField.val();
+      return complaintField === undefined ? undefined : complaintField.val();
     }
 
     /**
@@ -48,7 +56,7 @@ window.jQuery.noConflict();
      * @return {String}
      */
     function getSeverity() {
-      return $("input[name='severity']:selected").val();
+      return $("input[name='severity']:checked").val();
     }
 
     /**
@@ -67,14 +75,121 @@ window.jQuery.noConflict();
       const selectedBuilding = getSelectedBuilding();
       if (!selectedBuilding) {
         buildingHelpText.text(
-          "You must select a building. If none are available, then you do not have access to any buildings."
+          "You must select a building. If none are available, then you do not have access to any " +
+            "buildings and must apply for access to a building and wait for an admin or RA to approve your access."
         );
-        buildingSelection.addClass("is-danger");
+        buildingHelpText.show();
       } else {
-        buildingSelection.removeClass("is-danger");
         buildingHelpText.hide();
       }
       return !!selectedBuilding;
+    }
+
+    /**
+     * Ensure the report is either a building or machine. If not, it's either because the schema was changed
+     * or the user didn't select anything
+     */
+    function validateReportCategory() {
+      const selectedCategory = getCurrentlySelectedOptionBuildingMachine();
+      if (selectedCategory === undefined) {
+        categorySelectionHelpText.text("You must select a report category.");
+        categorySelectionHelpText.show();
+      } else if (
+        selectedCategory !== "machine" &&
+        selectedCategory !== "building"
+      ) {
+        categorySelectionHelpText.text(
+          "The selected category is not valid per the clientside validation. " +
+            "Please report this form to a developer/admin."
+        );
+        categorySelectionHelpText.show();
+      } else {
+        categorySelectionHelpText.hide();
+        return true;
+      }
+      return false;
+    }
+
+    /**
+     * Validate that the machine is either drier or washer
+     */
+    function validateMachineType() {
+      const selectedMachineType = getCurrentlySelectedOptionWasherDrier();
+      if (selectedMachineType === "washer" || selectedMachineType === "drier") {
+        selectedMachineTypeText.hide();
+        return true;
+      } else if (selectedMachineType === undefined) {
+        selectedMachineTypeText.text(
+          "You must select a washer or drier if reporting a machine"
+        );
+        selectedMachineTypeText.show();
+      } else {
+        selectedMachineTypeText.text(
+          "The selected Machine Type is not valid per the clientside validation. " +
+            "Please report this form to a developer/admin."
+        );
+        selectedMachineTypeText.show();
+      }
+      return false;
+    }
+
+    function validateWhichMachine() {
+      const machineId = getCurrentlySelectedMachineId();
+      if (machineId === undefined || machineId.trim() === "") {
+        whichMachineText.text(
+          "A machine must be selected to report an issue with a machine. " +
+            "If you are not finding a machine, please report this as a building concern " +
+            "and mention this issue in your report."
+        );
+        whichMachineText.show();
+      } else {
+        whichMachineText.hide();
+        return true;
+      }
+      return false;
+    }
+
+    function validateComplaint() {
+      const complaint = getComplaint();
+      if (complaint === undefined || complaint.trim() === "") {
+        complaintText.text(
+          "The complaint must not be empty. " +
+            "Please let us know what is broken and what we can do to fix it."
+        );
+        complaintText.show();
+      } else {
+        complaintText.hide();
+        return true;
+      }
+      return false;
+    }
+
+    function validateSeverity() {
+      const severity = getSeverity();
+      console.log(`Severity is: ${severity}`);
+      if (severity === undefined) {
+        severityText.text(
+          "The severity must be defined to help us prioritize our response and resources. " +
+            "Please let us know the urgency of this issue."
+        );
+        severityText.show();
+        return false;
+      } else if (
+        severity === "catastrophic" ||
+        severity === "inconvenient" ||
+        severity === "minor"
+      ) {
+        severityText.hide();
+        return true;
+      } else {
+        severityText.text(
+          "The selected severity is not valid. " +
+            "Please let an administrator know that this form needs to be updated."
+        );
+        severityText.show();
+        return false;
+      }
+      return false;
     }
 
     /**
@@ -100,9 +215,8 @@ window.jQuery.noConflict();
      * Handle form submission events
      */
     function processFormSubmit(e) {
-      e.preventDefault();
-      if (validateForm()) {
-        submitForm();
+      if (!validateForm()) {
+        e.preventDefault();
       }
     }
 
