@@ -1,8 +1,8 @@
-ObjectId = require("mongoose").Types.ObjectId;
-Report = require("../../models/report");
-Building = require("../../models/building");
-User = require("../../models/user");
-validateUserHasAccess = require("../Building/validateAccess");
+const ObjectId = require("mongoose").Types.ObjectId;
+const Report = require("../../models/report");
+const Building = require("../../models/building");
+const User = require("../../models/user");
+const validateUserHasAccess = require("../Building/validateAccess");
 
 /**
  * Create a user report
@@ -63,7 +63,8 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
     throw new Error("Expected severity to be inconvenient|minor|catastrophic");
   }
 
-  if (!(await User.exists({ _id: reporterIdAsObjectId }))) {
+  if (!(await User.findById(reporterId))) {
+    console.log(reporterId, reporterIdAsObjectId);
     throw new Error("The reporter does not exist in the users DB");
   }
   let buildingId = undefined;

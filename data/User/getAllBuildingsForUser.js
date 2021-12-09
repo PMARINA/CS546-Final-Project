@@ -12,8 +12,7 @@ async function getAllBuildingsForUser(uid) {
     // throw new Error("User does not exist");
     return new Promise((resolve) => resolve([]));
   } else {
-    const userObject = await user.findById(uid);
-    const groups = userObject.accessGroups;
+    const { accessGroups: groups } = await user.findById(uid);
     return Buildings.find({ accessGroups: { $in: groups } });
   }
 }

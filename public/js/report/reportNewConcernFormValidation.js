@@ -79,10 +79,11 @@ window.jQuery.noConflict();
             "buildings and must apply for access to a building and wait for an admin or RA to approve your access."
         );
         buildingHelpText.show();
+        return false;
       } else {
         buildingHelpText.hide();
+        return true;
       }
-      return !!selectedBuilding;
     }
 
     /**
@@ -94,6 +95,7 @@ window.jQuery.noConflict();
       if (selectedCategory === undefined) {
         categorySelectionHelpText.text("You must select a report category.");
         categorySelectionHelpText.show();
+        return false;
       } else if (
         selectedCategory !== "machine" &&
         selectedCategory !== "building"
@@ -103,11 +105,11 @@ window.jQuery.noConflict();
             "Please report this form to a developer/admin."
         );
         categorySelectionHelpText.show();
+        return false;
       } else {
         categorySelectionHelpText.hide();
         return true;
       }
-      return false;
     }
 
     /**
@@ -123,14 +125,15 @@ window.jQuery.noConflict();
           "You must select a washer or drier if reporting a machine"
         );
         selectedMachineTypeText.show();
+        return false;
       } else {
         selectedMachineTypeText.text(
           "The selected Machine Type is not valid per the clientside validation. " +
             "Please report this form to a developer/admin."
         );
         selectedMachineTypeText.show();
+        return false;
       }
-      return false;
     }
 
     function validateWhichMachine() {
@@ -142,11 +145,11 @@ window.jQuery.noConflict();
             "and mention this issue in your report."
         );
         whichMachineText.show();
+        return false;
       } else {
         whichMachineText.hide();
         return true;
       }
-      return false;
     }
 
     function validateComplaint() {
@@ -157,11 +160,11 @@ window.jQuery.noConflict();
             "Please let us know what is broken and what we can do to fix it."
         );
         complaintText.show();
+        return false;
       } else {
         complaintText.hide();
         return true;
       }
-      return false;
     }
 
     function validateSeverity() {
@@ -189,7 +192,6 @@ window.jQuery.noConflict();
         severityText.show();
         return false;
       }
-      return false;
     }
 
     /**

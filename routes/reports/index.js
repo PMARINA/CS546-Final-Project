@@ -1,6 +1,8 @@
 const express = require("express");
 const User = require("../../data/User");
+const Building = require("../../models/building");
 const middleware = require("../middleware");
+const Report = require("../../data/Report");
 const router = new express.Router();
 const StatusCodes = require("http-status-codes");
 
@@ -53,7 +55,7 @@ async function validateForm(submittedReport, req, res) {
   const allowedBuildings = await User.getAllBuildingsForUser(req.userId);
   let buildingAccessApproved = false;
   for (const building of allowedBuildings) {
-    if (building.toString() === submittedReport.building) {
+    if (building._id.toString() === submittedReport.building) {
       buildingAccessApproved = true;
       break;
     }
@@ -67,18 +69,91 @@ async function validateForm(submittedReport, req, res) {
     );
     return false;
   }
+  if (
+    submittedReport.reportType !== "building" &&
+    submittedReport.reportType !== "machine"
+  ) {
+    await middleware.auth.sendError(
+      req,
+      res,
+      StatusCodes.BAD_REQUEST,
+      "The report type must be one of building or machine"
+    );
+    return false;
+  }
+  if (submittedReport.reportType === "machine") {
+    const validMachineTypes = ["drier", "washer"];
+    if (!validMachineTypes.includes(submittedReport.machineType)) {
+      await middleware.auth.sendError(
+        req,
+        res,
+        StatusCodes.BAD_REQUEST,
+        `The selected type of laundry machine is not valid (expected ${validMachineTypes.toString()})`
+      );
+      return false;
+    }
+    const buildingSearchFilter = { _id: submittedReport.building };
+    buildingSearchFilter[submittedReport.machineType + "s"] =
+      submittedReport.machineModel;
+    if (!(await Building.exists(buildingSearchFilter))) {
+      await middleware.auth.sendError(
+        req,
+        res,
+        StatusCodes.BAD_REQUEST,
+        "The machine is either not of the type you specified (washer/drier), or does not exist in the specified building"
+      );
+      return false;
+    }
+  }
+  const validSeverities = ["minor", "inconvenient", "catastrophic"];
+  if (!validSeverities.includes(submittedReport.severity)) {
+    await middleware.auth.sendError(
+      req,
+      res,
+      StatusCodes.BAD_REQUEST,
+      `The report severity must be one of ${validSeverities.toString()}`
+    );
+    return false;
+  }
+  if (submittedReport.complaint.trim() === "") {
+    await middleware.auth.sendError(
+      req,
+      res,
+      StatusCodes.BAD_REQUEST,
+      `The report must have a complaint attached to it`
+    );
+    return false;
+  }
   return true;
 }
 
+/**
+ * There are two main types of complaints that can be received:
+ * 1. Without a specific machine
+ * 2. With a specific machine
+ *
+ * Their corresponding reports are given below:
+ * 1. {"building":"61ae5cdbacaa336b1a526711","reportType":"building","severity":"catastrophic","complaint":"bad floor"}
+ * 2. {"building":"61ae5cdbacaa336b1a526711","reportType":"machine","machineType":"drier","machineModel":"61ae5cdbacaa336b1a526713","severity":"inconvenient","complaint":"Bad floor"}
+ */
 router.post("/new", async (req, res) => {
-  // {"building":"61ae5cdbacaa336b1a526711","reportType":"building","severity":"catastrophic"}
-  // {"building":"61ae5cdbacaa336b1a526711","reportType":"machine","machineType":"drier","machineModel":"61ae5cdbacaa336b1a526713","severity":"inconvenient"}
   const submittedReport = req.body;
   if (!ensureFormParameters(submittedReport, req, res)) return;
   if (!(await validateForm(submittedReport, req, res))) return;
-  // console.log("This is the posted thing...");
-  // console.log(JSON.stringify(req.body));
-  // res.json(req.body);
+  await Report.create(
+    submittedReport.reportType,
+    req.userId.toString(),
+    submittedReport.reportType === "machine"
+      ? submittedReport.machineModel
+      : submittedReport.building,
+    submittedReport.complaint,
+    submittedReport.severity
+  );
+  res.render("reportReceived", {
+    navbar: req.navbar,
+    priority: submittedReport.severity,
+    building: (await Building.findById(submittedReport.building)).name,
+  });
 });
 
 router.delete("/:id", async (req, res) => {
