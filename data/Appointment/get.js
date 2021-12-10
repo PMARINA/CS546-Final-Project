@@ -1,6 +1,6 @@
-Appointment = require("../../models/appointment");
-User = require("../User");
-ObjectId = require("mongoose").Types.ObjectId;
+const Appointment = require("../../models/appointment");
+const User = require("../User");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 /**
  *

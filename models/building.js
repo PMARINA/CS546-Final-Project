@@ -134,5 +134,5 @@ const buildingSchema = new Schema(
   }
 );
 
-const Building = mongoose.model("Buildings", buildingSchema);
+const Building = new mongoose.model("Buildings", buildingSchema);
 module.exports = Building;

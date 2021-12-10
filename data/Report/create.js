@@ -63,7 +63,7 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
     throw new Error("Expected severity to be inconvenient|minor|catastrophic");
   }
 
-  if (!(await User.exists({_id: reporterIdAsObjectId}))) {
+  if (!(await User.exists({ _id: reporterIdAsObjectId }))) {
     throw new Error("The reporter does not exist in the users DB");
   }
   let buildingId = undefined;
@@ -74,12 +74,12 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
     }
     await validateUserHasAccess(reporterIdAsObjectId, buildingId);
   } else if (type === "machine") {
-    const buildingWithMachine = (await Building.findOne({
+    const buildingWithMachine = await Building.findOne({
       $or: [
         { "washers._id": entityIdAsObject },
         { "driers._id": entityIdAsObject },
       ],
-    }))
+    });
     if (
       !(await Building.exists({
         $or: [

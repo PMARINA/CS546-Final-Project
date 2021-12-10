@@ -1,5 +1,5 @@
-Report = require("../../models/report");
-ObjectId = require("mongoose").Types.ObjectId;
+const Report = require("../../models/report");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 /**
  * Mark a report as resolved.

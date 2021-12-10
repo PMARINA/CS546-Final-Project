@@ -4,6 +4,7 @@ const Building = require("../../models/building");
 const middleware = require("../middleware");
 const Report = require("../../data/Report");
 const router = new express.Router();
+const ObjectId = require("mongoose").Types.ObjectId;
 const StatusCodes = require("http-status-codes");
 
 router.use(middleware.auth.loggedInOnly);
@@ -53,11 +54,18 @@ function ensureFormParameters(submittedReport, req, res) {
 
 async function validateForm(submittedReport, req, res) {
   const allowedBuildings = await User.getAllBuildingsForUser(req.userId);
+  console.log(allowedBuildings);
   let buildingAccessApproved = false;
   for (const building of allowedBuildings) {
     if (building._id.toString() === submittedReport.building) {
       buildingAccessApproved = true;
       break;
+    } else {
+      console.log(
+        `BuildingId: ${building._id.toString()}; submittedId: ${
+          submittedReport.building
+        }`
+      );
     }
   }
   if (!buildingAccessApproved) {
@@ -92,9 +100,15 @@ async function validateForm(submittedReport, req, res) {
       );
       return false;
     }
-    const buildingSearchFilter = { _id: submittedReport.building };
-    buildingSearchFilter[submittedReport.machineType + "s"] =
-      submittedReport.machineModel;
+    const buildingSearchFilter = {
+      _id: new ObjectId(submittedReport.building),
+    };
+    buildingSearchFilter[submittedReport.machineType + "s._id"] = new ObjectId(
+      submittedReport.machineModel
+    );
+    console.log(
+      `Building search filter: ${JSON.stringify(buildingSearchFilter)}`
+    );
     if (!(await Building.exists(buildingSearchFilter))) {
       await middleware.auth.sendError(
         req,
