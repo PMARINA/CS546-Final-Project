@@ -6,7 +6,7 @@ const middleware = require("../middleware");
 router.use(middleware.auth.loggedInOnly);
 
 router.get("/", async (req, res) => {
-  const accessGroups = req.userData.accessGroups;
+  const accessGroups = res.locals.userInfo.accessGroups;
   const buildingsWithAccessGroups = await Building.find({
     accessGroups: { $in: accessGroups },
   });
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
     newObj.name = building.name.toString();
     results.push(newObj);
   }
-  res.render("appointments", { buildings: results, navbar: req.navbar });
+  res.render("appointments", { buildings: results, navbar: res.locals.navbar });
 });
 
 router.post("/", async (req, res) => {

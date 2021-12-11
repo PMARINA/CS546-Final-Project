@@ -6,9 +6,9 @@
       $("#apptDate").val() + "T" + $("#apptTime").val()
     );
     // const timeVal = $('#apptTime').val();
-    console.log($("#apptDate").val() + $("#apptTime").val());
-    console.log(calendarVal);
-    console.log(today);
+    // console.log($("#apptDate").val() + $("#apptTime").val());
+    // console.log(calendarVal);
+    // console.log(today);
     if (calendarVal < today) {
       $("#error_body").text("Appointments can not be made in the past.");
       $("#error_body").show();

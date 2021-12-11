@@ -57,7 +57,7 @@ $stevensSecondaryBlue: #004380;
 $stevensSecondaryTurquoise: #008a90;
 $stevensSecondaryOrange: #e7842e;
 
-$stevensAccentBlue: #007db8; // #4896CF;
+$stevensAccentBlue: #0074ac; //#007db8; // #4896CF;
 $stevensAccentPurple: #7a548b;
 
 $stevensLightGrey: #e4e5e6;
@@ -151,8 +151,63 @@ $input-disabled-background-color: $stevensLightGrey; //lighten($scheme-main, 7%)
   overflow-y: scroll;
 }
 
+.center-content-column {
+  @extend .is-8-desktop;
+  @extend .is-offset-2-desktop;
+  @extend .is-8-tablet;
+  @extend .is-offset-2-tablet;
+}
+
+.button-next-to-field {
+  @extend .is-narrow;
+}
+
+@include until($tablet) {
+  .button-next-to-field {
+    padding-top: 0;
+  }
+}
+
+@include from($tablet) {
+  .button-next-to-field {
+    padding-top: 2rem;
+  }
+}
+
+.card {
+  @extend .mb-6;
+}
+
 p {
   overflow-wrap: break-word;
+}
+
+.card-header {
+  background-color: $stevensSecondaryOrange; //mix($background, lighten($stevensAccentBlue, 55%));
+}
+
+// KBD css from https://www.rgagnon.com/jsdetails/js-nice-effect-the-KBD-tag.html
+kbd {
+  margin: 0px 0.1em;
+  padding: 0.1em 0.6em;
+  border-radius: 3px;
+  border: 1px solid rgb(204, 204, 204);
+  color: rgb(51, 51, 51);
+  line-height: 1.4;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10px;
+  display: inline-block;
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.2), inset 0px 0px 0px 2px #ffffff;
+  background-color: rgb(247, 247, 247);
+  -moz-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 0 2px #ffffff inset;
+  -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 0 2px #ffffff inset;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  text-shadow: 0 1px 0 #fff;
+  transform: translate(
+    0,
+    -2px
+  ); // transform my own (I didn't like the way it below the text a little bit)
 }
 
 //@include until($desktop) {

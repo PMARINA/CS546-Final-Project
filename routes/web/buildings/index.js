@@ -5,7 +5,7 @@ const User = require("../../../models/user");
 const Building = require("../../../models/building");
 
 router.get("/", middleware.auth.apiLoggedInOnly, async (req, res) => {
-  const userObject = await User.findById(req.userId);
+  const userObject = await User.findById(res.locals.userId.toString());
   const userAccessGroups = userObject.accessGroups;
   const buildingsWithAccessGroups = await Building.find({
     accessGroups: { $in: userAccessGroups },
@@ -24,7 +24,7 @@ router.get("/", middleware.auth.apiLoggedInOnly, async (req, res) => {
 router.get("/:id/:type", middleware.auth.apiLoggedInOnly, async (req, res) => {
   const buildingId = req.params["id"];
   const machineType = req.params["type"] + "s";
-  const userObject = await User.findById(req.userId);
+  const userObject = await User.findById(res.locals.userId);
   const accessGroups = userObject.accessGroups;
   const building = await Building.findOne({
     accessGroup: { $in: accessGroups },

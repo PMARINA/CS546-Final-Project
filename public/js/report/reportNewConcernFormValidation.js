@@ -169,7 +169,6 @@ window.jQuery.noConflict();
 
     function validateSeverity() {
       const severity = getSeverity();
-      console.log(`Severity is: ${severity}`);
       if (severity === undefined) {
         severityText.text(
           "The severity must be defined to help us prioritize our response and resources. " +

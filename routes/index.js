@@ -36,7 +36,7 @@ const constructorMethod = (app) => {
     (req, res) => {
       const url = req.protocol + "://" + req.get("host") + req.originalUrl; // from https://stackoverflow.com/a/10185427
       res.status(StatusCodes.NOT_FOUND).render("error", {
-        navbar: req.navbar,
+        navbar: res.locals.navbar,
         errCode: StatusCodes.NOT_FOUND,
         errMsg: getStatusPhrase(StatusCodes.NOT_FOUND),
         errMsgDescriptive: `${req.method} @ ${url} is not valid on this server`,

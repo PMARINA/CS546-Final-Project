@@ -1,0 +1,185 @@
+<header>
+    {{{navbar}}}
+</header>
+<div class="columns mt-5">
+    <div class="column center-content-column">
+        <!-- Card for description of the page -->
+        <div class="card">
+            <div class="card-header">
+                <h1 class="title card-header-title">Preferences</h1>
+            </div>
+
+            <div class="card-body p-5">
+                <p class="">Please change any/all information on this page to reflect
+                    your preferences.</p>
+            </div>
+        </div>
+
+
+        <!-- Updating the user's name -->
+        <div class="card">
+            <div class="card-header"><h2 class="card-header-title">Name</h2></div>
+            <div class="card-content p-5">
+                <form class="form" id="nameForm">
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label for="name-first" class="label">First Name</label>
+                                <div class="control">
+                                    <input type="text" class="input" id="name-first" name="name.first"
+                                           autocomplete="given-name"
+                                        {{#if userInfo.name.first}}
+                                            value="{{userInfo.name.first}}"
+                                            placeholder="{{userInfo.name.first}}"
+                                        {{/if}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <label for="name-last" class="label">Last Name</label>
+                                <div class="control">
+                                    <input type="text" class="input" id="name-last" name="name.last"
+                                           autocomplete="family-name"
+                                        {{#if userInfo.name.last}}
+                                           value="{{userInfo.name.last}}"
+                                           placeholder="{{userInfo.name.last}}"
+                                        {{/if}}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-narrow">
+                            <div class="field">
+                                <div class="control button-next-to-field">
+                                    <div class="buttons is-justify-content-right">
+                                        <input type="submit" class="button is-success" id="submitName"
+                                               value="Update Name">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Update the user's email -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-header-title">Email</h2>
+            </div>
+            <div class="card-content">
+                <form id="emailForm">
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label for="email" class="label">Email</label>
+                                <div class="control">
+                                    <input type="email" class="input" id="email" name="email" autocomplete="email"
+                                        {{#if userInfo.email}}
+                                           value="{{userInfo.email}}"
+                                           placeholder="{{userInfo.email}}"
+                                        {{/if}}
+                                    />
+                                    <p class="help">Note that you will have to sign in with your updated email. Please
+                                        update any password managers to reflect this.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-narrow">
+                            <div class="is-justify-content-right buttons button-next-to-field">
+                                <input type="submit" class="button is-success" id="emailSubmit" value="Update Email"/>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Allow the user to request user-groups -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-header-title">Request Access</h2>
+            </div>
+            {{#if unAppliedPermissionsExist}}
+                <div class="card-content">
+                    <p class="block">Request access to any of the groups below by highlighting any (for multiple, hold
+                        <kbd>ctrl</kbd>
+                        or <kbd>⌘</kbd> while clicking) and submitting the form.</p>
+                    <form id="accessGroupForm">
+                        <div class="field">
+                            <label for="multiselect" class="label">Access Groups</label>
+                            <div class="control select is-multiple">
+                                <select multiple id="multiselect">
+                                    {{#each unAppliedPermissions}}
+                                        <option value="{{this.value}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control buttons is-justify-content-right">
+                            <input type="submit" class="button is-success">
+                        </div>
+                    </form>
+                </div>
+                {{else}}
+                <div class="card-content">
+                    <p class="block is-danger">It appears you have requested access to all available buildings/groups. Please wait for an administrator or RA to approve your accesses.</p>
+                </div>
+            {{/if}}
+        </div>
+
+
+        <!-- Update the user's password -->
+        <div class="card">
+            <div class="card-header">
+                <h2 class="label card-header-title">Password</h2>
+            </div>
+            <div class="card-content">
+                <form id="passwordForm">
+                    <div class="field pb-2">
+                        <label for="existingPassword" class="label">Current Password</label>
+                        <div class="control">
+                            <input class="input" type="password" id="existingPassword"
+                                   name="existingPassword" autocomplete="current-password"
+                                   placeholder="Current Password"
+                            />
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label for="newPwd" class="label">New Password</label>
+                                <div class="control">
+                                    <input class="input" type="password" id="newPwd"
+                                           name="newPassword" autocomplete="new-password" placeholder="New Password">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <label for="newPwdConf" class="label">Confirm New Password</label>
+                                <div class="control">
+                                    <input class="input" type="password" id="newPwdConf"
+                                           name="newPasswordConfirmation" autocomplete="new-password" placeholder="New Password">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="buttons is-justify-content-right">
+                        <input type="submit" class="button is-success" id="passwordSubmitButton"
+                               value="Update Password"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/preferences/nameValidation.js" defer></script>
+<script src="/js/preferences/emailValidation.js" defer></script>
+<script src="/js/preferences/passwordValidation.js" defer></script>
+<script src="/js/preferences/groupsValidation.js" defer></script>

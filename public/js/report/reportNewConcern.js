@@ -65,7 +65,6 @@ window.jQuery.noConflict();
       try {
         $.get(`/web/buildings/${selectedBuildingId}/${whichOne}`).done(
           function (data) {
-            console.log(data);
             if (data.redirect !== undefined) {
               window.location.redirect(data.redirect);
             }
@@ -88,7 +87,6 @@ window.jQuery.noConflict();
     function populateBuildingsIntoForm() {
       try {
         $.get("/web/buildings").done(function (data) {
-          console.log(data);
           if (!data) return;
           if (typeof data === "object" && data.redirect)
             window.location.redirect(data.redirect);
@@ -96,7 +94,6 @@ window.jQuery.noConflict();
           for (let i = 0; i < data.length; i++) {
             const obj = data[i];
             const newElement = `<option value="${obj._id}">${obj.name}</option>`;
-            console.log(newElement);
             buildingSelection.append(newElement);
           }
         });

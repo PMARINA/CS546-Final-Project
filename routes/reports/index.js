@@ -18,7 +18,7 @@ router.get(
 );
 
 router.get("/new", async (req, res) => {
-  res.render("newReport", { navbar: req.navbar });
+  res.render("newReport", { navbar: res.locals.navbar });
 });
 
 function ensureFormParameters(submittedReport, req, res) {
@@ -53,19 +53,13 @@ function ensureFormParameters(submittedReport, req, res) {
 }
 
 async function validateForm(submittedReport, req, res) {
-  const allowedBuildings = await User.getAllBuildingsForUser(req.userId);
-  console.log(allowedBuildings);
+  const allowedBuildings = await User.getAllBuildingsForUser(res.locals.userId);
   let buildingAccessApproved = false;
   for (const building of allowedBuildings) {
     if (building._id.toString() === submittedReport.building) {
       buildingAccessApproved = true;
       break;
     } else {
-      console.log(
-        `BuildingId: ${building._id.toString()}; submittedId: ${
-          submittedReport.building
-        }`
-      );
     }
   }
   if (!buildingAccessApproved) {
@@ -105,9 +99,6 @@ async function validateForm(submittedReport, req, res) {
     };
     buildingSearchFilter[submittedReport.machineType + "s._id"] = new ObjectId(
       submittedReport.machineModel
-    );
-    console.log(
-      `Building search filter: ${JSON.stringify(buildingSearchFilter)}`
     );
     if (!(await Building.exists(buildingSearchFilter))) {
       await middleware.auth.sendError(
@@ -156,7 +147,7 @@ router.post("/new", async (req, res) => {
   if (!(await validateForm(submittedReport, req, res))) return;
   await Report.create(
     submittedReport.reportType,
-    req.userId.toString(),
+    res.locals.userId.toString(),
     submittedReport.reportType === "machine"
       ? submittedReport.machineModel
       : submittedReport.building,
@@ -164,7 +155,7 @@ router.post("/new", async (req, res) => {
     submittedReport.severity
   );
   res.render("reportReceived", {
-    navbar: req.navbar,
+    navbar: res.locals.navbar,
     priority: submittedReport.severity,
     building: (await Building.findById(submittedReport.building)).name,
   });
