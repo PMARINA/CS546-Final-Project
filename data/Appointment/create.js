@@ -95,22 +95,22 @@ function cleanAndVerifyObjectId(oid, oidName) {
  * @param {String} cycleDurationString hh:mm:ss duration of the cycle
  * @param {Date} endTimestamp When the appointment is supposed to end
  */
-function verifyEnoughTime(startTimestamp, cycleDurationString, endTimestamp) {
-  const durationMatches = cycleDurationString.match(/(\d{2}):(\d{2}):(\d{2})/);
-  const hours = parseInt(durationMatches[1], 10);
-  const minutes = parseInt(durationMatches[2], 10);
-  const seconds = parseInt(durationMatches[3], 10);
-  const earliestEndDate = moment(startTimestamp)
-    .add(hours, "hours")
-    .add(minutes, "minutes")
-    .add(seconds, "seconds")
-    .toDate();
-  if (earliestEndDate > endTimestamp) {
-    throw new Error(
-      "The cycle cannot possibly end before the requested end date"
-    );
-  }
-}
+// function verifyEnoughTime(startTimestamp, cycleDurationString, endTimestamp) {
+//   const durationMatches = cycleDurationString.match(/(\d{2}):(\d{2}):(\d{2})/);
+//   const hours = parseInt(durationMatches[1], 10);
+//   const minutes = parseInt(durationMatches[2], 10);
+//   const seconds = parseInt(durationMatches[3], 10);
+//   const earliestEndDate = moment(startTimestamp)
+//     .add(hours, "hours")
+//     .add(minutes, "minutes")
+//     .add(seconds, "seconds")
+//     .toDate();
+//   if (earliestEndDate > endTimestamp) {
+//     throw new Error(
+//       "The cycle cannot possibly end before the requested end date"
+//     );
+//   }
+// }
 
 /**
  *
@@ -171,7 +171,7 @@ async function cleanAndVerify(
   const machineModelDoc = await MachineModel.findById(machineModelId);
   const cycle = findCycle(machineModelDoc, cycleIdAsObjectId);
   const cycleDurationString = cycle.time;
-  verifyEnoughTime(startTimestamp, cycleDurationString, endTimestamp);
+  // verifyEnoughTime(startTimestamp, cycleDurationString, endTimestamp);
   if (!(await User.exists({ _id: userIdAsObjectId }))) {
     throw new Error("The user making the appointment does not exist");
   }
