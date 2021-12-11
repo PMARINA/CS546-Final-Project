@@ -1,21 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const appointment = require('../../models/appointment')
-const machine=require('../../models/machineModel')
-
+const notify=require('../../data/notification')
+const user=require('../../models/user')
 
 router.post('/', async (req, res) => {
-   const name=machine.find({"_id":appointment.machineId}).name;
-    const mailOptions = {
-            from: 'YOUR EMAIL',
-            to: req.session.email,//user's email
-            subject: `Appointment successful`,
-            html:`Your appointment is <h1>Time: ${appointment.startTimestamp} Machine: ${name}</h1>`
-        };
-        transporter.sendMail(mailOptions, (error, data) => {
-            if (error) {
-                console.log(error)
-            }
-        });
-    })
+   try{
+       let cancelappointment=[]
+       appointment.forEach(element=>{
+           if(element.machineId==machineId) cancelappointment.push(element.userId)
+       })
+       cancelappointment.forEach(cancel => {
+           user.forEach(element=>{
+               if(element._id==cancel) await notify.notification(element.email)
+           })
+       });
+       
+   }catch(e){
+       res.json(e)
+   }
+})
+
+router.get('/', async (req, res) => {
+    try {
+        res.render('function/notification');
+      } catch (e) {
+        res.status(500).send();
+      }
+    });
 module.exports = router;

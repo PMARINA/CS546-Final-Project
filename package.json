@@ -11,6 +11,7 @@
     "moment": "^2.29.1",
     "mongodb": "^4.1.4",
     "mongoose": "^6.0.12",
+    "nodemailer": "^6.7.2",
     "nodemailer-smtp-transport": "^2.7.4"
   },
   "description": "Washer/Drier Management WebApp",
