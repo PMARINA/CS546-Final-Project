@@ -42,11 +42,15 @@
 <article class="navbar-item">
   <head>
     <meta charset="utf-8">
-    <title>email notification</title>
+    <title>Reset Password</title>
   </head>
-  <form action="/notification" method="POST">
-        <label id="notification">
-            <button>Notify me!</button>
-        </label>
+  
+  <form action="/reset" method="POST">
+        <h1>Reset Password</h1>
+        <label for="username" class='username'>Username</label>
+	    <input type="text" id="username" name='username' />
+        <label for="password">Password</label>
+        <input type="password" id="password" name='password'/>
+	    <button type="submit" >Reset</button>
     </form>
 </article>
