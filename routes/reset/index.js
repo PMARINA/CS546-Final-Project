@@ -8,6 +8,7 @@ router.post('/', async (req, res) => {
     try{
         if(!req.body.username||!req.body.password) throw"username or password isn't input"
         user.modifyUser(res.locals.userInfo._id,req.body.username,req.body.password)
+        res.render('function/resetsuccess')
       }catch(e){
         res.status(400)
       }

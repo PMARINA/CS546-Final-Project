@@ -4,7 +4,10 @@
   padding-right: 20px; }
 
 .form {
-  text-align: center; }
+  margin: auto;
+  width: 50%;
+  border: 3px solid green;
+  padding: 10px; }
 
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
