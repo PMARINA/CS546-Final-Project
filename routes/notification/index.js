@@ -5,15 +5,6 @@ const building=require('../../models/building')
 const notify=require('../../data/notification')
 const user=require('../../models/user')
 
-router.post('/reset', async (req, res) => {
-   try{
-    await notify.reset(res.locals.userInfo.email)//user's email
-    // send reset email to user   
-   }catch(e){
-       res.json(e)
-   }
-})
-
 router.post('/', async (req, res) => {
     try{
      let newapm=appointment.findById(res.locals.userInfo._id);

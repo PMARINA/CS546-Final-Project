@@ -7,7 +7,7 @@ const user=require('../../data/User')
 router.post('/', async (req, res) => {
     try{
         if(!req.body.username||!req.body.password) throw"username or password isn't input"
-        user.modifyUser(res.locals.userInfo._id,)
+        user.modifyUser(res.locals.userInfo._id,req.body.username,req.body.password)
       }catch(e){
         res.status(400)
       }
