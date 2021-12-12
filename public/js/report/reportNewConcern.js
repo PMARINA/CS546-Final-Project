@@ -65,7 +65,6 @@ window.jQuery.noConflict();
       try {
         $.get(`/web/buildings/${selectedBuildingId}/${whichOne}`).done(
           function (data) {
-            console.log(data);
             if (data.redirect !== undefined) {
               window.location.redirect(data.redirect);
             }
