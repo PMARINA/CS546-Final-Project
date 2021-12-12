@@ -1,0 +1,113 @@
+<header>
+    {{{navbar}}}
+</header>
+<div class="columns mt-5">
+    <div class="column is-6 is-offset-3">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="title card-header-title">Make An Appointment</h1>
+            </div>
+            {{#if buildings}}
+            <form class="form m-5" method="POST" id="apptForm">
+                <div class="card-body">
+                    <div class="field">
+                        <label for="apptBuilding" class="label">Building</label>
+                        <div class="control">
+                            <div class="select">
+                                <select id="apptBuilding" name="apptBuilding">
+                                <option value="" selected>Select a building</option>
+                                {{#each buildings}}
+                                <option value={{this._id}}>{{this.name}}</option>
+                                {{/each}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="apptDate" class="label">Date</label>
+                        <div class="control">
+                            <input type="date" name="apptDate" id="apptDate" />
+                        </div>
+                    </div>
+
+                    {{!-- shows appointment availability --}}
+                    <article class="message is-warning" id="apptAvail" hidden>
+                        <div class="message-header">
+                            <p>Appointments are not available at: </p>
+                            <button class="delete" aria-label="delete" id="deleteButton"></button>
+                        </div>
+                        <div class="message-body" id="availBody">
+                            {{#each appts}}
+                                <input type="hidden" value="{{this._buildingId}}" readonly>{{startTimestamp}} - {{endTimestamp}}</input><br>
+                            {{/each}}
+                        </div>
+                    </article>
+
+                    <div class="field">
+                        {{!-- washer time --}}
+                        <label for="washerTime" class="label">Washer Start Time</label>
+                        <input type="time" name="washerTime" id="washerTime" step="900"/>
+                        <p class="help is-serif is-size-6">Choose appointment times in 15 minute increments.</p>
+                        {{!-- select cycle --}}
+                        <Label for="washerCycle" class="label">Washer Cycle</Label>
+                        <select id="washerCycle" name="washerCycle">
+                            <option value="15">Quick: 15 minutes</option>
+                            <option value="45">Normal: 45 minutes</option>
+                            <option value="70">Heavy: 1 hour 15 minutes</option>
+                        </select>
+                        {{!-- select machine --}}
+                         <label for="whichWasher" class="label">Which Washer?</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="whichWasher" id="whichWasher"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="dryerTime" class="label">Dryer Start Time (Automatically Set)</label>
+                        <input type="time" name="dryerTime" id="dryerTime" readonly/>
+                        <Label for="dryerCycle" class="label">Dryer Cycle</Label>
+                        <select id="dryerCycle" name="dryerCycle">
+                            <option value="15">Quick: 15 minutes</option>
+                            <option value="45">Normal: 45 minutes</option>
+                            <option value="70">Heavy: 1 hour 10 minutes</option>
+                        </select>
+                       <label for="whichDryer" class="label">Which Dryer?</label>
+                        <div class="control">
+                            <div class="select">
+                                <select name="whichDryer" id="whichDryer">
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="card-footer-item is-justify-content-right">
+                        <div class="buttons">
+                            <input type="submit" class="button is-primary" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {{else}}
+            <div class="card-body">
+            <br>
+            <h1 class="title is-4">You do not have access to any laundry
+                facilities</h1>
+            <p>Please add a building in preferences and/or contact your RA or an
+                admin to get access to buildings.</p>
+            </div>
+            {{/if}}
+        </div>
+        <article class="message is-danger">
+            <div class="message-body" id="errorBody" hidden></div>
+        </article>
+    </div>
+</div>
+
+<script src="/js/report/reportNewConcern.js" defer></script>
+<script src="/js/report/reportNewConcernFormValidation.js" defer></script>

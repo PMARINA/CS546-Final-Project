@@ -1,4 +1,4 @@
-const {ObjectId} = require('mongodb');
+const { ObjectId } = require("mongodb");
 
 // When set to true; all errors will also print which function they come from
 const DEBUG_MODE = false;
@@ -44,7 +44,7 @@ const isObj = function isObj(arg, argName, funName) {
     errStr += ` (function: ${funName})`;
   }
 
-  if (typeof arg !== 'object' || arg === null || Array.isArray(arg)) {
+  if (typeof arg !== "object" || arg === null || Array.isArray(arg)) {
     throw new Error(errStr);
   }
 };
@@ -63,19 +63,19 @@ const isType = function isType(arg, argName, funName, desiredType) {
   }
 
   switch (desiredType) {
-    case 'array':
+    case "array":
       isArray(arg, argName, funName);
       break;
-    case 'object':
+    case "object":
       isObj(arg, argName, funName);
       break;
-    case 'objectId':
-      if (typeof arg !== 'string') throw new Error(errStr);
+    case "objectId":
+      if (typeof arg !== "string") throw new Error(errStr);
       isObjId(arg, argName, funName);
       break;
-    case 'number':
+    case "number":
       if (typeof arg !== desiredType) {
-        if (typeof arg === 'string') {
+        if (typeof arg === "string") {
           try {
             parseInt(arg);
           } catch (e) {
@@ -172,13 +172,13 @@ module.exports = {
     isType(arg, argName, funName, desiredType);
 
     switch (desiredType) {
-      case 'string':
+      case "string":
         strNotBlanks(arg, argName, funName);
         break;
-      case 'array':
+      case "array":
         arrNotEmpty(arg, argName, funName);
         break;
-      case 'object':
+      case "object":
         objIsNotEmpty(arg, argName, funName);
         break;
       default:
@@ -192,7 +192,7 @@ module.exports = {
    * @param {string} funName the name of the function to print in error (when applicable)
    */
   argDNE(arg, funName) {
-    if (typeof arg !== 'undefined') {
+    if (typeof arg !== "undefined") {
       throw new Error(`${funName} takes no arguments`);
     }
   },

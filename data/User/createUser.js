@@ -4,12 +4,12 @@ const {
   validatePassword,
   validateAndCleanRole,
   validateAndCleanAccessGroups,
-} = require('./validate');
-User = require('../../models/user');
-v = require('../../inputVerification').general;
-bcrypt = require('bcrypt');
-config = require('../../config.json');
-ObjectId = require('mongoose').Types.ObjectId;
+} = require("./validate");
+const User = require("../../models/user");
+const v = require("../../inputVerification").general;
+const bcrypt = require("bcrypt");
+const config = require("../../config.json");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 /**
  * Validate & Return user params
@@ -23,18 +23,18 @@ ObjectId = require('mongoose').Types.ObjectId;
  * @return {Object} The params passed in, but trimmed, etc
  */
 async function verifyAndCleanCreateUserParams(
-    email,
-    fName,
-    lName,
-    rawPwd,
-    accessGroups,
-    role,
-    creatorId = '',
+  email,
+  fName,
+  lName,
+  rawPwd,
+  accessGroups,
+  role,
+  creatorId = ""
 ) {
   email = await validateAndCleanEmail(email);
 
-  fName = validateAndCleanName(fName, 'first name');
-  lName = validateAndCleanName(lName, 'last name');
+  fName = validateAndCleanName(fName, "first name");
+  lName = validateAndCleanName(lName, "last name");
   validatePassword(rawPwd);
 
   validateAndCleanAccessGroups(accessGroups);
@@ -59,8 +59,8 @@ async function verifyAndCleanCreateUserParams(
 async function getAccessGroups(groups, creatorId) {
   // If the ObjectId isn't valid, then just apply for it
   let creatorObjectId = null;
-  const accessGroupsLabel = 'accessGroups';
-  const appliedAccessGroupsLabel = 'appliedAccessGroups';
+  const accessGroupsLabel = "accessGroups";
+  const appliedAccessGroupsLabel = "appliedAccessGroups";
   try {
     creatorObjectId = new ObjectId(creatorId);
   } catch (e) {
@@ -71,24 +71,24 @@ async function getAccessGroups(groups, creatorId) {
   }
 
   const creatorUserObject = await User.findOne(
-      {_id: creatorObjectId},
-      {_id: 0, role: 1, accessGroups: 1},
+    { _id: creatorObjectId },
+    { _id: 0, role: 1, accessGroups: 1 }
   );
   if (creatorUserObject !== null) {
     // If the creator is an admin, they get everything
     const creatorRole = creatorUserObject.role;
     const creatorAdminAccessGroups = creatorUserObject.privilegedAccessGroups;
-    if (creatorRole === 'admin') {
+    if (creatorRole === "admin") {
       const toReturn = {};
       toReturn[accessGroupsLabel] = groups;
       toReturn[appliedAccessGroupsLabel] = [];
       return toReturn;
     }
-    if (creatorRole === 'ra') {
+    if (creatorRole === "ra") {
       const admittedGroups = [];
       const appliedGroups = [];
       const raPrivilegedGroups = set(creatorAdminAccessGroups);
-      groups.forEach(function(group) {
+      groups.forEach(function (group) {
         if (raPrivilegedGroups.contains(group)) admittedGroups.push(group);
         else appliedGroups.push(group);
       });
@@ -118,38 +118,37 @@ async function getAccessGroups(groups, creatorId) {
  * @return {Object}
  */
 async function createUser(
-    email,
-    fName,
-    lName,
-    rawPwd,
-    accessGroups,
-    role,
-    creatorId = '',
+  email,
+  fName,
+  lName,
+  rawPwd,
+  accessGroups,
+  role,
+  creatorId = ""
 ) {
   let accessGroupsList;
-  if (typeof accessGroups === 'string') {
+  if (typeof accessGroups === "string") {
     accessGroupsList = [accessGroups];
   } else {
     accessGroupsList = accessGroups;
   }
-  ({email, fName, lName, rawPwd, accessGroups, role} =
+  ({ email, fName, lName, rawPwd, accessGroups, role } =
     await verifyAndCleanCreateUserParams(
-        email,
-        fName,
-        lName,
-        rawPwd,
-        accessGroupsList,
-        role,
-        creatorId,
+      email,
+      fName,
+      lName,
+      rawPwd,
+      accessGroupsList,
+      role,
+      creatorId
     ));
   let appliedAccessGroups;
-  ({accessGroups, appliedAccessGroups} = await getAccessGroups(
-      accessGroupsList,
-      creatorId,
+  ({ accessGroups, appliedAccessGroups } = await getAccessGroups(
+    accessGroupsList,
+    creatorId
   ));
   accessGroupsList = accessGroups;
   const numRounds = config.APPLICATION.SECURITY.Password.BcryptNumHashingRounds;
-  // salt = await bcrypt.genSalt(numRounds);
   const hashPwd = await bcrypt.hash(rawPwd, numRounds);
   const userObj = {
     email,

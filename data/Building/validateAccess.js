@@ -1,5 +1,5 @@
-const Building = require('../../models/building');
-const User = require('../../models/user');
+const Building = require("../../models/building");
+const User = require("../../models/user");
 
 /**
  * Determine if the user has access to the building
@@ -7,8 +7,8 @@ const User = require('../../models/user');
  * @param {Object} buildingId
  */
 async function validateAccess(posterId, buildingId) {
-  const building = await Building.findOne({_id: buildingId}).exec();
-  const user = await User.findOne({_id: posterId}).exec();
+  const building = await Building.findOne({ _id: buildingId }).exec();
+  const user = await User.findOne({ _id: posterId }).exec();
   const userAccessGroups = user.accessGroups;
   const buildingAccessGroups = building.accessGroups;
   if (
@@ -18,13 +18,14 @@ async function validateAccess(posterId, buildingId) {
       buildingAccessGroups === undefined
     )
   ) {
-    const buildingAccessGroups = new Set(buildingAccessGroups);
+    const buildingAccessGroupsSet = new Set(buildingAccessGroups);
     let userHasAccess = false;
     for (let i = 0; i < userAccessGroups.length; i++) {
-      if (buildingAccessGroups.has(userAccessGroups[i])) userHasAccess = true;
+      if (buildingAccessGroupsSet.has(userAccessGroups[i]))
+        userHasAccess = true;
     }
     if (!userHasAccess) {
-      throw new Error('User does not have access to the building');
+      throw new Error("User does not have access to the building");
     }
   }
 }

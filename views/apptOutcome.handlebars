@@ -1,0 +1,24 @@
+{{{ navbar }}}
+{{#if success}}
+<div class="container">
+    <div class="columns is-centered">
+        <article class="message is-success is-large">
+            <div class="message-body">
+                {{message}}
+            </div>
+        </article>
+    </div>
+</div>
+
+{{else}}
+
+<div class="container">
+    <div class="columns is-centered">
+        <article class="message is-danger is-large">
+            <div class="message-body">
+               {{message}}
+            </div>
+        </article>
+    </div>
+</div>
+{{/if}}
