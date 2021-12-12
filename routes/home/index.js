@@ -74,11 +74,13 @@ router.get('/', async (req, res) => {
 				_id: true
 			}
 		});
+		return;
 	} else {
 		res.render('homeAnonymous', {
 			navbar: res.locals.navbar,
 			title: 'Duck Wash'
 		});
+		return;
 	}
 });
 

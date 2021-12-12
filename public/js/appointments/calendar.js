@@ -100,15 +100,8 @@
     }
   }
 
-  /**
-   * check availability of appointment
-   */
-  //  function checkAvailability(){
-    
-  // }
-
   // form validation for appointments
-  $("#apptForm").submit(async function (event) {
+  $("#apptForm").submit(function (event) {
     $("#errorBody").hide();
     // check appt building
     if($("#apptBuilding").val() === ""){

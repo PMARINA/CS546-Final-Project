@@ -1,13 +1,43 @@
 const express = require("express");
 const router = new express.Router();
 const Building = require("../../data/Building");
+const BuildingModel = require("../../models/building.js");
+const middleware = require('../middleware');  
+const scripts = [{ script: '/js/building/social.js' }];
 
-router.get("/", async (req, res) => {
-  res.json("all buildings");
+
+router.use(middleware.auth.loggedInOnly);
+
+// router.get("/", async (req, res) => {
+//   res.json("all buildings");
+// });
+
+router.get("/:id", async (req, res) => {
+  const buildingInfo = await BuildingModel.findOne({"_id":req.params.id}).lean();
+  res.render("building", {name: buildingInfo.name, comments: buildingInfo.comments, scripts: scripts});
+  return;
+});
+
+router.post("/:id", async (req, res) => {
+  console.log(req.session.userInfo._id);
+  const buildingInfo = await BuildingModel.findOne({"_id":req.params.id}).lean();
+  try{
+    const addedComment = await Building.comment(req.session.userInfo._id, req.body.commentVal);
+  }catch(e){
+    console.log(e);
+  }
+  res.render("building", {name: buildingInfo.name, comments: buildingInfo.comments, scripts: scripts});
 });
 
 router.get("/listOfAccessGroups", async (req, res) => {
-  const accessGroups = await Building.getAllAccessGroups();
+  try{
+    const accessGroups = await Building.getAllAccessGroups();
+  }catch(e){
+    console.log(e);
+    res.json(e);
+    return;
+  }
+  
   res.json(accessGroups);
 });
 
