@@ -3,6 +3,7 @@ const router = new express.Router();
 const Appointment = require('../../models/appointment.js');
 const AppointmentData = require('../../data/Appointment');
 const Maintenance = require('../../models/maintenance.js');
+const Building = require('../../models/building.js');
 const middleware = require('../middleware');
 const scripts = [{ script: '/js/appointments/calendar.js' }];
 const Moment = require('moment');
@@ -24,10 +25,14 @@ router.get('/', async (req, res) => {
 		newObj.name = building.name.toString();
 		results.push(newObj);
 	}
+	const appts = await Appointment.find({}).lean();
 	res.render('appointments', {
 		buildings: results,
-		navbar: res.locals.navbar
+		navbar: res.locals.navbar,
+		scripts: scripts,
+		appts: appts
 	});
+	return;
 });
 
 router.post('/', async (req, res) => {
@@ -137,6 +142,7 @@ router.post('/', async (req, res) => {
 		success: success,
 		message: 'Appointment Successfully Created'
 	});
+	return;
 });
 router.delete('/:id', async (req, res) => {
 	const appointmentId = req.params.id;

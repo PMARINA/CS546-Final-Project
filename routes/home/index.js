@@ -51,7 +51,7 @@ router.get('/', async (req, res) => {
 					a.machineType = 'drier';
 				}
 				res.render('homeLoggedIn', {
-					navbar: req.navbar,
+					navbar: res.locals.navbar,
 					title: 'Duck Wash',
 					appointments: nearbyAppointments,
 					allowedProtoProperties: {
@@ -59,9 +59,9 @@ router.get('/', async (req, res) => {
 					},
 					scripts: scripts
 				});
-				if (req.userData.role === 'admin') {
+				if (res.locals.userInfo.role === 'admin') {
 					console.log('admin');
-				} else if (req.userData.role === 'maintenance') {
+				} else if (res.locals.userInfo.role === 'maintenance') {
 					console.log('maintenance');
 				}
 			}
