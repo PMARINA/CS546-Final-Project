@@ -1,0 +1,41 @@
+<header>
+  {{{navbar}}}
+</header>
+<div class="card">
+  <div class="card-header">
+    <h1 class="card-header-title">My Appointments</h1>
+  </div>
+  <!--    <div class="has-background-grey-light"></div>-->
+  <div class="card-content content">
+    {{#if appointments}}
+
+      <table id="nearAppts">
+        <thead>
+          <tr>
+            <td class="has-text-primary">Start Time</td>
+            <td class="has-text-primary">End Time</td>
+            <td class="has-text-primary">Building</td>
+            <td class="has-text-primary">Machine</td>
+            <td></td>
+          </tr>
+        </thead>
+        {{#each appointments}}
+          <tr>
+            <td>{{this.startDate}}</td>
+            <td>{{this.endDate}}</td>
+            <td>{{this.building}}</td>
+            <td>{{this.machine}}</td>
+            <td>
+              <button id={{this._id}} 
+              class="button is-small is-danger is-outlined cancel">
+                Cancel
+              </button>
+            </td>
+          </tr>
+        {{/each}}
+      </table>
+    {{else}}
+      There are no currents reports. 
+    {{/if}}
+  </div>
+</div>

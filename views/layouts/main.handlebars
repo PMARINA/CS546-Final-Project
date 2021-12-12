@@ -21,6 +21,10 @@
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
       crossorigin="anonymous"
     ></script>
+    {{!-- https://stackoverflow.com/questions/40386257/add-scripts-in-express-handlebars-from-view --}}
+    {{#each scripts}}
+      <script src="{{script}}"></script>
+    {{/each}}
   </body>
 
 </html>
