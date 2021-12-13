@@ -16,7 +16,8 @@
     "moment": "^2.29.1",
     "moment-range": "^4.0.2",
     "mongodb": "^4.1.4",
-    "mongoose": "^6.0.12"
+    "mongoose": "^6.0.12",
+    "xss": "^1.0.10"
   },
   "description": "Washer/Drier Management WebApp",
   "devDependencies": {
