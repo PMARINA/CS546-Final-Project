@@ -1,10 +1,10 @@
-const moment = require("moment");
-const ObjectId = require("mongoose").Types.ObjectId;
-const Building = require("../../models/building");
-const MachineModel = require("../../models/machineModel");
-const User = require("../../models/user");
-const validateUserAccessBuilding = require("../Building/validateAccess");
-const Appointment = require("../../models/appointment");
+const moment = require('moment');
+const ObjectId = require('mongoose').Types.ObjectId;
+const Building = require('../../models/building');
+const MachineModel = require('../../models/machineModel');
+const User = require('../../models/user');
+const validateUserAccessBuilding = require('../Building/validateAccess');
+const Appointment = require('../../models/appointment');
 
 /**
  *
@@ -13,22 +13,22 @@ const Appointment = require("../../models/appointment");
  * @return {Object} The machine entry
  */
 function findMachine(doc, machineId) {
-  const mId = machineId.toString();
-  let found = undefined;
-  doc["washers"].forEach((washer) => {
-    if (washer._id.toString() === mId) {
-      found = washer;
-    }
-  });
-  if (found) return found;
+	const mId = machineId.toString();
+	let found = undefined;
+	doc['washers'].forEach((washer) => {
+		if (washer._id.toString() === mId) {
+			found = washer;
+		}
+	});
+	if (found) return found;
 
-  doc["driers"].forEach((drier) => {
-    if (drier._id.toString() === mId) {
-      found = drier;
-    }
-  });
-  if (found) return found;
-  throw new Error("Found building with machine but unable to extract it");
+	doc['driers'].forEach((drier) => {
+		if (drier._id.toString() === mId) {
+			found = drier;
+		}
+	});
+	if (found) return found;
+	throw new Error('Found building with machine but unable to extract it');
 }
 /**
  *
@@ -37,13 +37,13 @@ function findMachine(doc, machineId) {
  * @return {Object} The specific cycle
  */
 function findCycle(doc, cycleId) {
-  const cId = cycleId.toString();
-  let found = undefined;
-  doc["cycles"].forEach((c) => {
-    if (c._id.toString() === cId) found = c;
-  });
-  if (found) return found;
-  throw new Error("Found machine with cycle but unable to extract it");
+	const cId = cycleId.toString();
+	let found = undefined;
+	doc['cycles'].forEach((c) => {
+		if (c._id.toString() === cId) found = c;
+	});
+	if (found) return found;
+	throw new Error('Found machine with cycle but unable to extract it');
 }
 
 /**
@@ -53,21 +53,21 @@ function findCycle(doc, cycleId) {
  * @return {Date} The cleaned timestamp
  */
 function cleanAndVerifyTimestamp(ts, tsName) {
-  if (typeof ts !== "string" && typeof ts !== "object") {
-    throw new Error(`${tsName} must be a string or a Date`);
-  }
-  if (typeof ts === "object") {
-    if (!ts instanceof Date) {
-      throw new Error(`${tsName} must be a Date object`);
-    }
-  } else {
-    ts = moment(ts.trim()).toDate();
-  }
+	if (typeof ts !== 'string' && typeof ts !== 'object') {
+		throw new Error(`${tsName} must be a string or a Date`);
+	}
+	if (typeof ts === 'object') {
+		if (!ts instanceof Date) {
+			throw new Error(`${tsName} must be a Date object`);
+		}
+	} else {
+		ts = moment(ts.trim()).toDate();
+	}
 
-  if (isNaN(ts.valueOf())) {
-    throw new Error(`${tsName} was an invalid date`);
-  }
-  return ts;
+	if (isNaN(ts.valueOf())) {
+		throw new Error(`${tsName} was an invalid date`);
+	}
+	return ts;
 }
 
 /**
@@ -77,16 +77,16 @@ function cleanAndVerifyTimestamp(ts, tsName) {
  * @return {ObjectId}
  */
 function cleanAndVerifyObjectId(oid, oidName) {
-  if (typeof oid !== "string") {
-    throw new Error(`Expected ObjectId (${oidName}) to be a string`);
-  }
-  let oidAsObject;
-  try {
-    oidAsObject = new ObjectId(oid);
-  } catch (err) {
-    throw new Error(`${oidName} was an invalid object id`);
-  }
-  return oidAsObject;
+	if (typeof oid !== 'string') {
+		throw new Error(`Expected ObjectId (${oidName}) to be a string`);
+	}
+	let oidAsObject;
+	try {
+		oidAsObject = new ObjectId(oid);
+	} catch (err) {
+		throw new Error(`${oidName} was an invalid object id`);
+	}
+	return oidAsObject;
 }
 
 /**
@@ -123,68 +123,73 @@ function cleanAndVerifyObjectId(oid, oidName) {
  * @return {Object}
  */
 async function cleanAndVerify(
-  buildingId,
-  userId,
-  machineId,
-  cycleId,
-  startTimestamp,
-  endTimestamp
+	buildingId,
+	userId,
+	machineId,
+	cycleId,
+	startTimestamp,
+	endTimestamp
 ) {
-  startTimestamp = cleanAndVerifyTimestamp(
-    startTimestamp,
-    "Starting timestamp"
-  );
-  endTimestamp = cleanAndVerifyTimestamp(endTimestamp, "Ending timestamp");
-  const buildingIdAsObjectId = cleanAndVerifyObjectId(
-    buildingId,
-    "Building id"
-  );
-  const userIdAsObjectId = cleanAndVerifyObjectId(userId, "User id");
-  const machineIdAsObjectId = cleanAndVerifyObjectId(machineId, "Machine id");
-  const cycleIdAsObjectId = cleanAndVerifyObjectId(cycleId, "Cycle id");
+	startTimestamp = cleanAndVerifyTimestamp(
+		startTimestamp,
+		'Starting timestamp'
+	);
+	endTimestamp = cleanAndVerifyTimestamp(endTimestamp, 'Ending timestamp');
+	const buildingIdAsObjectId = cleanAndVerifyObjectId(
+		buildingId,
+		'Building id'
+	);
+	const userIdAsObjectId = cleanAndVerifyObjectId(userId, 'User id');
+	const machineIdAsObjectId = cleanAndVerifyObjectId(
+		machineId,
+		'Machine id'
+	);
+	const cycleIdAsObjectId = cleanAndVerifyObjectId(cycleId, 'Cycle id');
 
-  if (
-    !(await Building.exists({
-      _id: buildingIdAsObjectId,
-      $or: [
-        { "washers._id": machineIdAsObjectId },
-        { "driers._id": machineIdAsObjectId },
-      ],
-    }))
-  ) {
-    throw new Error("Building with specified machine does not exist");
-  }
-  const building = await Building.findById(buildingIdAsObjectId);
-  const machine = findMachine(building, machineIdAsObjectId);
-  const machineModelId = machine.modelId;
-  if (!(await MachineModel.exists({ _id: machineModelId }))) {
-    throw new Error("Machine model does not exist. Was it removed?");
-  }
-  if (
-    !(await MachineModel.exists({
-      _id: machineModelId,
-      "cycles._id": cycleIdAsObjectId,
-    }))
-  ) {
-    throw new Error("The specified machine does not have the requested cycle");
-  }
-  const machineModelDoc = await MachineModel.findById(machineModelId);
-  const cycle = findCycle(machineModelDoc, cycleIdAsObjectId);
-  const cycleDurationString = cycle.time;
-  // verifyEnoughTime(startTimestamp, cycleDurationString, endTimestamp);
-  if (!(await User.exists({ _id: userIdAsObjectId }))) {
-    throw new Error("The user making the appointment does not exist");
-  }
-  await validateUserAccessBuilding(userIdAsObjectId, buildingIdAsObjectId);
+	if (
+		!(await Building.exists({
+			_id: buildingIdAsObjectId,
+			$or: [
+				{ 'washers._id': machineIdAsObjectId },
+				{ 'driers._id': machineIdAsObjectId }
+			]
+		}))
+	) {
+		throw new Error('Building with specified machine does not exist');
+	}
+	const building = await Building.findById(buildingIdAsObjectId);
+	const machine = findMachine(building, machineIdAsObjectId);
+	const machineModelId = machine.modelId;
+	if (!(await MachineModel.exists({ _id: machineModelId }))) {
+		throw new Error('Machine model does not exist. Was it removed?');
+	}
+	if (
+		!(await MachineModel.exists({
+			'_id': machineModelId,
+			'cycles._id': cycleIdAsObjectId
+		}))
+	) {
+		throw new Error(
+			'The specified machine does not have the requested cycle'
+		);
+	}
+	const machineModelDoc = await MachineModel.findById(machineModelId);
+	const cycle = findCycle(machineModelDoc, cycleIdAsObjectId);
+	const cycleDurationString = cycle.time;
+	// verifyEnoughTime(startTimestamp, cycleDurationString, endTimestamp);
+	if (!(await User.exists({ _id: userIdAsObjectId }))) {
+		throw new Error('The user making the appointment does not exist');
+	}
+	await validateUserAccessBuilding(userIdAsObjectId, buildingIdAsObjectId);
 
-  return {
-    buildingId: buildingIdAsObjectId,
-    userId: userIdAsObjectId,
-    machineId: machineIdAsObjectId,
-    cycleId: cycleIdAsObjectId,
-    startTimestamp,
-    endTimestamp,
-  };
+	return {
+		buildingId: buildingIdAsObjectId,
+		userId: userIdAsObjectId,
+		machineId: machineIdAsObjectId,
+		cycleId: cycleIdAsObjectId,
+		startTimestamp,
+		endTimestamp
+	};
 }
 
 /**
@@ -198,29 +203,29 @@ async function cleanAndVerify(
  * @return {Object}
  */
 async function create(
-  buildingId,
-  userId,
-  machineId,
-  cycleId,
-  startTimestamp,
-  endTimestamp
+	buildingId,
+	userId,
+	machineId,
+	cycleId,
+	startTimestamp,
+	endTimestamp
 ) {
-  const returned = await cleanAndVerify(
-    buildingId,
-    userId,
-    machineId,
-    cycleId,
-    startTimestamp,
-    endTimestamp
-  );
-  return await Appointment.create({
-    buildingId: returned.buildingId,
-    userId: returned.userId,
-    machineId: returned.machineId,
-    cycleId: returned.cycleId,
-    startTimestamp: returned.startTimestamp,
-    endTimestamp: returned.endTimestamp,
-  });
+	const returned = await cleanAndVerify(
+		buildingId,
+		userId,
+		machineId,
+		cycleId,
+		startTimestamp,
+		endTimestamp
+	);
+	return await Appointment.create({
+		buildingId: returned.buildingId,
+		userId: returned.userId,
+		machineId: returned.machineId,
+		cycleId: returned.cycleId,
+		startTimestamp: returned.startTimestamp,
+		endTimestamp: returned.endTimestamp
+	});
 }
 
 module.exports = create;
