@@ -40,14 +40,13 @@
                             <div class="media-content">
                                 <div class="content">
                                 <p>
-                                    <h6>poster name</h6>
-                                    <br>
+                                    <h6>{{this.posterId}}</h6>
                                     {{this.message}}
                                 </p>
                                 </div>
                                 <nav class="level is-mobile">
                                 <div class="level-left">
-                                    <a class="level-item">
+                                    <a class="level-item reply">
                                     <span class="icon is-small">Reply</span>
                                     </a>
                                     
@@ -57,6 +56,16 @@
                             <div class="media-right">
                                 <button class="button is-small is-outlined is-danger">Delete Comment</button>
                             </div>
+                            {{#if comments.replies}}
+                                 <div class="media-content">
+                                    <div class="content">
+                                    <p>
+                                        <h6>{{this.posterId}}</strong>
+                                        {{this.message}}
+                                    </p>
+                                    </div>
+                                </div>
+                            {{/if}}
                         </article>
                     </div>
                 </div>
