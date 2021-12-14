@@ -10,21 +10,22 @@ const expressHandlebars = require("express-handlebars").create();
  */
 async function renderNavbarToReq(req, res, next) {
   let navbarUserInfo = undefined;
-  if (req.userValidated) {
+  if (res.locals.userValidated) {
     navbarUserInfo = {};
-    navbarUserInfo.buildings = await User.getAllBuildingsForUser(req.userId);
-    console.log(navbarUserInfo.buildings);
+    navbarUserInfo.buildings = await User.getAllBuildingsForUser(
+      res.locals.userId
+    );
     for (let i = 0; i < navbarUserInfo.buildings.length; i++) {
-      navbarUserInfo.buildings[i] = navbarUserInfo.buildings[i].toJSON();
+      navbarUserInfo.buildings[i] = navbarUserInfo.buildings[i];
     }
   }
   const currentPageIsHome = req.url === "/";
   const context = {
-    userLoggedIn: req.userValidated,
+    userLoggedIn: res.locals.loggedIn,
     currentPageIsHome,
     navbarUserInfo,
   };
-  req.navbar = await expressHandlebars.render(
+  res.locals.navbar = await expressHandlebars.render(
     "views/navbar/main.handlebars",
     context
   );

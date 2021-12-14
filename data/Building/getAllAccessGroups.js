@@ -6,7 +6,7 @@ const Building = require("../../models/building");
  */
 async function getAllAccessGroups() {
   const allAccessGroups = new Set();
-  for await (const doc of Building.find()) {
+  for await (let doc of Building.find()) {
     const accessGroups = doc.accessGroups;
     accessGroups.forEach((a) => allAccessGroups.add(a));
   }

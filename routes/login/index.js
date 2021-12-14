@@ -18,6 +18,7 @@ router.post("/", auth.apiAnonymousOnly, async (req, res) => {
 
   const checkResult = await User.checkCredentials(username, password);
   if (checkResult.valid) {
+    res.locals.userInfo = checkResult.cookieData;
     req.session.userInfo = checkResult.cookieData;
     res.json({ redirect: "/" });
   } else {

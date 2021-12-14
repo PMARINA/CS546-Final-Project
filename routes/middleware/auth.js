@@ -12,7 +12,7 @@ const navbar = require("./navbar").renderNavbarToReq;
  * @return {boolean}
  */
 function userHasCookie(req) {
-  return !!(req.session && req.session.userInfo && req.session.userInfo._id);
+  return !!req.session.userInfo;
 }
 
 /**
@@ -32,13 +32,11 @@ function getUserId(req) {
  * @param {String} description A description of the error
  */
 async function sendError(req, res, errCode, description) {
-  await getInfoOnly(req, res, () => {});
-  await navbar(req, res, () => {});
   res.status(errCode).render("error", {
     errCode: errCode,
     errMsg: getStatusPhrase(errCode),
     errMsgDescriptive: description,
-    navbar: req.navbar,
+    navbar: res.locals.navbar,
   });
 }
 
@@ -50,9 +48,8 @@ async function sendError(req, res, errCode, description) {
  * @return {Promise<void>}
  */
 async function loggedInOnly(req, res, next) {
-  await getInfoOnly(req, res, () => {});
-  if (req.userValidated) await next();
-  else if (req.loggedIn)
+  if (res.locals.userValidated) await next();
+  else if (res.locals.loggedIn)
     await sendError(
       req,
       res,
@@ -76,12 +73,8 @@ async function loggedInOnly(req, res, next) {
  * @return {Promise<void>}
  */
 async function apiLoggedInOnly(req, res, next) {
-  await getInfoOnly(req, res, () => {});
-  if (req.session && req.session.userInfo) {
-    const userId = req.session.userInfo["_id"];
-    req.loggedIn = true;
-    if (await User.exists(userId)) {
-      req.userValidated = true;
+  if (res.locals && res.locals.loggedIn) {
+    if (res.locals.userValidated) {
       await next();
     } else {
       res.status(403).json({ redirect: "/logout" });
@@ -100,9 +93,8 @@ async function apiLoggedInOnly(req, res, next) {
  * @return {Promise<void>}
  */
 async function apiAnonymousOnly(req, res, next) {
-  if (req.session && req.session.userInfo) {
-    const userId = req.session.userInfo["_id"];
-    if (await User.exists(userId)) {
+  if (res.locals && res.locals.loggedIn) {
+    if (res.locals.userValidated) {
       res.json({ redirect: "/" });
     } else {
       res.status(401).json({ redirect: "/logout" });
@@ -125,8 +117,8 @@ async function onlyAllowRole(role, req, res, next) {
   if (typeof role === "string") {
     role = [role];
   }
-  role = new Set(role);
-  if (role.has(req.role)) {
+  const allowedRolesSet = new Set(role);
+  if (allowedRolesSet.has(res.locals.role)) {
     await next();
   } else {
     await sendError(
@@ -150,12 +142,13 @@ async function onlyAllowRole(role, req, res, next) {
 async function getInfoOnly(req, res, next) {
   if (userHasCookie(req)) {
     const userId = getUserId(req);
-    req.loggedIn = true;
+    res.locals.loggedIn = true;
     if (await User.exists(userId)) {
-      req.userValidated = true;
-      req.userId = userId;
-      req.userData = await userModel.findById(userId.toString());
-      req.role = req.userData.role;
+      res.locals.userValidated = true;
+      res.locals.userId = userId;
+      const userInfo = await userModel.findById(userId.toString()).lean();
+      res.locals.userInfo = userInfo;
+      res.locals.role = userInfo.role;
     }
   }
   await next();

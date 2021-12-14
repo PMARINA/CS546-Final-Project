@@ -1,0 +1,82 @@
+<header>
+	{{{navbar}}}
+</header>
+<div class="columns mt-5">
+    <div class="column is-6 is-offset-3">
+        <div class='card mt-5'>
+            <div class='card-header'>
+                <h1 class='card-header-title'>{{name}}</h1>
+            </div>
+            <div class="card-body">
+                {{!-- add a comment --}}
+                <article class="message is-danger">
+                    <div class="message-body" id="errorBodyComment" hidden></div>
+                </article>
+                <form method="POST" id="newCommentForm">
+                    <article class="media">
+                    <div class="media-content">
+                        <div class="field">
+                            <br>
+                            <label for="commentVal">Add a comment: </label>
+                            <p class="control">
+                                <textarea id="commentVal" name="commentVal" class="textarea" placeholder="What's on your mind..."></textarea>
+                            </p>
+                            <div class="level-left">
+                                <div class="level-item">
+                                <input type="submit" class="button is-info"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </article>
+                </form>
+                {{!-- comments --}}
+                <h4 class="title">Comments</h4>
+                {{#if comments}}
+                {{#each comments}}
+                <div class="card-content has-background-light">
+                    <div class="content">
+                        <article class="media">
+                            <div class="media-content">
+                                <div class="content">
+                                <p>
+                                    <h6>{{this.posterId}}</h6>
+                                    {{this.message}}
+                                </p>
+                                </div>
+                                <nav class="level is-mobile">
+                                <div class="level-left">
+                                    <a class="level-item reply">
+                                    <span class="icon is-small">Reply</span>
+                                    </a>
+                                    
+                                </div>
+                                </nav>
+                            </div>
+                            <div class="media-right">
+                                <button class="button is-small is-outlined is-danger">Delete Comment</button>
+                            </div>
+                            {{#if comments.replies}}
+                                 <div class="media-content">
+                                    <div class="content">
+                                    <p>
+                                        <h6>{{this.posterId}}</strong>
+                                        {{this.message}}
+                                    </p>
+                                    </div>
+                                </div>
+                            {{/if}}
+                        </article>
+                    </div>
+                </div>
+                <br>
+                {{/each}}
+                {{else}}
+                <br><h3>There are no comments for this building.</h3>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
+
+

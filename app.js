@@ -22,6 +22,7 @@ app.use(
   expressSession({
     name: config.APPLICATION.COOKIE.name,
     secret: config.APPLICATION.COOKIE.secret,
+    secure: false,
     saveUninitialized: false,
     resave: false,
     cookie: { maxAge: config.APPLICATION.COOKIE.maxAgeMillis },

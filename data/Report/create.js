@@ -1,8 +1,8 @@
-ObjectId = require("mongoose").Types.ObjectId;
-Report = require("../../models/report");
-Building = require("../../models/building");
-User = require("../../models/user");
-validateUserHasAccess = require("../Building/validateAccess");
+const ObjectId = require("mongoose").Types.ObjectId;
+const Report = require("../../models/report");
+const Building = require("../../models/building");
+const User = require("../../models/user");
+const validateUserHasAccess = require("../Building/validateAccess");
 
 /**
  * Create a user report
@@ -74,6 +74,12 @@ async function validateAndClean(type, reporterId, entityId, comment, severity) {
     }
     await validateUserHasAccess(reporterIdAsObjectId, buildingId);
   } else if (type === "machine") {
+    const buildingWithMachine = await Building.findOne({
+      $or: [
+        { "washers._id": entityIdAsObject },
+        { "driers._id": entityIdAsObject },
+      ],
+    });
     if (
       !(await Building.exists({
         $or: [
